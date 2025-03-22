@@ -3524,6 +3524,11 @@
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
+  .lg\:grid-cols-6 {
+    @media (width >= 64rem) {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+  }
   .lg\:space-x-10 {
     @media (width >= 64rem) {
       :where(& > :not(:last-child)) {
