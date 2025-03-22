@@ -23,3 +23,7 @@
     background-color: var(--highlight5);
     border: 1px solid var(--highlight5);
   }
+
+  .card:hover {
+    cursor: pointer;
+  }
