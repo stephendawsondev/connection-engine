@@ -1,10 +1,11 @@
 {
   "editor.formatOnSave": true,
-  "editor.rulers": [88],
+  "editor.rulers": [
+    88
+  ],
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
-
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter",
     "editor.formatOnSave": true,
@@ -12,7 +13,6 @@
       "source.organizeImports": "explicit"
     }
   },
-
   // Use newer Pylance/Python language server settings
   "python.analysis.typeCheckingMode": "basic",
   "python.analysis.diagnosticMode": "workspace",
@@ -22,7 +22,6 @@
     "reportUnusedImport": "warning",
     "reportUnusedVariable": "warning"
   },
-
   // Django template file associations
   "files.associations": {
     "**/*.html": "html",
@@ -34,12 +33,11 @@
   },
   "[django-html]": {
     "editor.formatOnSave": true,
-    "editor.defaultFormatter": "batisteo.vscode-django"
+    "editor.defaultFormatter": "junstyle.vscode-django-support"
   },
   "[html]": {
     "editor.defaultFormatter": "vscode.html-language-features"
   },
-
   "[markdown]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode"
