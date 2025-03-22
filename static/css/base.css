@@ -30,8 +30,19 @@ p {
   text-align: center;
 }
 
+.logo {
+  background-image: url("https://res.cloudinary.com/dj2lk9daf/image/upload/v1742647701/ce-logo-dark-theme_dulmwg.png");
+  width: auto;
+  height: 60px;
+  aspect-ratio: 4 / 1;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
 
-
+/* Logo in Light Theme */
+html[data-theme="light"] .logo {
+  background-image: url("https://res.cloudinary.com/dj2lk9daf/image/upload/v1742647700/ce-logo-light-theme_jcwtrv.png");
+}
 
 
 
