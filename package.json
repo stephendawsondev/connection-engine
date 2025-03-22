@@ -8,6 +8,7 @@
     "build": "npx @tailwindcss/cli -i ./src/styles/tailwind.css -o ./static/css/tailwind.css --minify"
   },
   "dependencies": {
+    "@hackernoon/pixel-icon-library": "^1.0.5",
     "@tailwindcss/cli": "^4.0.14",
     "march_hackathon_placeholder": "file:"
   },
