@@ -13,12 +13,30 @@ class Profile(models.Model):
     image = CloudinaryField("image", blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    favourite_projects = models.ManyToManyField(
+        "os_project.Project",
+        through="FavouriteProject",
+        related_name="favourited_by",
+        blank=True,
+    )
 
     def get_absolute_url(self):
         return reverse("profile_detail", kwargs={"username": self.user.username})
 
     def __str__(self):
         return f"{self.user.username}'s profile"
+
+
+class FavouriteProject(models.Model):
+    profile = models.ForeignKey("Profile", on_delete=models.CASCADE)
+    project = models.ForeignKey("os_project.Project", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("profile", "project")
+
+    def __str__(self):
+        return f"{self.profile.user.username} favourited {self.project.title}"
 
 
 class WomenInTech(models.Model):
@@ -41,12 +59,6 @@ class WomenInTech(models.Model):
     maintained_projects = models.ManyToManyField(
         Project, blank=True
     )  # Need to create project model
-    favourite_projects = models.ManyToManyField(
-        Project,
-        through="FavouriteProjectWIT",
-        related_name="favourited_by_wit",
-        blank=True,
-    )
     contribution_focus = models.ManyToManyField(
         Project,
         through="ContributionFocusWIT",
@@ -77,15 +89,7 @@ class OS_Maintainer(models.Model):
 
     # Maintainer fields
     github_username = models.CharField(max_length=100, blank=True)
-    maintained_projects = models.ManyToManyField(
-        Project, blank=True
-    )  # Need to create project model
-    favourite_projects = models.ManyToManyField(
-        Project,
-        through="FavouriteProjectOS",
-        related_name="favourited_by_os",
-        blank=True,
-    )
+    maintained_projects = models.ManyToManyField(Project, blank=True)
     contribution_focus = models.ManyToManyField(
         Project,
         through="ContributionFocusOS",
@@ -126,18 +130,6 @@ class Mentor(models.Model):
         return f"{self.user.username}'s Mentor profile"
 
 
-class FavouriteProjectWIT(models.Model):
-    wit = models.ForeignKey(WomenInTech, on_delete=models.CASCADE)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        unique_together = ("wit", "project")
-
-    def __str__(self):
-        return f"{self.wit.user.username} favourited {self.project.title}"
-
-
 class ContributionFocusWIT(models.Model):
     wit = models.ForeignKey(WomenInTech, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
@@ -149,18 +141,6 @@ class ContributionFocusWIT(models.Model):
 
     def __str__(self):
         return f"{self.wit.user.username} focuses on {self.focus_area} for {self.project.title}"
-
-
-class FavouriteProjectOS(models.Model):
-    maintainer = models.ForeignKey(OS_Maintainer, on_delete=models.CASCADE)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        unique_together = ("maintainer", "project")
-
-    def __str__(self):
-        return f"{self.maintainer.user.username} favourited {self.project.title}"
 
 
 class ContributionFocusOS(models.Model):

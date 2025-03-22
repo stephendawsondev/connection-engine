@@ -13,14 +13,8 @@ def profile_detail(request, username):
     user = get_object_or_404(User, username=username)
     profile = get_object_or_404(Profile, user=user)
 
-    favorites = None
-
-    if hasattr(request.user, "women_in_tech_profile"):
-        favorites = request.user.women_in_tech_profile.favourite_projects.all()
-    elif hasattr(request.user, "mentor_profile"):
-        favorites = request.user.mentor_profile.favourite_projects.all()
-    elif hasattr(request.user, "os_maintainer_profile"):
-        favorites = request.user.os_maintainer_profile.favourite_projects.all()
+    # Get favorites from the profile model directly
+    favorites = profile.favourite_projects.all()
 
     context = {
         "profile_user": user,
