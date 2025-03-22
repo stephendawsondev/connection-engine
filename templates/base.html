@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}My Project{% endblock %}</title>
+    <title>{% block title %}Connection Engine{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <!-- Favicon links -->
@@ -43,7 +43,7 @@
                     {% endif %}
                 </ul>
             </div>
-            <a href="{% url 'home' %}" class="btn btn-ghost text-xl">My Project</a>
+            <a href="{% url 'home' %}" class="btn btn-ghost text-xs md:text-xl">Connection Engine</a>
         </div>
         <div class="navbar-center hidden lg:flex">
             <ul class="menu menu-horizontal px-1">
@@ -99,7 +99,7 @@
 
     <!-- Messages -->
     {% if messages %}
-    <div class="toast toast-top toast-end">
+    <div class="toast toast-bottom toast-end">
         {% for message in messages %}
             <div class="alert {% if message.tags == 'error' %}alert-error{% elif message.tags == 'success' %}alert-success{% elif message.tags == 'info' %}alert-info{% elif message.tags == 'warning' %}alert-warning{% else %}alert-info{% endif %}">
                 <span>{{ message }}</span>
