@@ -10,6 +10,20 @@ from django_countries.fields import CountryField
 
 # Create your models here.
 class Payment(models.Model):
+    project = models.ForeignKey(
+        "os_project.Project",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="donations",
+    )
+    sponsored_user = models.ForeignKey(
+        "user_profile.WomenInTech",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="sponsorships",
+    )
     confirmation_number = models.CharField(max_length=32, null=False, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)

@@ -1,44 +1,115 @@
-import json
-import os
-
+# donations/views.py
 import stripe
 from django.conf import settings
-from django.contrib import messages
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import redirect, render
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
+from django.shortcuts import get_object_or_404
+from os_project.models import Project
+from user_profile.models import WomenInTech
+from .models import Payment
 
-from .forms import PaymentForm, ProjectFundingForm, WITFundingForm
-from .models import Payment, ProjectFunding, WITFunding
+import json
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
-def donations(request):
-    return render(request, "donations/donations.html")
+@csrf_exempt
+def create_checkout_session(request):
+    data = json.loads(request.body)
+    amount = int(float(data.get("amount", 10)) * 100)  # Convert to cents
+    type = data.get("type")
+    id = data.get("id")
 
+    success_url = request.build_absolute_uri("/donations/success/")
+    cancel_url = request.build_absolute_uri("/donations/cancel/")
 
-@require_POST
-def process_donation(request):
+    metadata = {"user_id": request.user.id, "payment_type": type}
+
+    product_name = "Donation"
+
+    if type == "project":
+        project = get_object_or_404(Project, id=id)
+        metadata["project_id"] = project.id
+        product_name = f"Donation to {project.title}"
+
+    elif type == "sponsor":
+        wit = get_object_or_404(WomenInTech, id=id)
+        metadata["wit_id"] = wit.id
+        product_name = f"Sponsorship for {wit.user.username}"
+
     try:
-        data = json.loads(request.body)
-        amount = int(float(data["amount"]) * 100)
-
-        if amount <= 0:
-            return JsonResponse({"error": "Amount must be positive"}, status=400)
-
-        intent = stripe.PaymentIntent.create(
-            amount=amount,
-            currency="gbp",
-            automatic_payment_methods={"enabled": True},
-            metadata={
-                "target": data.get("target", "project"),
-                "amount": data["amount"],
-                "save_info": data.get("save_info", "False"),
-                "username": request.user.username,
-            },
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=["card"],
+            line_items=[
+                {
+                    "price_data": {
+                        "currency": "eur",
+                        "product_data": {
+                            "name": product_name,
+                        },
+                        "unit_amount": amount,
+                    },
+                    "quantity": 1,
+                }
+            ],
+            mode="payment",
+            success_url=success_url + "?session_id={CHECKOUT_SESSION_ID}",
+            cancel_url=cancel_url,
+            metadata=metadata,
         )
-        return JsonResponse({"clientSecret": intent["client_secret"]})
+        return JsonResponse({"id": checkout_session.id})
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
+
+
+@csrf_exempt
+def stripe_webhook(request):
+    payload = request.body
+    sig_header = request.META.get("HTTP_STRIPE_SIGNATURE")
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
+        )
+    except ValueError as e:
+        return JsonResponse({"error": str(e)}, status=400)
+    except stripe.error.SignatureVerificationError as e:
+        return JsonResponse({"error": str(e)}, status=400)
+
+    if event["type"] == "checkout.session.completed":
+        session = event["data"]["object"]
+        handle_completed_checkout(session)
+
+    return JsonResponse({"status": "success"})
+
+
+def handle_completed_checkout(session):
+    metadata = session.metadata
+    payment_type = metadata.get("payment_type")
+    amount = session.amount_total / 100  # Convert from cents
+
+    # Create payment record
+    payment = Payment(
+        confirmation_number=session.id,
+        user_id=metadata.get("user_id"),
+        amount=amount,
+        status="SUCCESS",
+        stripe_payment_intent_id=session.payment_intent,
+    )
+
+    # Update project funding or add sponsorship details
+    if payment_type == "project":
+        project_id = metadata.get("project_id")
+        if project_id:
+            project = Project.objects.get(id=project_id)
+            payment.project = project
+            project.current_funding += amount
+            project.save()
+
+    elif payment_type == "sponsor":
+        wit_id = metadata.get("wit_id")
+        if wit_id:
+            wit = WomenInTech.objects.get(id=wit_id)
+            payment.sponsored_user = wit
+
+    payment.save()

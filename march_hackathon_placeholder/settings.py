@@ -67,8 +67,6 @@ INSTALLED_APPS = [
     "user_profile",
     "os_project",
     "donations",
-    # other apps
-    "django_countries",
 ]
 
 MIDDLEWARE = [
@@ -204,8 +202,6 @@ else:
         "default": {"BACKEND": "custom_storages.EmptySafeMediaCloudinaryStorage"},
     }
 
-
 # Stripe
-STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY")
+STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_PUBLISHABLE_KEY")
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
-STRIPE_WEBHOOK_SECRET = "your_webhook_secret"
