@@ -1,25 +1,27 @@
 {% load static %}
 
-<div id="favorites-sidebar" class="favorites-sidebar closed">
+{% if favorites %}
+<div id="favorites-sidebar" class="w-72 bg-base-200 md:w-148 h-[460px] md:h-[650px] lg:h-[800px] favorites-sidebar border-2 border-primary closed">
   <!-- Star buttonv -->
-  <div id="toggle-button" class="toggle-button">
-    <img
-      src="{% static 'images/retro-star.svg' %}"
-      alt="Retro Star"
-      width="32"
-      height="32"
-    >
-  </div>
+  <button id="toggle-button" class="toggle-button fill-primary bg-base-100 border-2 border-primary">
+    <svg id="star-solid" xmlns="http://www.w3.org/2000/svg" class="w-9 h-9" viewBox="0 0 24 24"><polygon points="23 8 23 10 22 10 22 11 21 11 21 12 20 12 20 13 19 13 19 14 18 14 18 19 19 19 19 23 17 23 17 22 15 22 15 21 13 21 13 20 11 20 11 21 9 21 9 22 7 22 7 23 5 23 5 19 6 19 6 14 5 14 5 13 4 13 4 12 3 12 3 11 2 11 2 10 1 10 1 8 8 8 8 6 9 6 9 4 10 4 10 2 11 2 11 1 13 1 13 2 14 2 14 4 15 4 15 6 16 6 16 8 23 8"/></svg>
+  </button>
 
   <!-- List of favorites -->
-  <div class="favorites-content">
-    <h3>Favorite Projects</h3>
+  <div class="favorites-content h-full overflow-y-scroll bg-base-200">
+    <h3 class="text-primary text-md text-center md:text-lg mb-2">Favorited Projects</h3>
     <ul>
       {% for project in favorites %}
-      <li>
-        <a href="{% url 'project_detail' pk=project.pk %}">{{ project.title }}</a>
-      </li>
+      <div class="card card-side w-[calc(50% - 3px)] bg-base-100 shadow-sm my-2">
+        <div class="card-body">
+          <h2 class="card-title text-sm text-center md:text-left">{{ project.title }}</h2>
+          <div class="card-actions justify-end">
+            <a class="btn btn-primary text-xs mt-2" href="{% url 'project_detail' pk=project.pk %}">View project</a>
+          </div>
+        </div>
+      </div>
       {% endfor %}
     </ul>
   </div>
 </div>
+{% endif %}
