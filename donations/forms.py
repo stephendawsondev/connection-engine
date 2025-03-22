@@ -13,7 +13,6 @@ class PaymentForm(forms.ModelForm):
     class Meta:
         model = Payment
         fields = [
-            "amount",
             "full_name",
             "email",
             "phone_number",
@@ -30,7 +29,7 @@ class PaymentForm(forms.ModelForm):
 class ProjectFundingForm(forms.ModelForm):
     class Meta:
         model = ProjectFunding
-        fields = ["project", "amount"]
+        fields = ["amount"]
 
 
 class WITFundingForm(forms.ModelForm):

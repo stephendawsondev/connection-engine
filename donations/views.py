@@ -4,8 +4,8 @@ import os
 import stripe
 from django.conf import settings
 from django.contrib import messages
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
@@ -15,71 +15,30 @@ from .models import Payment, ProjectFunding, WITFunding
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
+def donations(request):
+    return render(request, "donations/donations.html")
+
+
 @require_POST
-def cache_donation_data(request):
+def process_donation(request):
     try:
-        pid = request.POST.get("client_secret").split("_secret")[0]
-        stripe.api_key = settings.STRIPE_SECRET_KEY
-        stripe.PaymentIntent.modify(
-            pid,
+        data = json.loads(request.body)
+        amount = int(float(data["amount"]) * 100)
+
+        if amount <= 0:
+            return JsonResponse({"error": "Amount must be positive"}, status=400)
+
+        intent = stripe.PaymentIntent.create(
+            amount=amount,
+            currency="gbp",
+            automatic_payment_methods={"enabled": True},
             metadata={
-                "donation_data": json.dumps(request.session.get("donate", {})),
-                "save_info": request.POST.get("save_info"),
+                "target": data.get("target", "project"),
+                "amount": data["amount"],
+                "save_info": data.get("save_info", "False"),
                 "username": request.user.username,
             },
         )
-        return HttpResponse(status=200)
+        return JsonResponse({"clientSecret": intent["client_secret"]})
     except Exception as e:
-        messages.error(
-            request,
-            "Sorry, your payment cannot be processed right now. Please try again later.",
-        )
-        return HttpResponse(content=e, status=400)
-
-
-def donations(request):
-    if request.method == "POST":
-        payment_form = PaymentForm(request.POST)
-        if payment_form.is_valid():
-            payment = payment_form.save(commit=False)
-            payment.user = request.user
-            payment.save()
-
-            target = payment_form.cleaned_data["target"]
-            if target == "project":
-                project_form = ProjectFundingForm(request.POST)
-                if project_form.is_valid():
-                    project_funding = project_form.save(commit=False)
-                    project_funding.payment = payment
-                    project_funding.save()
-            elif target == "wit":
-                wit_form = WITFundingForm(request.POST)
-                if wit_form.is_valid():
-                    wit_funding = wit_form.save(commit=False)
-                    wit_funding.payment = payment
-                    wit_funding.save()
-
-            # Create Stripe PaymentIntent
-            intent = stripe.PaymentIntent.create(
-                amount=int(payment.amount * 100),  # Stripe expects the amount in cents
-                currency="usd",
-                metadata={"integration_check": "accept_a_payment"},
-            )
-
-            payment.stripe_payment_intent_id = intent["id"]
-            payment.save()
-
-            messages.success(request, "Your donation has been successfully processed.")
-            return redirect("donations")
-    else:
-        payment_form = PaymentForm()
-        project_form = ProjectFundingForm()
-        wit_form = WITFundingForm()
-
-    context = {
-        "payment_form": payment_form,
-        "project_form": project_form,
-        "wit_form": wit_form,
-    }
-
-    return render(request, "donations/donations.html", context)
+        return JsonResponse({"error": str(e)}, status=400)

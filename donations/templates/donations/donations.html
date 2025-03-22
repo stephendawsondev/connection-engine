@@ -1,48 +1,32 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}{% endblock %}
+{% block title %}Donations{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'donations/css/donations.css' %}">
 {% endblock %}
 
 {% block content %}
-<h1>Main heading</h1>
-<p>Welcome!</p>
+<h1>Make a Donation</h1>
+<p>Welcome! Please fill out the form below to make a donation.</p>
 
-<form method="post" action="{% url 'donations' %}">
-    {% csrf_token %}
-    {{ payment_form.as_p }}
-    <div id="project-form" style="display: none;">
-        {{ project_form.as_p }}
+<form id="payment-form">
+    <div id="payment-element">
+      <!--Stripe.js injects the Payment Element-->
     </div>
-    <div id="wit-form" style="display: none;">
-        {{ wit_form.as_p }}
-    </div>
-    <button type="submit">Donate</button>
-</form>
+    <button id="submit">
+      <div class="spinner hidden" id="spinner"></div>
+      <span id="button-text">Pay now</span>
+    </button>
+    <div id="payment-message" class="hidden"></div>
+  </form>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const targetRadios = document.querySelectorAll('input[name="target"]');
-        const projectForm = document.getElementById('project-form');
-        const witForm = document.getElementById('wit-form');
 
-        targetRadios.forEach(radio => {
-            radio.addEventListener('change', function() {
-                if (this.value === 'project') {
-                    projectForm.style.display = 'block';
-                    witForm.style.display = 'none';
-                } else if (this.value === 'wit') {
-                    projectForm.style.display = 'none';
-                    witForm.style.display = 'block';
-                }
-            });
-        });
-    });
-</script>
 {% endblock %}
+
 {% block postloadjs %}
-    {{ block.super }}
-    {{ stripe_public_key|json_script:"id_stripe_public_key" }}
-    {{ client_secret|json_script:"id_client_secret" }}
+{{ block.super }}
+{{ stripe_public_key|json_script:"id_stripe_public_key" }}
+{{ client_secret|json_script:"id_client_secret" }}
+<script src="{% static 'donations/js/stripe_elements.js' %}"></script>
+<script src="{% static 'donations/js/complete.js' %}"></script>
 {% endblock %}
