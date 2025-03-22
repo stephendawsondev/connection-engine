@@ -2,9 +2,7 @@
   position: fixed;
   top: 12%;
   right: 0;
-  width: 250px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  background: #f0f0f0;
   z-index: 9999;
   transition: transform 0.3s ease;
   transform: translateX(calc(100% - 40px));
@@ -20,7 +18,6 @@
   top: 12%;
   left: -40px;
   cursor: pointer;
-  background: #fff;
   padding: 8px;
   border-radius: 50%;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);

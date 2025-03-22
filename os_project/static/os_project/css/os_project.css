@@ -1,0 +1,27 @@
+.favorite-btn {
+  transition: all 0.3s ease;
+}
+
+.favorite-btn:hover {
+  transform: scale(1.1);
+}
+
+/* SVG star styling */
+.favorite-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Show/hide the appropriate star based on favorite status */
+.favorite-btn.favorited #star-outline {
+  display: none;
+}
+
+.favorite-btn:not(.favorited) #star-solid {
+  display: none;
+}
+
+/* Toast animations */
+.toast {
+  transition: opacity 0.3s ease;
+}
