@@ -239,7 +239,9 @@
                         </div>
                     </div>
 
-                    <!-- TODO: Add "Sponsor Project" button when payments app is implemented -->
+                    <button id="donate-button" class="btn btn-primary btn-block mt-4">
+                        Support This Project
+                    </button>
                 </div>
             </div>
         </div>
@@ -249,4 +251,45 @@
 
 {% block extra_js %}
 <script src="{% static 'os_project/js/favorite.js' %}"></script>
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const stripe = Stripe('{{ stripe_publishable_key }}');
+
+        const donateButton = document.getElementById('donate-button');
+        if (donateButton) {
+            donateButton.addEventListener('click', async function() {
+                const amount = prompt('Enter donation amount in EUR:', '20');
+
+                if (!amount) return;
+
+                try {
+                    const response = await fetch('/donations/create-checkout-session/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: JSON.stringify({
+                            type: 'project',
+                            id: {{ project.id }},
+                            amount: amount
+                        })
+                    });
+
+                    const session = await response.json();
+
+                    if (session.error) {
+                        console.error(session.error);
+                        return;
+                    }
+
+                    stripe.redirectToCheckout({ sessionId: session.id });
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+    });
+</script>
 {% endblock %}
