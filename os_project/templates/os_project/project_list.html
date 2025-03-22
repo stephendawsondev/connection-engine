@@ -116,16 +116,16 @@
 
             <div class="card-body">
                 <div class="flex items-center justify-between">
-                    <h2 class="card-title">{{ project.title }}</h2>
+                    <h2 class="card-title text-xs">{{ project.title }}</h2>
 
                     {% if project.status == 'OPEN' %}
-                    <div class="badge badge-success">{{ project.get_status_display }}</div>
+                    <div class="badge badge-success text-xs">{{ project.get_status_display }}</div>
                     {% elif project.status == 'ASSIGNED' %}
-                    <div class="badge badge-warning">{{ project.get_status_display }}</div>
+                    <div class="badge badge-warning text-xs">{{ project.get_status_display }}</div>
                     {% elif project.status == 'IN_PROGRESS' %}
-                    <div class="badge badge-info">{{ project.get_status_display }}</div>
+                    <div class="badge badge-info text-xs">{{ project.get_status_display }}</div>
                     {% elif project.status == 'COMPLETED' %}
-                    <div class="badge badge-secondary">{{ project.get_status_display }}</div>
+                    <div class="badge badge-secondary text-xs">{{ project.get_status_display }}</div>
                     {% endif %}
                 </div>
 

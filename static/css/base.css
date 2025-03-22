@@ -3,12 +3,13 @@
 
 /* Light Mode Variables */
 :root {
-  --highlight1: #0CC0DF;
-  --highlight2: #7ED957;
+  --highlight1: #30CEEC;
+  --highlight2: #7ACA09;
   --highlight3: #DD1026;
-  --highlight4: #8C52FF;
-  --bg: #F4F4F4; /* Light mode background */
-  --text: #080D0F; /* Light mode text */
+  --highlight4: #8C4FFE;
+  --highlight5: #F5A742;
+  --bg: #FAFAFA; /* Light mode background */
+  --text: #0A0A0B; /* Light mode text */
   --font-primary: 'Press Start 2P', sans-serif;
   --font-secondary: 'Orbitron', sans-serif;
 }
@@ -24,6 +25,12 @@ p {
   font-family: var(--font-secondary);
   letter-spacing: 2px;
 }
+
+.badge {
+  height: auto;
+  text-align: center;
+}
+
 
 
 
