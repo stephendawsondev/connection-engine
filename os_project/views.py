@@ -129,6 +129,16 @@ class ProjectDetailView(DetailView):
                         self.object.old_owner_id == self.request.user.id
                     )
 
+            # Check if user is a mentor for this project
+            context["is_mentor"] = ProjectMentor.objects.filter(
+                project=self.object, mentor__user=self.request.user
+            ).exists()
+
+            # Check if user is the assigned WIT
+            context["is_assigned_wit"] = check_assigned_wit(
+                self.request.user, self.object
+            )
+
             context["stripe_publishable_key"] = settings.STRIPE_PUBLISHABLE_KEY
 
             # Add donation information
@@ -138,7 +148,17 @@ class ProjectDetailView(DetailView):
                 project=self.object, status="SUCCESS"
             ).order_by("-created_at")[:5]
 
-            return context
+            # Add milestone information
+            context["milestones"] = Milestone.objects.filter(
+                project=self.object
+            ).order_by("target_date")
+
+            # Get project mentors
+            context["project_mentors"] = ProjectMentor.objects.filter(
+                project=self.object
+            )
+
+        return context
 
 
 # Create, Update, Delete views

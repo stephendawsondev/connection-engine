@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ milestone.title }} - {{ project.title }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <div class="mb-4">
+        <a href="{% url 'milestone_list' project_id=project.id %}" class="btn btn-ghost btn-sm">
+            ← Back to Milestones
+        </a>
+    </div>
+
+    <div class="card bg-base-200 shadow-xl mb-6">
+        <div class="card-body">
+            <div class="flex justify-between items-center flex-wrap">
+                <h1 class="card-title text-2xl mb-2">{{ milestone.title }}</h1>
+                <div class="flex gap-2">
+                    {% if is_owner and not milestone.locked %}
+                    <a href="{% url 'milestone_update' project_id=project.id milestone_id=milestone.id %}" class="btn btn-outline btn-sm">
+                        Edit Milestone
+                    </a>
+                    <form method="POST" action="{% url 'lock_milestone' project_id=project.id milestone_id=milestone.id %}"
+                          onsubmit="return confirm('Are you sure you want to lock this milestone? It cannot be edited after locking.')">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-warning btn-sm">Lock Milestone</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+                <div>
+                    <h3 class="font-bold">Project:</h3>
+                    <p>{{ project.title }}</p>
+                </div>
+                <div>
+                    <h3 class="font-bold">Target Date:</h3>
+                    <p>{{ milestone.target_date|date:"F j, Y" }}</p>
+                </div>
+            </div>
+
+            <div class="my-4">
+                <h3 class="font-bold">Description:</h3>
+                <p>{{ milestone.description|linebreaks|default:"No description provided." }}</p>
+            </div>
+
+            <div class="flex items-center gap-4 my-4">
+                <div class="radial-progress text-primary" style="--value:{{ milestone.completion_percentage }};">{{ milestone.completion_percentage }}%</div>
+                <div>
+                    <p class="font-bold">Completion Progress</p>
+                    <p class="text-sm opacity-70">
+                        {% if milestone.locked %}
+                        This milestone is locked and cannot be edited.
+                        {% else %}
+                        This milestone can still be edited.
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
+            <div class="divider">Goals</div>
+
+            {% if goals %}
+            <div class="overflow-x-auto">
+                <table class="table w-full">
+                    <thead>
+                        <tr>
+                            <th>Goal</th>
+                            <th>Status</th>
+                            <th>Last Updated</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for goal in goals %}
+                        <tr class="hover">
+                            <td>
+                                <div class="font-bold">{{ goal.title }}</div>
+                                <div class="text-sm opacity-70">
+                                    {{ goal.description|truncatechars:100 }}
+                                </div>
+                                {% if goal.evidence_link or goal.evidence_image %}
+                                <div class="mt-2">
+                                    {% if goal.evidence_link %}
+                                    <a href="{{ goal.evidence_link }}" target="_blank" class="link link-primary text-sm">
+                                        View Evidence Link
+                                    </a>
+                                    {% endif %}
+
+                                    {% if goal.evidence_image %}
+                                    <button class="btn btn-xs btn-ghost" onclick="document.getElementById('image-modal-{{ goal.id }}').showModal()">
+                                        View Evidence Image
+                                    </button>
+
+                                    <dialog id="image-modal-{{ goal.id }}" class="modal">
+                                        <form method="dialog" class="modal-box">
+                                            <h3 class="font-bold text-lg">Evidence for "{{ goal.title }}"</h3>
+                                            <div class="py-4">
+                                                <img src="{{ goal.evidence_image.url }}" alt="Evidence for {{ goal.title }}" class="w-full">
+                                            </div>
+                                            <div class="modal-action">
+                                                <button class="btn">Close</button>
+                                            </div>
+                                        </form>
+                                    </dialog>
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if goal.status == 'NOT_STARTED' %}
+                                <div class="badge">Not Started</div>
+                                {% elif goal.status == 'IN_PROGRESS' %}
+                                <div class="badge badge-primary">In Progress</div>
+                                {% elif goal.status == 'READY_FOR_REVIEW' %}
+                                <div class="badge badge-warning">Ready for Review</div>
+                                {% elif goal.status == 'COMPLETED' %}
+                                <div class="badge badge-success">Completed</div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{ goal.updated_at|date:"M d, Y" }}
+                            </td>
+                            <td>
+                                <div class="flex gap-2">
+                                    {% if is_assigned_wit %}
+                                    <button class="btn btn-sm" onclick="document.getElementById('update-goal-{{ goal.id }}').showModal()">
+                                        Update Status
+                                    </button>
+
+                                    <dialog id="update-goal-{{ goal.id }}" class="modal">
+                                        <form method="dialog" class="modal-box">
+                                            <h3 class="font-bold text-lg">Update Goal Status</h3>
+                                            <form action="{% url 'update_goal_status' project_id=project.id goal_id=goal.id %}" method="POST" enctype="multipart/form-data" id="goal-form-{{ goal.id }}">
+                                                {% csrf_token %}
+                                                <div class="form-control mt-4">
+                                                    <label class="label">
+                                                        <span class="label-text">Status</span>
+                                                    </label>
+                                                    <select name="status" class="select select-bordered w-full">
+                                                        <option value="IN_PROGRESS" {% if goal.status == 'IN_PROGRESS' %}selected{% endif %}>In Progress</option>
+                                                        <option value="READY_FOR_REVIEW" {% if goal.status == 'READY_FOR_REVIEW' %}selected{% endif %}>Ready for Review</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-control mt-4">
+                                                    <label class="label">
+                                                        <span class="label-text">Evidence Link (Optional)</span>
+                                                    </label>
+                                                    <input type="url" name="evidence_link" class="input input-bordered" value="{{ goal.evidence_link|default:'' }}">
+                                                </div>
+
+                                                <div class="form-control mt-4">
+                                                    <label class="label">
+                                                        <span class="label-text">Evidence Image (Optional)</span>
+                                                    </label>
+                                                    <input type="file" name="evidence_image" class="file-input file-input-bordered w-full">
+                                                    {% if goal.evidence_image %}
+                                                    <div class="mt-2">
+                                                        <p class="text-sm">Current image: {{ goal.evidence_image.url|truncatechars:30 }}</p>
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                            </form>
+
+                                            <div class="modal-action">
+                                                <button class="btn btn-ghost" onclick="document.getElementById('update-goal-{{ goal.id }}').close()">Cancel</button>
+                                                <button class="btn btn-primary" onclick="document.getElementById('goal-form-{{ goal.id }}').submit()">Save</button>
+                                            </div>
+                                        </form>
+                                    </dialog>
+                                    {% endif %}
+
+                                    {% if is_owner or is_mentor %}
+                                    {% if goal.status == 'READY_FOR_REVIEW' %}
+                                    <form action="{% url 'update_goal_status' project_id=project.id goal_id=goal.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="status" value="COMPLETED">
+                                        <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Mark this goal as completed?')">
+                                            Mark Complete
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                    {% endif %}
+
+                                    {% if is_owner and not milestone.locked %}
+                                    <a href="{% url 'delete_goal' project_id=project.id goal_id=goal.id %}" class="btn btn-sm btn-outline btn-error">
+                                        Delete
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert">
+                <span>No goals have been added to this milestone yet.</span>
+            </div>
+            {% endif %}
+
+            {% if is_owner and not milestone.locked and goal_form %}
+            <div class="divider">Add New Goal</div>
+
+            <form method="POST" action="{% url 'milestone_detail' project_id=project.id milestone_id=milestone.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="add_goal" value="1">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Title</span>
+                        </label>
+                        {{ goal_form.title }}
+                        {% if goal_form.title.errors %}
+                        <label class="label">
+                            <span class="label-text-alt text-error">{{ goal_form.title.errors }}</span>
+                        </label>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Description</span>
+                        </label>
+                        {{ goal_form.description }}
+                        {% if goal_form.description.errors %}
+                        <label class="label">
+                            <span class="label-text-alt text-error">{{ goal_form.description.errors }}</span>
+                        </label>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-control mt-4">
+                    <button type="submit" class="btn btn-primary">Add Goal</button>
+                </div>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
