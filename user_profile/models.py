@@ -75,6 +75,23 @@ class WomenInTech(models.Model):
     def __str__(self):
         return f"{self.user.username}'s profile"
 
+    @property
+    def total_sponsorships(self):
+        """Calculate total amount received from sponsorships"""
+        return (
+            Payment.objects.filter(sponsored_user=self, status="SUCCESS").aggregate(
+                total=models.Sum("amount")
+            )["total"]
+            or 0
+        )
+
+    @property
+    def sponsorship_percentage(self):
+        """Calculate percentage of sponsorship goal reached"""
+        if not hasattr(self, "sponsorship_goal"):
+            return 0
+        return min(100, int((self.total_sponsorships / self.sponsorship_goal) * 100))
+
 
 class OS_Maintainer(models.Model):
     user = models.OneToOneField(

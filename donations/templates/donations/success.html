@@ -7,13 +7,14 @@
 {% block content %}
 <div class="container success-container">
     <div class="card bg-base-200 shadow-md">
+        <h2>Payment Details</h2>
         <h1>Thank you for your donation {{ payment.user }}!</h1>
         <p>Your payment has been successfully processed.</p>
         <p>Order Number: {{ payment.confirmation_number }}</p>
         <p>Amount: €{{ payment.amount }}</p>
 
         {% if project %}
-        <div class="card bg-base-200 shadow-md">
+        <div>
             <h2>Project Details</h2>
             <p>Project: {{ project.title }}</p>
             <p>Funding Progress: {{ funding_progress }}%</p>

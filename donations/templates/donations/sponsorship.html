@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Women in Tech Profiles{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'donations/css/donations.css' %}">
+{% endblock %}
+{% block content %}
+<div class="container mx-auto px-4">
+    <div class="text-center mb-6">
+        <h1 class="text-3xl font-bold">Women in Tech Profiles</h1>
+        <p class="text-lg">Find and support talented Women in Tech developers</p>
+    </div>
+
+    <!-- Search and filter section -->
+    <div class="card bg-base-200 shadow-md mb-6">
+        <div class="card-body">
+            <form method="get" action="{% url 'sponsorship_list' %}" class="space-y-4">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="form-control flex-1">
+                        <div class="input-group md:flex md:justify-center">
+                            {{ search_form.search }}
+                            <button type="submit" class="btn btn-primary w-full md:w-auto">
+                                Search
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-control">
+                        <select name="tech_specialties" class="select select-bordered" onchange="this.form.submit()">
+                            <option value="">All Specialties</option>
+                            {% for specialty in search_form.tech_specialties.field.queryset %}
+                            <option value="{{ specialty.id }}" {% if search_form.tech_specialties.value == specialty.id %}selected{% endif %}>
+                                {{ specialty.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-control">
+                        <select name="experience_level" class="select select-bordered" onchange="this.form.submit()">
+                            <option value="">All Experience Levels</option>
+                            {% for level in search_form.experience_level.field.choices %}
+                            <option value="{{ level.0 }}" {% if search_form.experience_level.value == level.0 %}selected{% endif %}>
+                                {{ level.1 }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if women_in_tech %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for wit in women_in_tech %}
+        <div class="card bg-base-200 shadow-xl h-full hover:shadow-2xl transition-shadow duration-300">
+            <div class="card-body">
+                <div class="flex items-center justify-between">
+                    <h2 class="card-title text-xs">{{ wit.user.username }}</h2>
+                    <div class="badge badge-lg badge-primary">{{ wit.experience_level }}</div>
+                </div>
+
+                <p class="line-clamp-3">{{ wit.tech_specialties }}</p>
+
+                <div class="flex flex-wrap gap-1 mt-2">
+                    {% for specialty in wit.specialties.all %}
+                    <div class="badge badge-outline">{{ specialty.name }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="mt-4">
+                    <div class="text-sm mb-1">Total Sponsorships: €{{ wit.total_sponsorships }}</div>
+                    <progress class="progress progress-primary w-full" value="{{ wit.sponsorship_percentage }}" max="100"></progress>
+                </div>
+
+                <div class="card-actions justify-end mt-4">
+                    <a href="{% url 'profile_detail' pk=wit.user.id %}" class="btn btn-primary btn-sm">View Profile</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <div class="flex justify-center mt-8">
+        <div class="join">
+            {% if page_obj.has_previous %}
+            <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page=1" class="join-item btn">«</a>
+            <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}" class="join-item btn">‹</a>
+            {% endif %}
+            <button class="join-item btn btn-active">{{ page_obj.number }}</button>
+            {% if page_obj.has_next %}
+            <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}" class="join-item btn">›</a>
+            <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.paginator.num_pages }}" class="join-item btn">»</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+    {% else %}
+    <div class="card bg-base-200 shadow-md">
+        <div class="card-body text-center">
+            <h3 class="text-xl mb-4">No profiles found</h3>
+            <p>Try adjusting your search filters or check back later.</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
