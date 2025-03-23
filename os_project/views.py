@@ -442,7 +442,6 @@ def toggle_favorite(request, project_id):
 
 
 @login_required
-@os_maintainer_required
 def milestone_list(request, project_id):
     """View all milestones for a project"""
     project = get_object_or_404(Project, pk=project_id)
@@ -452,12 +451,6 @@ def milestone_list(request, project_id):
     is_mentor = ProjectMentor.objects.filter(
         project=project, mentor__user=request.user
     ).exists()
-
-    if not (is_owner or is_mentor):
-        messages.error(
-            request, "You don't have permission to view this project's milestones"
-        )
-        return redirect("project_detail", pk=project_id)
 
     milestones = Milestone.objects.filter(project=project).order_by("target_date")
 
@@ -716,9 +709,9 @@ def update_goal_status(request, project_id, goal_id):
         else:
             messages.error(request, "There was an error updating the goal status")
 
-    return redirect(
-        "milestone_detail", project_id=project_id, milestone_id=goal.milestone.id
-    )
+        return redirect(
+            "milestone_detail", project_id=project_id, milestone_id=goal.milestone.id
+        )
 
 
 @login_required

@@ -130,9 +130,10 @@
                                     </button>
 
                                     <dialog id="update-goal-{{ goal.id }}" class="modal">
-                                        <form method="dialog" class="modal-box">
+                                        <div class="modal-box">
                                             <h3 class="font-bold text-lg">Update Goal Status</h3>
-                                            <form action="{% url 'update_goal_status' project_id=project.id goal_id=goal.id %}" method="POST" enctype="multipart/form-data" id="goal-form-{{ goal.id }}">
+
+                                            <form id="goal-form-{{ goal.id }}" action="{% url 'update_goal_status' project_id=project.id goal_id=goal.id %}" method="POST" enctype="multipart/form-data">
                                                 {% csrf_token %}
                                                 <div class="form-control mt-4">
                                                     <label class="label">
