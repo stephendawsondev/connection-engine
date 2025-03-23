@@ -120,7 +120,6 @@ class Mentor(models.Model):
     expertise = models.CharField(max_length=200, blank=True)
     years_of_experience = models.IntegerField(null=True, blank=True)
     about = models.TextField(blank=True)
-    favourite_projects = models.ManyToManyField(Project, blank=True)
 
     def get_absolute_url(self):
         from django.urls import reverse
