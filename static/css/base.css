@@ -5,7 +5,7 @@
 :root {
   --highlight1: #30ceec;
   --highlight2: #7aca09;
-  --highlight3: #dd1026;
+  --highlight3: #e50004;
   --highlight4: #8c4ffe;
   --highlight5: #f5a742;
   --bg: #fafafa; /* Light mode background */
@@ -42,6 +42,22 @@ textarea,
   font-family: var(--font-secondary);
   letter-spacing: 2px;
 }
+h1 {
+  font-size: 30px;
+}
+
+h2 {
+  font-size: 20px;
+}
+
+h3 {
+  font-size: 13px;
+}
+
+a,
+.btn {
+  font-size: 0.75rem;
+}
 
 select {
   font-size: 0.75rem;
@@ -69,6 +85,10 @@ html[data-theme="light"] .logo {
 /* Cards & Buttons pixelated border effect */
 
 /* Static cards Retro Effect */
+.btn-outline,
+.btn-outline--wrapper,
+.btn-error,
+.btn-error--wrapper,
 .btn-retro,
 .btn-retro--wrapper,
 .card,
@@ -95,15 +115,21 @@ html[data-theme="light"] .logo {
     0px 10px);
   position: relative;
 }
+.btn-outline,
+.btn-error,
 .btn-retro,
 .card {
   border: 5px solid transparent;
 }
+.btn-outline--wrapper,
+.btn-error--wrapper,
 .btn-retro--wrapper,
 .card--wrapper {
   width: fit-content;
   height: fit-content;
 }
+.btn-outline--wrapper .btn-outline,
+.btn-error--wrapper .btn-error,
 .btn-retro--wrapper .btn-retro,
 .card--wrapper .card {
   display: block;
@@ -120,6 +146,10 @@ html[data-theme="light"] .logo {
     10px calc(100% - 10px),
     5px calc(100% - 10px));
 }
+.btn-outline::after,
+.btn-outline--wrapper::after,
+.btn-error::after,
+.btn-error--wrapper::after,
 .btn-retro::after,
 .btn-retro--wrapper::after,
 .card::after,
@@ -170,9 +200,19 @@ html[data-theme="light"] .logo {
   display: block;
   pointer-events: none;
 }
+.btn-outline::after,
+.btn-error::after,
 .btn-retro::after,
 .card::after {
   margin: -5px;
+}
+
+.btn.btn-error::after {
+  background: var(--highlight3) !important;
+}
+
+.btn.btn-outline::after {
+  background: var(--text);
 }
 
 .error-container {
