@@ -1,0 +1,42 @@
+[
+  {
+    "model": "donations.witfunding",
+    "pk": 1,
+    "fields": {
+      "wit": 1,
+      "payment": 5,
+      "amount": "2000.00",
+      "created_at": "2025-03-06T10:15:00Z"
+    }
+  },
+  {
+    "model": "donations.witfunding",
+    "pk": 2,
+    "fields": {
+      "wit": 1,
+      "payment": 6,
+      "amount": "2000.00",
+      "created_at": "2025-03-08T16:20:00Z"
+    }
+  },
+  {
+    "model": "donations.witfunding",
+    "pk": 3,
+    "fields": {
+      "wit": 2,
+      "payment": 3,
+      "amount": "1500.00",
+      "created_at": "2025-03-12T11:20:00Z"
+    }
+  },
+  {
+    "model": "donations.witfunding",
+    "pk": 4,
+    "fields": {
+      "wit": 2,
+      "payment": 4,
+      "amount": "1500.00",
+      "created_at": "2025-03-14T14:30:00Z"
+    }
+  }
+]
