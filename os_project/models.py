@@ -125,18 +125,14 @@ class Project(models.Model):
 
     def get_other_projects(self):
         """Get related projects that might be of interest."""
-        # Get projects with similar categories or tags
         similar_projects = Project.objects.exclude(id=self.id)
 
-        # If project has categories, find similar projects
         if self.category:
             similar_projects = similar_projects.filter(category=self.category)
 
-        # If project has tags, find projects with matching tags
         if self.tags.exists():
             similar_projects = similar_projects.filter(tags__in=self.tags.all())
 
-        # Order by relevance (projects with both matching category and tags first)
         return similar_projects.annotate(
             category_match=models.Case(
                 models.When(category=self.category, then=1),
