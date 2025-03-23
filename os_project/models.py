@@ -151,3 +151,89 @@ class ProjectInterest(models.Model):
         if self.wit:
             return f"Interest in {self.project.title} by {self.wit.user.username}"
         return f"Interest in {self.project.title} (User: {self.old_user_id})"
+
+
+class Milestone(models.Model):
+    """Milestones for tracking project progress"""
+
+    project = models.ForeignKey(
+        Project, on_delete=models.CASCADE, related_name="milestones"
+    )
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    target_date = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    # Flag to prevent edits after WIT has started
+    locked = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.title} - {self.project.title}"
+
+    @property
+    def completion_percentage(self):
+        """Calculate percentage of completed goals"""
+        total_goals = self.goals.count()
+        if total_goals == 0:
+            return 0
+        completed_goals = self.goals.filter(status="COMPLETED").count()
+        return int((completed_goals / total_goals) * 100)
+
+    @property
+    def is_completed(self):
+        """Check if all goals are completed"""
+        return self.completion_percentage == 100
+
+
+class MilestoneGoal(models.Model):
+    """Individual goals within a milestone"""
+
+    STATUS_CHOICES = [
+        ("NOT_STARTED", "Not Started"),
+        ("IN_PROGRESS", "In Progress"),
+        ("READY_FOR_REVIEW", "Ready for Review"),
+        ("COMPLETED", "Completed"),
+    ]
+
+    milestone = models.ForeignKey(
+        Milestone, on_delete=models.CASCADE, related_name="goals"
+    )
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default="NOT_STARTED"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    evidence_link = models.URLField(blank=True, null=True)
+    evidence_image = CloudinaryField("evidence_image", blank=True, null=True)
+
+    def __str__(self):
+        return self.title
+
+
+class ProjectMentor(models.Model):
+    """Mentors associated with a specific project"""
+
+    project = models.ForeignKey(
+        Project, on_delete=models.CASCADE, related_name="mentors"
+    )
+    mentor = models.ForeignKey(
+        "user_profile.Mentor",
+        on_delete=models.CASCADE,
+        related_name="mentored_projects",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    # Optional fields for mentor details specific to this project
+    expertise_areas = models.CharField(max_length=200, blank=True)
+    availability = models.CharField(max_length=200, blank=True)
+    notes = models.TextField(blank=True)
+
+    class Meta:
+        unique_together = ("project", "mentor")
+
+    def __str__(self):
+        return f"{self.mentor.user.username} mentoring {self.project.title}"

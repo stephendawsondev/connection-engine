@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  Milestones - {{ project.title }}
+{% endblock %}
+
+{% block content %}
+  <div class="container mx-auto px-4 py-6">
+    <div class="mb-4">
+      <a href="{% url 'project_detail' pk=project.pk %}" class="btn btn-ghost btn-sm">← Back to Project</a>
+    </div>
+
+    <div class="card bg-base-200 shadow-xl mb-6">
+      <div class="card-body">
+        <div class="flex justify-between items-center">
+          <h1 class="card-title text-2xl mb-2">Project Milestones</h1>
+          {% if is_owner %}
+            <a href="{% url 'milestone_create' project_id=project.id %}" class="btn btn-primary">Add Milestone</a>
+          {% endif %}
+        </div>
+        <h2 class="text-xl mb-4">{{ project.title }}</h2>
+
+        {% if milestones %}
+          <div class="overflow-x-auto">
+            <table class="table w-full">
+              <thead>
+                <tr>
+                  <th>Milestone</th>
+                  <th>Target Date</th>
+                  <th>Progress</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for milestone in milestones %}
+                  <tr class="hover">
+                    <td>
+                      <div class="font-bold">{{ milestone.title }}</div>
+                      <div class="text-sm opacity-70">{{ milestone.description|truncatechars:50 }}</div>
+                    </td>
+                    <td>{{ milestone.target_date|date:'M d, Y' }}</td>
+                    <td>
+                      <progress class="progress progress-primary w-24" value="{{ milestone.completion_percentage }}" max="100"></progress>
+                      <span class="text-sm">{{ milestone.completion_percentage }}%</span>
+                    </td>
+                    <td>
+                      {% if milestone.locked %}
+                        <div class="badge badge-warning">Locked</div>
+                      {% else %}
+                        <div class="badge badge-info">Editable</div>
+                      {% endif %}
+                    </td>
+                    <td>
+                      <div class="flex gap-2">
+                        <a href="{% url 'milestone_detail' project_id=project.id milestone_id=milestone.id %}" class="btn btn-sm btn-primary">View</a>
+                        {% if is_owner and not milestone.locked %}
+                          <a href="{% url 'milestone_update' project_id=project.id milestone_id=milestone.id %}" class="btn btn-sm btn-outline">Edit</a>
+                          <a href="{% url 'milestone_delete' project_id=project.id milestone_id=milestone.id %}" class="btn btn-sm btn-outline btn-error">Delete</a>
+                        {% endif %}
+                      </div>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <div class="alert">
+            <span>No milestones have been created for this project yet.</span>
+            {% if is_owner %}
+              <div class="mt-4">
+                <a href="{% url 'milestone_create' project_id=project.id %}" class="btn btn-primary">Create First Milestone</a>
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if is_owner %}
+      <div class="card bg-base-200 shadow-xl mb-6">
+        <div class="card-body">
+          <h2 class="card-title text-xl mb-4">Project Mentors</h2>
+
+          <div class="flex justify-end mb-4">
+            <a href="{% url 'manage_mentors' project_id=project.id %}" class="btn btn-primary btn-sm">Manage Mentors</a>
+          </div>
+
+          {% with mentor_count=project.mentors.count %}
+            {% if mentor_count > 0 %}
+              <div class="overflow-x-auto">
+                <table class="table w-full">
+                  <thead>
+                    <tr>
+                      <th>Mentor</th>
+                      <th>Expertise</th>
+                      <th>Since</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for mentor_relation in project.mentors.all %}
+                      <tr>
+                        <td>
+                          <div class="font-bold">{{ mentor_relation.mentor.user.username }}</div>
+                        </td>
+                        <td>{{ mentor_relation.expertise_areas|default:'Not specified' }}</td>
+                        <td>{{ mentor_relation.created_at|date:'M d, Y' }}</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            {% else %}
+              <div class="alert">
+                <span>This project doesn't have any mentors yet.</span>
+              </div>
+            {% endif %}
+          {% endwith %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

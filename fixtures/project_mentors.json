@@ -1,0 +1,38 @@
+[
+  {
+    "model": "os_project.projectmentor",
+    "pk": 1,
+    "fields": {
+      "project": 1,
+      "mentor": 1,
+      "expertise_areas": "React, Accessibility, Frontend Development",
+      "availability": "Evenings and weekends",
+      "notes": "Experienced in building accessible web applications and can help with WCAG compliance.",
+      "created_at": "2025-03-16T10:30:00Z"
+    }
+  },
+  {
+    "model": "os_project.projectmentor",
+    "pk": 2,
+    "fields": {
+      "project": 2,
+      "mentor": 1,
+      "expertise_areas": "Django, PostgreSQL, API Optimization",
+      "availability": "Tuesday and Thursday afternoons",
+      "notes": "Has worked on large-scale Django applications and can help with database optimization.",
+      "created_at": "2025-03-12T12:15:00Z"
+    }
+  },
+  {
+    "model": "os_project.projectmentor",
+    "pk": 3,
+    "fields": {
+      "project": 3,
+      "mentor": 1,
+      "expertise_areas": "Data Visualization, D3.js, Frontend Development",
+      "availability": "Monday and Wednesday evenings",
+      "notes": "Experienced with data visualization libraries and can help with charting implementations.",
+      "created_at": "2025-03-07T09:45:00Z"
+    }
+  }
+]
