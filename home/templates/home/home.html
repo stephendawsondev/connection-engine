@@ -18,8 +18,8 @@
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 justify-center items-center mt-4 md:gap-6">
       <div class="flex justify-center">
-        <img src="https://res.cloudinary.com/dj2lk9daf/image/upload/v1742737056/ada-badass-light-theme-purple-glasses_fifvlx.png"
-             class="max-w-xs sm:max-w-sm md:max-w-md w-full rounded-lg" />
+        <img src="https://res.cloudinary.com/dj2lk9daf/image/upload/v1742737056/ada-badass-dark-theme-purple-glasses.png_zpunfu.png"
+             class="max-w-xs sm:max-w-sm md:max-w-md w-full rounded-lg" id="theme-image"/>
       </div>
       <div class="max-w-lg text-center mx-auto px-6 sm:pb-4">
         <h1 class="text-xl md:text-3xl lg:text-3xl font-bold main-title ">Connection Engine</h1>
@@ -90,4 +90,7 @@
       </div>
     </div>
   <div class="divider my-12"></div>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'home/js/home.js' %}" ></script>
 {% endblock %}
