@@ -1,59 +1,63 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load i18n %}
 
-{% block title %}Home{% endblock %}
+{% block title %}
+  Home
+{% endblock %}
 
 {% block content %}
-<div class="hero min-h-[70vh] bg-base-200 rounded-lg shadow-md">
+  <div class="hero min-h-[70vh] bg-base-200 rounded-lg shadow-md">
     <div class="hero-content text-center">
-        <div class="max-w-md">
-            <h1 class="text-2xl md:text-3xl lg:text-5xl font-bold">Welcome to Connection Engine</h1>
-            <p class="py-6">Supporting Women in Tech on their Open Source journeys.</p>
-            {% if not user.is_authenticated %}
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="{% url 'account_login' %}" class="btn btn-outline">Login</a>
-                    <a href="{% url 'account_signup' %}" class="btn btn-primary">Sign Up</a>
-                </div>
-            {% else %}
-                <p class="mb-4">You are logged in as <strong>{{ user.username }}</strong></p>
-                <a href="{% url 'profile_detail' username=user.username %}" class="btn btn-primary">View Profile</a>
-            {% endif %}
-        </div>
+      <div class="max-w-md">
+        <h1 class="text-2xl md:text-3xl lg:text-5xl font-bold">Welcome to Connection Engine</h1>
+        <p class="py-6">Supporting Women in Tech on their Open Source journeys.</p>
+        {% if not user.is_authenticated %}
+          <div class="flex flex-col md:flex-row gap-4 justify-center">
+            <a href="{% url 'account_login' %}" class="btn btn-outline">Login</a>
+            <a href="{% url 'account_signup' %}" class="btn btn-primary">Sign Up</a>
+          </div>
+        {% else %}
+          <p class="mb-4">
+            You are logged in as <strong>{{ user.username }}</strong>
+          </p>
+          <a href="{% url 'profile_detail' username=user.username %}" class="btn btn-primary">View Profile</a>
+        {% endif %}
+      </div>
     </div>
-</div>
+  </div>
 
-<div class="mt-12">
+  <div class="mt-12">
     <h2 class="text-2xl md:text-3xl lg:text-5xl font-bold mb-6 text-center">Features</h2>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="card bg-base-200 shadow-md">
-            <div class="card-body">
-                <h3 class="card-title">User Authentication</h3>
-                <p>Complete user authentication system with login, sign up, password reset, and account management.</p>
-            </div>
+      <div class="card bg-base-200 shadow-md">
+        <div class="card-body">
+          <h3 class="card-title">User Authentication</h3>
+          <p>Complete user authentication system with login, sign up, password reset, and account management.</p>
         </div>
+      </div>
 
-        <div class="card bg-base-200 shadow-md">
-            <div class="card-body">
-                <h3 class="card-title">User Profiles</h3>
-                <p>User profile system with customizable avatars and user information management.</p>
-            </div>
+      <div class="card bg-base-200 shadow-md">
+        <div class="card-body">
+          <h3 class="card-title">User Profiles</h3>
+          <p>User profile system with customizable avatars and user information management.</p>
         </div>
+      </div>
 
-        <div class="card bg-base-200 shadow-md">
-            <div class="card-body">
-                <h3 class="card-title">Responsive Design</h3>
-                <p>Fully responsive design with Tailwind CSS and DaisyUI components.</p>
-            </div>
+      <div class="card bg-base-200 shadow-md">
+        <div class="card-body">
+          <h3 class="card-title">Responsive Design</h3>
+          <p>Fully responsive design with Tailwind CSS and DaisyUI components.</p>
         </div>
+      </div>
     </div>
-</div>
+  </div>
 
-<div class="divider my-12"></div>
+  <div class="divider my-12"></div>
 
-<div class="text-center mb-12">
+  <div class="text-center mb-12">
     <h2 class="text-2xl md:text-3xl lg:text-5xl font-bold mb-6">Get Started</h2>
     <p class="max-w-2xl mx-auto mb-6">This Django starter template provides everything you need to build a modern web application with authentication, user profiles, and responsive design.</p>
     <a href="#" target="_blank" class="btn btn-primary">Call to action</a>
-</div>
+  </div>
 {% endblock %}

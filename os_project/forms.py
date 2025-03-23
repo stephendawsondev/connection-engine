@@ -60,7 +60,12 @@ class ProjectSearchForm(forms.Form):
 
     search = forms.CharField(
         required=False,
-        widget=forms.TextInput(attrs={"placeholder": "Search projects..."}),
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Search project by title or description...",
+                "class": "input input-bordered w-full mb-2",
+            }
+        ),
     )
     category = forms.ModelChoiceField(
         queryset=ProjectCategory.objects.all(),
