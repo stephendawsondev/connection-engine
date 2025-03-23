@@ -88,6 +88,7 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
+ACCOUNT_SIGNUP_FIELDS = ["email*", "username*", "password1*", "password2*"]
 ACCOUNT_LOGIN_METHODS = {"email", "username"}
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"
