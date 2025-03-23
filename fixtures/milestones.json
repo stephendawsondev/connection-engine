@@ -1,0 +1,106 @@
+[
+  {
+    "model": "os_project.milestone",
+    "pk": 1,
+    "fields": {
+      "project": 1,
+      "title": "Initial Component Set",
+      "description": "Develop the first set of accessible components including buttons, form inputs, and navigation elements.",
+      "target_date": "2025-04-15",
+      "created_at": "2025-03-15T15:30:00Z",
+      "updated_at": "2025-03-15T15:30:00Z",
+      "locked": false
+    }
+  },
+  {
+    "model": "os_project.milestone",
+    "pk": 2,
+    "fields": {
+      "project": 1,
+      "title": "Documentation and Examples",
+      "description": "Create comprehensive documentation and usage examples for all components.",
+      "target_date": "2025-05-01",
+      "created_at": "2025-03-15T15:35:00Z",
+      "updated_at": "2025-03-15T15:35:00Z",
+      "locked": false
+    }
+  },
+  {
+    "model": "os_project.milestone",
+    "pk": 3,
+    "fields": {
+      "project": 2,
+      "title": "Cache Middleware Implementation",
+      "description": "Implement and test the caching middleware for Django REST Framework endpoints.",
+      "target_date": "2025-04-10",
+      "created_at": "2025-03-10T10:15:00Z",
+      "updated_at": "2025-03-10T10:15:00Z",
+      "locked": true
+    }
+  },
+  {
+    "model": "os_project.milestone",
+    "pk": 4,
+    "fields": {
+      "project": 2,
+      "title": "Query Optimization Tools",
+      "description": "Develop tools for identifying and optimizing slow database queries.",
+      "target_date": "2025-05-15",
+      "created_at": "2025-03-10T10:20:00Z",
+      "updated_at": "2025-03-10T10:20:00Z",
+      "locked": true
+    }
+  },
+  {
+    "model": "os_project.milestone",
+    "pk": 5,
+    "fields": {
+      "project": 3,
+      "title": "Core Visualization Components",
+      "description": "Implement the core chart components (bar, line, pie) with interactive features.",
+      "target_date": "2025-03-25",
+      "created_at": "2025-03-05T17:00:00Z",
+      "updated_at": "2025-03-05T17:00:00Z",
+      "locked": true
+    }
+  },
+  {
+    "model": "os_project.milestone",
+    "pk": 6,
+    "fields": {
+      "project": 3,
+      "title": "Data Export Functionality",
+      "description": "Add functionality to export visualizations in various formats (PNG, SVG, PDF).",
+      "target_date": "2025-04-20",
+      "created_at": "2025-03-05T17:05:00Z",
+      "updated_at": "2025-03-05T17:05:00Z",
+      "locked": true
+    }
+  },
+  {
+    "model": "os_project.milestone",
+    "pk": 7,
+    "fields": {
+      "project": 4,
+      "title": "Basic Setup Guide",
+      "description": "Write comprehensive setup guides for Docker with different web frameworks.",
+      "target_date": "2025-03-30",
+      "created_at": "2025-03-01T11:30:00Z",
+      "updated_at": "2025-03-01T11:30:00Z",
+      "locked": false
+    }
+  },
+  {
+    "model": "os_project.milestone",
+    "pk": 8,
+    "fields": {
+      "project": 4,
+      "title": "Production Deployment Chapter",
+      "description": "Create guides for deploying Docker applications to various cloud platforms.",
+      "target_date": "2025-04-30",
+      "created_at": "2025-03-01T11:35:00Z",
+      "updated_at": "2025-03-01T11:35:00Z",
+      "locked": false
+    }
+  }
+]

@@ -33,21 +33,149 @@
                 <div class="badge badge-lg
                 {% if project.status == 'OPEN' %}
                     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 badge-success
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                   {% elif project.status == 'ASSIGNED' %}
                     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 badge-warning
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                   {% elif project.status == 'IN_PROGRESS' %}
                     
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 badge-info
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                   {% elif project.status == 'COMPLETED' %}
                     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 badge-secondary
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                   {% endif %}">{{ project.get_status_display }}</div>
 
@@ -104,9 +232,73 @@
                 <a href="{% url 'toggle_favorite' project_id=project.pk %}"
                   class="btn btn-circle {% if is_favorited %}favorited{% endif %} fill-primary favorite-btn"
                   title="{% if is_favorited %}
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     Remove from favorites
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                   {% else %}
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     Add to favorites
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                   {% endif %}">
                   <!-- Outline star (shown when not favorited) -->
                   <svg id="star-outline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -120,12 +312,13 @@
               </div>
 
               {% if is_owner %}
-                <div class="flex flex-wrap gap-2">
-                  <a href="{% url 'project_update' pk=project.pk %}" class="btn btn-secondary">Edit Project</a>
-                  <a href="{% url 'project_interested_users' project_id=project.pk %}" class="btn btn-info">View Interested Users ({{ interest_count }})</a>
+                <div class="flex flex-col flex-wrap md:flex-row gap-2">
+                  <a href="{% url 'project_update' pk=project.pk %}" class="btn btn-error btn-retro">Edit</a>
                   {% if not project.assigned_wit and not project.old_assigned_wit_id and project.status == 'OPEN' %}
-                    <a href="{% url 'project_delete' pk=project.pk %}" class="btn btn-error">Delete Project</a>
+                    <a href="{% url 'project_delete' pk=project.pk %}" class="btn btn-error">Delete</a>
                   {% endif %}
+                  <a href="{% url 'project_interested_users' project_id=project.pk %}" class="btn btn-info btn-retro">View Interested Users ({{ interest_count }})</a>
+                  <a href="{% url 'milestone_list' project_id=project.pk %}" class="btn btn-primary btn-retro">Manage Milestones</a>
                 </div>
               {% else %}
                 <!-- WIT actions -->
@@ -165,6 +358,46 @@
             {% endif %}
           </div>
         </div>
+        {% if user.is_authenticated and milestones %}
+          <div class="card bg-base-200 shadow-xl mt-6">
+            <div class="card-body">
+              <div class="flex justify-between items-center">
+                <h2 class="card-title text-xl">Project Milestones</h2>
+                {% if is_owner or is_mentor or is_assigned_wit %}
+                  <a href="{% url 'milestone_list' project_id=project.id %}" class="btn btn-primary btn-sm">View All Milestones</a>
+                {% endif %}
+              </div>
+
+              <div class="overflow-x-auto">
+                <table class="table w-full">
+                  <thead>
+                    <tr>
+                      <th>Milestone</th>
+                      <th>Target Date</th>
+                      <th>Progress</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for milestone in milestones|slice:':3' %}
+                      <tr class="hover">
+                        <td>
+                          <div class="font-bold">{{ milestone.title }}</div>
+                        </td>
+                        <td>{{ milestone.target_date|date:'M d, Y' }}</td>
+                        <td>
+                          <div class="flex items-center gap-2">
+                            <progress class="progress progress-primary w-24" value="{{ milestone.completion_percentage }}" max="100"></progress>
+                            <span class="text-sm">{{ milestone.completion_percentage }}%</span>
+                          </div>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        {% endif %}
       </div>
 
       <!-- Sidebar -->
@@ -267,6 +500,47 @@
             {% endif %}
           </div>
         </div>
+
+        {% if user.is_authenticated and project_mentors.exists %}
+          <div class="card bg-base-200 shadow-xl mt-6">
+            <div class="card-body">
+              <h2 class="card-title mb-4">Project Mentors</h2>
+
+              <div class="space-y-4">
+                {% for mentor_relation in project_mentors %}
+                  <div class="flex items-center gap-3 p-2 bg-base-300 rounded-lg">
+                    {% if mentor_relation.mentor.image %}
+                      <div class="avatar">
+                        <div class="w-12 h-12 rounded-full">
+                          <img src="{{ mentor_relation.mentor.image.url }}" alt="{{ mentor_relation.mentor.user.username }}" />
+                        </div>
+                      </div>
+                    {% else %}
+                      <div class="avatar placeholder">
+                        <div class="bg-neutral-focus text-neutral-content w-12 h-12 rounded-full">
+                          <span>{{ mentor_relation.mentor.user.username|slice:':1'|upper }}</span>
+                        </div>
+                      </div>
+                    {% endif %}
+
+                    <div>
+                      <div class="font-bold">{{ mentor_relation.mentor.user.username }}</div>
+                      {% if mentor_relation.expertise_areas %}
+                        <div class="text-xs">{{ mentor_relation.expertise_areas }}</div>
+                      {% endif %}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+
+              {% if is_assigned_wit %}
+                <div class="mt-4 text-center">
+                  <p class="text-sm">These mentors can help you with project tasks and review your milestone progress.</p>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>

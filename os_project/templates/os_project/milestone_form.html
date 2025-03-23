@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  {% if is_new %}
+    Create
+  {% else %}
+    Update
+  {% endif %}Milestone - {{ project.title }}
+{% endblock %}
+
+{% block content %}
+  <div class="container mx-auto px-4 py-6 max-w-2xl">
+    <div class="mb-4">
+      {% if is_new %}
+        <a href="{% url 'milestone_list' project_id=project.id %}" class="btn btn-ghost btn-sm">← Back to Milestones</a>
+      {% else %}
+        <a href="{% url 'milestone_detail' project_id=project.id milestone_id=milestone.id %}" class="btn btn-ghost btn-sm">← Back to Milestone</a>
+      {% endif %}
+    </div>
+
+    <div class="card bg-base-200 shadow-xl">
+      <div class="card-body">
+        <h1 class="card-title text-2xl">
+          {% if is_new %}
+            Create
+          {% else %}
+            Update
+          {% endif %}Milestone
+        </h1>
+        <h2 class="text-xl mb-4">Project: {{ project.title }}</h2>
+
+        <form method="post" enctype="multipart/form-data" class="space-y-6">
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+            <div class="alert alert-error">
+              {% for error in form.non_field_errors %}
+                <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <div class="form-control">
+            <label class="label block mb-1" for="{{ form.title.id_for_label }}"><span class="label-text">Milestone Title*</span></label>
+            <input type="text" name="{{ form.title.name }}" id="{{ form.title.id_for_label }}" class="input input-bordered w-full {% if form.title.errors %}input-error{% endif %}" value="{{ form.title.value|default:'' }}" required />
+            {% if form.title.errors %}
+              <label class="label block mb-1"><span class="label-text-alt text-error">{{ form.title.errors.0 }}</span></label>
+            {% endif %}
+          </div>
+
+          <div class="form-control">
+            <label class="label block mb-1" for="{{ form.description.id_for_label }}"><span class="label-text">Description</span></label>
+            <textarea name="{{ form.description.name }}" id="{{ form.description.id_for_label }}" class="textarea textarea-bordered h-32 w-full {% if form.description.errors %}textarea-error{% endif %}">{{ form.description.value|default:'' }}</textarea>
+            {% if form.description.errors %}
+              <label class="label block mb-1"><span class="label-text-alt text-error">{{ form.description.errors.0 }}</span></label>
+            {% endif %}
+          </div>
+
+          <div class="form-control">
+            <label class="label block mb-1" for="{{ form.target_date.id_for_label }}"><span class="label-text">Target Date*</span></label>
+            <input type="date" name="{{ form.target_date.name }}" id="{{ form.target_date.id_for_label }}" class="input input-bordered w-full {% if form.target_date.errors %}input-error{% endif %}" value="{{ form.target_date.value|date:'Y-m-d'|default:'' }}" required />
+            {% if form.target_date.errors %}
+              <label class="label block mb-1"><span class="label-text-alt text-error">{{ form.target_date.errors.0 }}</span></label>
+            {% endif %}
+          </div>
+
+          {% if not is_new %}
+            <div class="alert alert-info">
+              <span>Note: Once a milestone is locked, it cannot be edited or deleted.</span>
+            </div>
+          {% endif %}
+
+          <div class="form-control mt-6">
+            <button type="submit" class="btn btn-primary">
+              {% if is_new %}
+                Create
+              {% else %}
+                Update
+              {% endif %}Milestone
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

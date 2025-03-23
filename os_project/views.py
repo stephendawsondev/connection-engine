@@ -13,8 +13,16 @@ from django.contrib import messages
 from django.db.models import Q
 from django.http import JsonResponse
 
-from .models import Project, ProjectInterest
-from .forms import ProjectForm, ProjectInterestForm, ProjectSearchForm
+from .models import Project, ProjectInterest, Milestone, MilestoneGoal, ProjectMentor
+from .forms import (
+    ProjectForm,
+    ProjectInterestForm,
+    ProjectSearchForm,
+    MilestoneForm,
+    MilestoneGoalForm,
+    MilestoneGoalUpdateForm,
+    ProjectMentorForm,
+)
 from user_profile.models import OS_Maintainer, WomenInTech, FavouriteProject
 from .decorators import os_maintainer_required, OSMaintainerRequiredMixin
 
@@ -121,6 +129,16 @@ class ProjectDetailView(DetailView):
                         self.object.old_owner_id == self.request.user.id
                     )
 
+            # Check if user is a mentor for this project
+            context["is_mentor"] = ProjectMentor.objects.filter(
+                project=self.object, mentor__user=self.request.user
+            ).exists()
+
+            # Check if user is the assigned WIT
+            context["is_assigned_wit"] = check_assigned_wit(
+                self.request.user, self.object
+            )
+
             context["stripe_publishable_key"] = settings.STRIPE_PUBLISHABLE_KEY
 
             # Add donation information
@@ -130,7 +148,17 @@ class ProjectDetailView(DetailView):
                 project=self.object, status="SUCCESS"
             ).order_by("-created_at")[:5]
 
-            return context
+            # Add milestone information
+            context["milestones"] = Milestone.objects.filter(
+                project=self.object
+            ).order_by("target_date")
+
+            # Get project mentors
+            context["project_mentors"] = ProjectMentor.objects.filter(
+                project=self.object
+            )
+
+        return context
 
 
 # Create, Update, Delete views
@@ -411,3 +439,390 @@ def toggle_favorite(request, project_id):
 
     messages.success(request, message)
     return redirect("project_detail", pk=project_id)
+
+
+@login_required
+def milestone_list(request, project_id):
+    """View all milestones for a project"""
+    project = get_object_or_404(Project, pk=project_id)
+
+    # Check if user is the owner or a mentor
+    is_owner = check_project_ownership(request.user, project)
+    is_mentor = ProjectMentor.objects.filter(
+        project=project, mentor__user=request.user
+    ).exists()
+
+    milestones = Milestone.objects.filter(project=project).order_by("target_date")
+
+    return render(
+        request,
+        "os_project/milestone_list.html",
+        {
+            "project": project,
+            "milestones": milestones,
+            "is_owner": is_owner,
+            "is_mentor": is_mentor,
+        },
+    )
+
+
+@login_required
+@os_maintainer_required
+def milestone_create(request, project_id):
+    """Create a new milestone for a project"""
+    project = get_object_or_404(Project, pk=project_id)
+
+    # Check if user is the owner
+    if not check_project_ownership(request.user, project):
+        messages.error(request, "Only the project owner can create milestones")
+        return redirect("project_detail", pk=project_id)
+
+    if request.method == "POST":
+        form = MilestoneForm(request.POST, project=project)
+        if form.is_valid():
+            milestone = form.save()
+            messages.success(request, "Milestone created successfully!")
+            return redirect(
+                "milestone_detail", project_id=project_id, milestone_id=milestone.id
+            )
+    else:
+        form = MilestoneForm(project=project)
+
+    return render(
+        request,
+        "os_project/milestone_form.html",
+        {
+            "form": form,
+            "project": project,
+            "is_new": True,
+        },
+    )
+
+
+@login_required
+def milestone_detail(request, project_id, milestone_id):
+    """View a milestone's details and goals"""
+    project = get_object_or_404(Project, pk=project_id)
+    milestone = get_object_or_404(Milestone, pk=milestone_id, project=project)
+
+    # Check if user is the owner, a mentor, or the assigned WIT
+    is_owner = check_project_ownership(request.user, project)
+    is_mentor = ProjectMentor.objects.filter(
+        project=project, mentor__user=request.user
+    ).exists()
+    is_assigned_wit = check_assigned_wit(request.user, project)
+
+    if not (is_owner or is_mentor or is_assigned_wit):
+        messages.error(request, "You don't have permission to view this milestone")
+        return redirect("project_detail", pk=project_id)
+
+    goals = MilestoneGoal.objects.filter(milestone=milestone).order_by("created_at")
+
+    # Form for adding new goals (only for project owner)
+    goal_form = None
+    if is_owner and not milestone.locked:
+        if request.method == "POST" and "add_goal" in request.POST:
+            goal_form = MilestoneGoalForm(request.POST, milestone=milestone)
+            if goal_form.is_valid():
+                goal_form.save()
+                messages.success(request, "Goal added successfully!")
+                return redirect(
+                    "milestone_detail", project_id=project_id, milestone_id=milestone_id
+                )
+        else:
+            goal_form = MilestoneGoalForm(milestone=milestone)
+
+    return render(
+        request,
+        "os_project/milestone_detail.html",
+        {
+            "project": project,
+            "milestone": milestone,
+            "goals": goals,
+            "is_owner": is_owner,
+            "is_mentor": is_mentor,
+            "is_assigned_wit": is_assigned_wit,
+            "goal_form": goal_form,
+        },
+    )
+
+
+@login_required
+@os_maintainer_required
+def milestone_update(request, project_id, milestone_id):
+    """Update a milestone"""
+    project = get_object_or_404(Project, pk=project_id)
+    milestone = get_object_or_404(Milestone, pk=milestone_id, project=project)
+
+    # Check if user is the owner
+    if not check_project_ownership(request.user, project):
+        messages.error(request, "Only the project owner can update milestones")
+        return redirect(
+            "milestone_detail", project_id=project_id, milestone_id=milestone_id
+        )
+
+    # Check if milestone is locked
+    if milestone.locked:
+        messages.error(request, "This milestone is locked and cannot be edited")
+        return redirect(
+            "milestone_detail", project_id=project_id, milestone_id=milestone_id
+        )
+
+    if request.method == "POST":
+        form = MilestoneForm(request.POST, instance=milestone, project=project)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Milestone updated successfully!")
+            return redirect(
+                "milestone_detail", project_id=project_id, milestone_id=milestone_id
+            )
+    else:
+        form = MilestoneForm(instance=milestone, project=project)
+
+    return render(
+        request,
+        "os_project/milestone_form.html",
+        {
+            "form": form,
+            "project": project,
+            "milestone": milestone,
+            "is_new": False,
+        },
+    )
+
+
+@login_required
+@os_maintainer_required
+def milestone_delete(request, project_id, milestone_id):
+    """Delete a milestone"""
+    project = get_object_or_404(Project, pk=project_id)
+    milestone = get_object_or_404(Milestone, pk=milestone_id, project=project)
+
+    # Check if user is the owner
+    if not check_project_ownership(request.user, project):
+        messages.error(request, "Only the project owner can delete milestones")
+        return redirect(
+            "milestone_detail", project_id=project_id, milestone_id=milestone_id
+        )
+
+    # Check if milestone is locked
+    if milestone.locked:
+        messages.error(request, "This milestone is locked and cannot be deleted")
+        return redirect(
+            "milestone_detail", project_id=project_id, milestone_id=milestone_id
+        )
+
+    if request.method == "POST":
+        milestone.delete()
+        messages.success(request, "Milestone deleted successfully!")
+        return redirect("milestone_list", project_id=project_id)
+
+    return render(
+        request,
+        "os_project/milestone_confirm_delete.html",
+        {
+            "project": project,
+            "milestone": milestone,
+        },
+    )
+
+
+@login_required
+@os_maintainer_required
+def lock_milestone(request, project_id, milestone_id):
+    """Lock a milestone to prevent further edits"""
+    project = get_object_or_404(Project, pk=project_id)
+    milestone = get_object_or_404(Milestone, pk=milestone_id, project=project)
+
+    # Check if user is the owner
+    if not check_project_ownership(request.user, project):
+        messages.error(request, "Only the project owner can lock milestones")
+        return redirect(
+            "milestone_detail", project_id=project_id, milestone_id=milestone_id
+        )
+
+    if request.method == "POST":
+        milestone.locked = True
+        milestone.save()
+        messages.success(request, "Milestone locked successfully!")
+
+    return redirect(
+        "milestone_detail", project_id=project_id, milestone_id=milestone_id
+    )
+
+
+# Goal Views
+@login_required
+def update_goal_status(request, project_id, goal_id):
+    """Update a goal's status"""
+    project = get_object_or_404(Project, pk=project_id)
+    goal = get_object_or_404(MilestoneGoal, pk=goal_id, milestone__project=project)
+
+    # Check permissions based on the action
+    is_owner = check_project_ownership(request.user, project)
+    is_mentor = ProjectMentor.objects.filter(
+        project=project, mentor__user=request.user
+    ).exists()
+    is_assigned_wit = check_assigned_wit(request.user, project)
+
+    # WIT can only mark as ready for review and provide evidence
+    # Owners and mentors can mark as completed
+    if not (is_owner or is_mentor or is_assigned_wit):
+        messages.error(request, "You don't have permission to update this goal")
+        return redirect("project_detail", pk=project_id)
+
+    if request.method == "POST":
+        form = MilestoneGoalUpdateForm(request.POST, request.FILES, instance=goal)
+        if form.is_valid():
+            updated_goal = form.save(commit=False)
+
+            # Check permissions for specific status changes
+            new_status = form.cleaned_data["status"]
+            if new_status == "COMPLETED" and not (is_owner or is_mentor):
+                messages.error(
+                    request,
+                    "Only project owners or mentors can mark goals as completed",
+                )
+                return redirect(
+                    "milestone_detail",
+                    project_id=project_id,
+                    milestone_id=goal.milestone.id,
+                )
+
+            # WIT can only change to READY_FOR_REVIEW or IN_PROGRESS
+            if is_assigned_wit and not (is_owner or is_mentor):
+                if new_status not in ["IN_PROGRESS", "READY_FOR_REVIEW"]:
+                    messages.error(
+                        request,
+                        "You can only mark goals as in progress or ready for review",
+                    )
+                    return redirect(
+                        "milestone_detail",
+                        project_id=project_id,
+                        milestone_id=goal.milestone.id,
+                    )
+
+            updated_goal.save()
+            messages.success(
+                request, f"Goal status updated to {updated_goal.get_status_display()}"
+            )
+        else:
+            messages.error(request, "There was an error updating the goal status")
+
+        return redirect(
+            "milestone_detail", project_id=project_id, milestone_id=goal.milestone.id
+        )
+
+
+@login_required
+@os_maintainer_required
+def delete_goal(request, project_id, goal_id):
+    """Delete a goal"""
+    project = get_object_or_404(Project, pk=project_id)
+    goal = get_object_or_404(MilestoneGoal, pk=goal_id, milestone__project=project)
+
+    # Check if user is the owner
+    if not check_project_ownership(request.user, project):
+        messages.error(request, "Only the project owner can delete goals")
+        return redirect(
+            "milestone_detail", project_id=project_id, milestone_id=goal.milestone.id
+        )
+
+    # Check if milestone is locked
+    if goal.milestone.locked:
+        messages.error(request, "This milestone is locked and goals cannot be deleted")
+        return redirect(
+            "milestone_detail", project_id=project_id, milestone_id=goal.milestone.id
+        )
+
+    if request.method == "POST":
+        milestone_id = goal.milestone.id
+        goal.delete()
+        messages.success(request, "Goal deleted successfully!")
+        return redirect(
+            "milestone_detail", project_id=project_id, milestone_id=milestone_id
+        )
+
+    return render(
+        request,
+        "os_project/goal_confirm_delete.html",
+        {
+            "project": project,
+            "goal": goal,
+        },
+    )
+
+
+# Mentor views
+@login_required
+@os_maintainer_required
+def manage_mentors(request, project_id):
+    """Manage mentors for a project"""
+    project = get_object_or_404(Project, pk=project_id)
+
+    # Check if user is the owner
+    if not check_project_ownership(request.user, project):
+        messages.error(request, "Only the project owner can manage mentors")
+        return redirect("project_detail", pk=project_id)
+
+    mentors = ProjectMentor.objects.filter(project=project)
+
+    if request.method == "POST":
+        form = ProjectMentorForm(request.POST, project=project)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Mentor added successfully!")
+            return redirect("manage_mentors", project_id=project_id)
+    else:
+        form = ProjectMentorForm(project=project)
+
+    return render(
+        request,
+        "os_project/manage_mentors.html",
+        {
+            "project": project,
+            "mentors": mentors,
+            "form": form,
+        },
+    )
+
+
+@login_required
+@os_maintainer_required
+def remove_mentor(request, project_id, mentor_id):
+    """Remove a mentor from a project"""
+    project = get_object_or_404(Project, pk=project_id)
+    mentor_relation = get_object_or_404(ProjectMentor, pk=mentor_id, project=project)
+
+    # Check if user is the owner
+    if not check_project_ownership(request.user, project):
+        messages.error(request, "Only the project owner can remove mentors")
+        return redirect("manage_mentors", project_id=project_id)
+
+    if request.method == "POST":
+        mentor_relation.delete()
+        messages.success(request, "Mentor removed successfully!")
+
+    return redirect("manage_mentors", project_id=project_id)
+
+
+# Helper functions
+def check_project_ownership(user, project):
+    """Check if the user is the owner of the project"""
+    try:
+        osm_profile = OS_Maintainer.objects.get(user=user)
+        return project.owner == osm_profile or project.old_owner_id == user.id
+    except OS_Maintainer.DoesNotExist:
+        return project.old_owner_id == user.id
+
+
+def check_assigned_wit(user, project):
+    """Check if the user is the assigned WIT for the project"""
+    try:
+        wit_profile = WomenInTech.objects.get(user=user)
+        return (
+            project.assigned_wit == wit_profile
+            or project.old_assigned_wit_id == user.id
+        )
+    except WomenInTech.DoesNotExist:
+        return project.old_assigned_wit_id == user.id
