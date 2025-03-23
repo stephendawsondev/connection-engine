@@ -59,6 +59,10 @@ a,
   font-size: 0.75rem;
 }
 
+.text-error {
+  font-size: 0.5rem;
+}
+
 select {
   font-size: 0.75rem;
 }
