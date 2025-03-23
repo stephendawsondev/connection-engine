@@ -1,4 +1,3 @@
-import os
 from decimal import Decimal
 
 import stripe
@@ -19,7 +18,8 @@ def stripe_webhook(request):
             payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
         )
 
-        if event.type == "payment_succeeded":
+        # Handle successful payment
+        if event.type == "payment_intent.succeeded":
             payment_intent = event.data.object
             try:
                 payment = Payment.objects.get(
@@ -28,20 +28,25 @@ def stripe_webhook(request):
                 payment.status = "SUCCESS"
                 payment.save()
 
+                # Update project funding if payment is associated with a project
+                if payment.project:
+                    payment.project.update_funding()
+
                 # Distribute funds to projects and WIT initiatives
                 distribute_funds(payment)
 
             except Payment.DoesNotExist:
                 print(f"Payment not found for PaymentIntent: {payment_intent.id}")
 
+        # Handle completed checkout session
+        elif event["type"] == "checkout.session.completed":
+            session = event["data"]["object"]
+            handle_completed_checkout(session)
+
     except ValueError as e:
         return HttpResponse({"error": "Invalid payload"}, status=400)
     except stripe.error.SignatureVerificationError as e:
         return HttpResponse({"error": "Invalid signature"}, status=400)
-
-    if event["type"] == "checkout.session.completed":
-        session = event["data"]["object"]
-        handle_completed_checkout(session)
 
     return HttpResponse({"received": True})
 

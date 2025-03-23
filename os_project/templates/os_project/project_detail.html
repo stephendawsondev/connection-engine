@@ -32,23 +32,33 @@
               <div class="flex flex-wrap gap-2">
                 <div class="badge badge-lg
                 {% if project.status == 'OPEN' %}
+                    
 
                 badge-success
 
-                {% elif project.status == 'ASSIGNED' %}
+
+
+                  {% elif project.status == 'ASSIGNED' %}
+                    
 
                 badge-warning
 
-                {% elif project.status == 'IN_PROGRESS' %}
+
+
+                  {% elif project.status == 'IN_PROGRESS' %}
+                    
 
                 badge-info
 
-                {% elif project.status == 'COMPLETED' %}
+
+
+                  {% elif project.status == 'COMPLETED' %}
+                    
 
                 badge-secondary
 
-            {% endif %}">{{ project.get_status_display }}
-                </div>
+
+                  {% endif %}">{{ project.get_status_display }}</div>
 
                 <div class="badge badge-lg">{{ project.get_difficulty_display }}</div>
               </div>
@@ -103,23 +113,15 @@
                 <a href="{% url 'toggle_favorite' project_id=project.pk %}"
                   class="btn btn-circle {% if is_favorited %}favorited{% endif %} fill-primary favorite-btn"
                   title="{% if is_favorited %}
-
-
-
+                    
 
                     Remove from favorites
 
 
-
-
                   {% else %}
-
-
-
+                    
 
                     Add to favorites
-
-
 
 
                   {% endif %}">
@@ -172,7 +174,6 @@
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 w-6">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-
                 <div>
                   <p>Sign in to express interest in this project.</p>
                   <a href="{% url 'account_login' %}?next={{ request.path }}" class="btn btn-primary btn-sm mt-2">Sign In</a>
@@ -265,6 +266,22 @@
                 <button id="donate-button" class="btn btn-primary mt-2 w-full">Support This Project</button>
               </div>
             </div>
+
+            {% if recent_donations %}
+              <div class="mt-4">
+                <h3 class="font-bold mb-2">Recent Donations</h3>
+                <div class="space-y-2">
+                  {% for donation in recent_donations %}
+                    <div class="bg-base-300 p-2 rounded-lg text-sm">
+                      <div class="flex justify-between">
+                        <span>€{{ donation.amount }}</span>
+                        <span class="opacity-70">{{ donation.created_at|date:'M d' }}</span>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -318,5 +335,5 @@
             });
         }
     });
-</script>
+  </script>
 {% endblock %}
