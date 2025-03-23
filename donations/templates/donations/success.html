@@ -4,17 +4,51 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'donations/css/donations.css' %}">
 {% endblock %}
-
 {% block content %}
-<h1>Thank you for your donation!</h1>
-<p>Your payment has been successfully processed.</p>
-<p>Order Number: {{ payment.confirmation_number }}</p>
-<p>Amount: ${{ payment.amount }}</p>
-{% if save_info %}
-<p>Your information has been saved for future use.</p>
-{% endif %}
-{% endblock %}
+<div class="container success-container">
+    <div class="success-message">
+        <h1>Thank you for your donation {{ payment.user }}!</h1>
+        <p>Your payment has been successfully processed.</p>
+        <p>Order Number: {{ payment.confirmation_number }}</p>
+        <p>Amount: €{{ payment.amount }}</p>
 
+        {% if project %}
+        <div class="project-details">
+            <h2>Project Details</h2>
+            <p>Project: {{ project.title }}</p>
+            <p>Funding Progress: {{ funding_progress }}%</p>
+            <p>Remaining Funding Needed: €{{ remaining_funding }}</p>
+            <p>Your donation has brought this project {{ payment.amount }} closer to its goal of €{{ project.funding_goal }}!</p>
+        </div>
+        {% endif %}
+
+        {% if save_info %}
+        <p>Your information has been saved for future use.</p>
+        {% endif %}
+    </div>
+
+    {% if project %}
+    <div class="other-projects">
+        <h3>Other Open Source Projects</h3>
+        <p>Consider supporting these projects too:</p>
+        <div class="project-grid">
+            {% for other_project in project.get_other_projects %}
+            <div class="project-card">
+                <h4>{{ other_project.title }}</h4>
+                <div class="progress-bar">
+                    <div class="progress" style="width: {{ other_project.funding_percentage }}%"></div>
+                </div>
+                <p>Funding: {{ other_project.funding_percentage }}%</p>
+                <a href="{% url 'project_detail' other_project.id %}" class="btn btn-primary">
+                    View Project
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
 {% block postloadjs %}
 {{ block.super }}
 {% endblock %}

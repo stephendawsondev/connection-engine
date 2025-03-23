@@ -1,8 +1,8 @@
 # donations/views.py
 import json
+from decimal import Decimal
 
 import stripe
-from decimal import Decimal
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
@@ -139,14 +139,12 @@ def handle_completed_checkout(session):
 # donations/views.py - update the success function
 
 
-@csrf_exempt
 def success(request):
     """
     Handle successful payments
     """
     # Get the session ID from query parameters
     session_id = request.GET.get("session_id")
-
     if not session_id:
         return render(
             request, "donations/error.html", {"error_message": "No session ID provided"}
@@ -155,7 +153,6 @@ def success(request):
     try:
         # Retrieve the session from Stripe
         session = stripe.checkout.Session.retrieve(session_id)
-
         # Look for an existing payment or create one
         try:
             payment = Payment.objects.get(confirmation_number=session_id)
@@ -174,7 +171,6 @@ def success(request):
                 status="SUCCESS",
                 stripe_payment_intent_id=session.payment_intent,
             )
-
             # Handle project and WIT data from metadata
             if hasattr(session, "metadata"):
                 if session.metadata.get("project_id"):
@@ -183,14 +179,10 @@ def success(request):
                             id=session.metadata.get("project_id")
                         )
                         payment.project = project
-                        payment.save()
-
-                        # Update project funding
                         project.update_funding()
-
+                        payment.save()
                     except Project.DoesNotExist:
                         payment.save()
-
                 elif session.metadata.get("wit_id"):
                     try:
                         payment.sponsored_user = WomenInTech.objects.get(
@@ -199,13 +191,32 @@ def success(request):
                         payment.save()
                     except WomenInTech.DoesNotExist:
                         payment.save()
-                else:
-                    payment.save()
             else:
                 payment.save()
 
-        return render(request, "donations/success.html", {"payment": payment})
+        # Get project information if applicable
+        project = payment.project
+        if project:
+            remaining_funding = project.funding_goal - project.current_funding
+            funding_progress = project.funding_percentage()
 
+            return render(
+                request,
+                "donations/success.html",
+                {
+                    "payment": payment,
+                    "project": project,
+                    "remaining_funding": remaining_funding,
+                    "funding_progress": funding_progress,
+                    "save_info": request.session.get("save_info"),
+                },
+            )
+        else:
+            return render(
+                request,
+                "donations/success.html",
+                {"payment": payment, "save_info": request.session.get("save_info")},
+            )
     except Exception as e:
         return render(
             request,
