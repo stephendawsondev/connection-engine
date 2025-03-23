@@ -35,7 +35,35 @@
                     
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 badge-success
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -43,7 +71,35 @@
                     
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 badge-warning
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -52,7 +108,35 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 badge-info
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -61,7 +145,35 @@
                     
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 badge-secondary
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -122,13 +234,69 @@
                   title="{% if is_favorited %}
                     
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     Remove from favorites
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                   {% else %}
                     
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     Add to favorites
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                   {% endif %}">
@@ -144,12 +312,13 @@
               </div>
 
               {% if is_owner %}
-                <div class="flex flex-wrap gap-2">
-                  <a href="{% url 'project_update' pk=project.pk %}" class="btn btn-secondary">Edit Project</a>
-                  <a href="{% url 'project_interested_users' project_id=project.pk %}" class="btn btn-info">View Interested Users ({{ interest_count }})</a>
+                <div class="flex flex-col flex-wrap md:flex-row gap-2">
+                  <a href="{% url 'project_update' pk=project.pk %}" class="btn btn-error btn-retro">Edit</a>
                   {% if not project.assigned_wit and not project.old_assigned_wit_id and project.status == 'OPEN' %}
-                    <a href="{% url 'project_delete' pk=project.pk %}" class="btn btn-error">Delete Project</a>
+                    <a href="{% url 'project_delete' pk=project.pk %}" class="btn btn-error">Delete</a>
                   {% endif %}
+                  <a href="{% url 'project_interested_users' project_id=project.pk %}" class="btn btn-info btn-retro">View Interested Users ({{ interest_count }})</a>
+                  <a href="{% url 'milestone_list' project_id=project.pk %}" class="btn btn-primary btn-retro">Manage Milestones</a>
                 </div>
               {% else %}
                 <!-- WIT actions -->

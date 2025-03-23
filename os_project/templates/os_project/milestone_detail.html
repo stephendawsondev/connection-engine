@@ -209,26 +209,30 @@
                 {% csrf_token %}
                 <input type="hidden" name="add_goal" value="1">
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2">
                     <div class="form-control">
-                        <label class="label">
+                        <label class="label block">
                             <span class="label-text">Title</span>
                         </label>
-                        {{ goal_form.title }}
+                        <div class="bg-base-100 input py-3 inline">
+                            {{ goal_form.title }}
+                        </div>
                         {% if goal_form.title.errors %}
-                        <label class="label">
+                        <label class="label block">
                             <span class="label-text-alt text-error">{{ goal_form.title.errors }}</span>
                         </label>
                         {% endif %}
                     </div>
 
-                    <div class="form-control">
-                        <label class="label">
+                    <div class="form-control ml-auto">
+                        <label class="label block">
                             <span class="label-text">Description</span>
                         </label>
+                        <div class="bg-base-100 py-5 mt-5">
                         {{ goal_form.description }}
+                        </div>
                         {% if goal_form.description.errors %}
-                        <label class="label">
+                        <label class="label block">
                             <span class="label-text-alt text-error">{{ goal_form.description.errors }}</span>
                         </label>
                         {% endif %}
