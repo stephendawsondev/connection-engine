@@ -1,71 +1,65 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load i18n %}
 
-{% block title %}{% trans "Sign In" %}{% endblock %}
+{% block title %}
+  {% trans 'Sign In' %}
+{% endblock %}
 
 {% block content %}
-<div class="max-w-md mx-auto">
+  <div class="max-w-md mx-auto">
     <div class="card bg-base-200 shadow-xl">
-        <div class="card-body">
-            <h2 class="card-title text-2xl mb-4">{% trans "Sign In" %}</h2>
+      <div class="card-body">
+        <h2 class="card-title text-2xl mb-4">{% trans 'Sign In' %}</h2>
 
-            {% url 'account_login' as action_url %}
-            <form class="login space-y-4" method="POST" action="{{ action_url }}">
-                {% csrf_token %}
+        {% url 'account_login' as action_url %}
+        <form class="login space-y-4" method="POST" action="{{ action_url }}">
+          {% csrf_token %}
 
-                <div class="form-control">
-                    <label class="label block" for="login">
-                        <span class="label-text">{% trans "Username or Email" %}</span>
-                    </label>
-                    <input type="text" name="login" id="login" placeholder="{% trans 'Username or Email' %}" class="input input-bordered w-full" required autofocus>
-                    {% if form.login.errors %}
-                    <label class="label">
-                        <span class="label-text-alt text-error">{{ form.login.errors.0 }}</span>
-                    </label>
-                    {% endif %}
-                </div>
+          <div class="form-control">
+            <label class="label block" for="login"><span class="label-text">{% trans 'Username or Email' %}</span></label>
+            <input type="text" name="login" id="login" placeholder="{% trans 'Username or Email' %}" class="input input-bordered w-full" required autofocus />
+            {% if form.login.errors %}
+              <label class="label"><span class="label-text-alt text-error">{{ form.login.errors.0 }}</span></label>
+            {% endif %}
+          </div>
 
-                <div class="form-control">
-                    <label class="label block" for="password">
-                        <span class="label-text">{% trans "Password" %}</span>
-                    </label>
-                    <input type="password" name="password" id="password" placeholder="{% trans 'Password' %}" class="input input-bordered w-full" required>
-                    {% if form.password.errors %}
-                    <label class="label">
-                        <span class="label-text-alt text-error">{{ form.password.errors.0 }}</span>
-                    </label>
-                    {% endif %}
-                    <label class="label mt-3">
-                        <a href="{% url 'account_reset_password' %}" class="label-text-alt link link-hover">{% trans "Forgot Password?" %}</a>
-                    </label>
-                </div>
+          <div class="form-control">
+            <label class="label block" for="password"><span class="label-text">{% trans 'Password' %}</span></label>
+            <input type="password" name="password" id="password" placeholder="{% trans 'Password' %}" class="input input-bordered w-full" required />
+            {% if form.password.errors %}
+              <label class="label"><span class="label-text-alt text-error">{{ form.password.errors.0 }}</span></label>
+            {% endif %}
+            <label class="label mt-3"><a href="{% url 'account_reset_password' %}" class="label-text-alt link link-hover">{% trans 'Forgot Password?' %}</a></label>
+          </div>
 
-                <div class="form-control">
-                    <label class="label cursor-pointer">
-                        <span class="label-text">{% trans "Remember Me" %}</span>
-                        <input type="checkbox" name="remember" id="id_remember" class="checkbox">
-                    </label>
-                </div>
+          <div class="form-control">
+            <label class="label cursor-pointer">
+              <span class="label-text">{% trans 'Remember Me' %}</span>
+              <input type="checkbox" name="remember" id="id_remember" class="checkbox" />
+            </label>
+          </div>
 
-                {% if redirect_field_value %}
-                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
-                {% endif %}
+          {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+          {% endif %}
 
-                {% if form.non_field_errors %}
-                <div class="alert alert-error">
-                    <span>{{ form.non_field_errors.0 }}</span>
-                </div>
-                {% endif %}
-
-                <div class="form-control mt-6">
-                    <button class="btn btn-primary w-full" type="submit">{% trans "Sign In" %}</button>
-                </div>
-            </form>
-
-            <div class="mt-4 text-center">
-                <p>{% trans "Don't have an account?" %} <a href="{{ signup_url }}" class="link link-primary">{% trans "Sign up" %}</a></p>
+          {% if form.non_field_errors %}
+            <div class="alert alert-error">
+              <span>{{ form.non_field_errors.0 }}</span>
             </div>
+          {% endif %}
+
+          <div class="form-control mt-6">
+            <button class="btn btn-primary btn-retro w-full" type="submit">{% trans 'Sign In' %}</button>
+          </div>
+        </form>
+
+        <div class="mt-4 text-center">
+          <p>
+            {% trans "Don't have an account?" %} <a href="{{ signup_url }}" class="link link-primary">{% trans 'Sign up' %}</a>
+          </p>
         </div>
+      </div>
     </div>
-</div>
+  </div>
 {% endblock %}
