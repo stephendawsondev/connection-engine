@@ -18,6 +18,8 @@ from .forms import ProjectForm, ProjectInterestForm, ProjectSearchForm
 from user_profile.models import OS_Maintainer, WomenInTech, FavouriteProject
 from .decorators import os_maintainer_required, OSMaintainerRequiredMixin
 
+from django.conf import settings
+
 
 # List views
 class ProjectListView(ListView):
@@ -112,6 +114,8 @@ class ProjectDetailView(DetailView):
                     context["is_owner"] = (
                         self.object.old_owner_id == self.request.user.id
                     )
+
+            context["stripe_publishable_key"] = settings.STRIPE_PUBLISHABLE_KEY
 
             return context
 

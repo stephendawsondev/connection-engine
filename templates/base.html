@@ -7,6 +7,10 @@
     <title>{% block title %}Connection Engine{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block corejs %}
+    <!-- Stripe -->
+    <script src="https://js.stripe.com/v3/"></script>
+    {% endblock %}
     <!-- Favicon links -->
     <link rel="icon" type="image/x-icon" href="{% static 'favicons/favicon.ico' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicons/favicon-16x16.png' %}">

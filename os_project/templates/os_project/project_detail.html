@@ -1,252 +1,322 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{ project.title }}{% endblock %}
+{% block title %}
+  {{ project.title }}
+{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'os_project/css/os_project.css' %}">
+  <link rel="stylesheet" href="{% static 'os_project/css/os_project.css' %}" />
 {% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-6">
+  <div class="container mx-auto px-4 py-6">
     <div class="mb-4">
-        <a href="{% url 'project_list' %}" class="btn btn-ghost btn-sm">
-            ← Back to Projects
-        </a>
+      <a href="{% url 'project_list' %}" class="btn btn-ghost btn-sm">← Back to Projects</a>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Main content column -->
-        <div class="lg:col-span-2">
-            <div class="card bg-base-200 shadow-xl">
-                {% if project.image %}
-                <figure class="h-64">
-                    <img src="{{ project.image.url }}" alt="{{ project.title }}" class="object-cover w-full h-full">
-                </figure>
+      <!-- Main content column -->
+      <div class="lg:col-span-2">
+        <div class="card bg-base-200 shadow-xl">
+          {% if project.image %}
+            <figure class="h-64">
+              <img src="{{ project.image.url }}" alt="{{ project.title }}" class="object-cover w-full h-full" />
+            </figure>
+          {% endif %}
+
+          <div class="card-body">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h1 class="card-title text-2xl">{{ project.title }}</h1>
+
+              <div class="flex flex-wrap gap-2">
+                <div class="badge badge-lg
+                {% if project.status == 'OPEN' %}
+
+                badge-success
+
+                {% elif project.status == 'ASSIGNED' %}
+
+                badge-warning
+
+                {% elif project.status == 'IN_PROGRESS' %}
+
+                badge-info
+
+                {% elif project.status == 'COMPLETED' %}
+
+                badge-secondary
+
+            {% endif %}">{{ project.get_status_display }}
+                </div>
+
+                <div class="badge badge-lg">{{ project.get_difficulty_display }}</div>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="text-lg mb-4">{{ project.description|linebreaks }}</div>
+
+            {% if project.technologies %}
+              <div class="mb-4">
+                <h3 class="text-lg font-bold mb-2">Technologies</h3>
+                <div class="flex flex-wrap gap-2">
+                  {% for tech in project.get_technologies_list %}
+                    <div class="badge badge-outline">{{ tech }}</div>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endif %}
+
+            <div class="flex flex-col sm:flex-row gap-4 my-4">
+              {% if project.repo_link %}
+                <a href="{{ project.repo_link }}" target="_blank" class="btn btn-primary">Repository</a>
+              {% endif %}
+
+              {% if project.deploy_link %}
+                <a href="{{ project.deploy_link }}" target="_blank" class="btn btn-primary">Live Demo</a>
+              {% endif %}
+            </div>
+
+            {% if project.category or project.tags.exists %}
+              <div class="mb-4">
+                <h3 class="text-lg font-bold mb-2">Categories & Tags</h3>
+                <div class="flex flex-wrap gap-2">
+                  {% if project.category %}
+                    <div class="badge badge-lg">{{ project.category }}</div>
+                  {% endif %}
+
+                  {% for tag in project.tags.all %}
+                    <div class="badge">{{ tag.name }}</div>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endif %}
+
+            <div class="divider"></div>
+
+            <!-- User actions -->
+            {% if user.is_authenticated %}
+              <!-- Favorite button (for all authenticated users) -->
+              <div class="flex justify-end mb-4">
+                <a href="{% url 'toggle_favorite' project_id=project.pk %}"
+                  class="btn btn-circle {% if is_favorited %}favorited{% endif %} fill-primary favorite-btn"
+                  title="{% if is_favorited %}
+
+
+
+
+                    Remove from favorites
+
+
+
+
+                  {% else %}
+
+
+
+
+                    Add to favorites
+
+
+
+
+                  {% endif %}">
+                  <!-- Outline star (shown when not favorited) -->
+                  <svg id="star-outline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="m16,8v-2h-1v-2h-1v-2h-1v-1h-2v1h-1v2h-1v2h-1v2H1v2h1v1h1v1h1v1h1v1h1v5h-1v4h2v-1h2v-1h2v-1h2v1h2v1h2v1h2v-4h-1v-5h1v-1h1v-1h1v-1h1v-1h1v-2h-7Zm4,3h-1v1h-1v1h-1v1h-1v5h1v1h-2v-1h-2v-1h-2v1h-2v1h-2v-1h1v-5h-1v-1h-1v-1h-1v-1h-1v-1h4v-1h1v-1h1v-2h1v-2h2v2h1v2h1v1h1v1h4v1Z" />
+                  </svg>
+                  <!-- Solid star (shown when favorited) -->
+                  <svg id="star-solid" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <polygon points="23 8 23 10 22 10 22 11 21 11 21 12 20 12 20 13 19 13 19 14 18 14 18 19 19 19 19 23 17 23 17 22 15 22 15 21 13 21 13 20 11 20 11 21 9 21 9 22 7 22 7 23 5 23 5 19 6 19 6 14 5 14 5 13 4 13 4 12 3 12 3 11 2 11 2 10 1 10 1 8 8 8 8 6 9 6 9 4 10 4 10 2 11 2 11 1 13 1 13 2 14 2 14 4 15 4 15 6 16 6 16 8 23 8" />
+                  </svg>
+                </a>
+              </div>
+
+              {% if is_owner %}
+                <div class="flex flex-wrap gap-2">
+                  <a href="{% url 'project_update' pk=project.pk %}" class="btn btn-secondary">Edit Project</a>
+                  <a href="{% url 'project_interested_users' project_id=project.pk %}" class="btn btn-info">View Interested Users ({{ interest_count }})</a>
+                  {% if not project.assigned_wit and not project.old_assigned_wit_id and project.status == 'OPEN' %}
+                    <a href="{% url 'project_delete' pk=project.pk %}" class="btn btn-error">Delete Project</a>
+                  {% endif %}
+                </div>
+              {% else %}
+                <!-- WIT actions -->
+                {% if user_interested %}
+                  <div class="alert alert-success mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>You have expressed interest in this project!</span>
+                  </div>
+
+                  <a href="{% url 'withdraw_interest' project_id=project.pk %}" class="btn btn-outline btn-error">Withdraw Interest</a>
+                {% else %}
+                  {% if project.status == 'OPEN' %}
+                    <a href="{% url 'express_interest' project_id=project.pk %}" class="btn btn-primary">Express Interest</a>
+                  {% elif project.status == 'ASSIGNED' %}
+                    {% if user.women_in_tech_profile %}
+                      {% if project.assigned_wit == user.women_in_tech_profile %}
+                        <div class="alert alert-success mb-4">
+                          <span>You are currently assigned to work on this project!</span>
+                        </div>
+                      {% endif %}
+                    {% endif %}
+                  {% endif %}
                 {% endif %}
+              {% endif %}
+            {% else %}
+              <div class="alert alert-info">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 w-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
 
-                <div class="card-body">
-                    <div class="flex flex-wrap items-center justify-between gap-2">
-                        <h1 class="card-title text-2xl">{{ project.title }}</h1>
-
-                        <div class="flex flex-wrap gap-2">
-                            <div class="badge badge-lg
-                                {% if project.status == 'OPEN' %}badge-success
-                                {% elif project.status == 'ASSIGNED' %}badge-warning
-                                {% elif project.status == 'IN_PROGRESS' %}badge-info
-                                {% elif project.status == 'COMPLETED' %}badge-secondary
-                                {% endif %}">
-                                {{ project.get_status_display }}
-                            </div>
-
-                            <div class="badge badge-lg">{{ project.get_difficulty_display }}</div>
-                        </div>
-                    </div>
-
-                    <div class="divider"></div>
-
-                    <div class="text-lg mb-4">
-                        {{ project.description|linebreaks }}
-                    </div>
-
-                    {% if project.technologies %}
-                    <div class="mb-4">
-                        <h3 class="text-lg font-bold mb-2">Technologies</h3>
-                        <div class="flex flex-wrap gap-2">
-                          {% for tech in project.get_technologies_list %}
-                            <div class="badge badge-outline">{{ tech }}</div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    {% endif %}
-
-                    <div class="flex flex-col sm:flex-row gap-4 my-4">
-                        {% if project.repo_link %}
-                        <a href="{{ project.repo_link }}" target="_blank" class="btn btn-primary">
-                            Repository
-                        </a>
-                        {% endif %}
-
-                        {% if project.deploy_link %}
-                        <a href="{{ project.deploy_link }}" target="_blank" class="btn btn-primary">
-                            Live Demo
-                        </a>
-                        {% endif %}
-                    </div>
-
-                    {% if project.category or project.tags.exists %}
-                    <div class="mb-4">
-                        <h3 class="text-lg font-bold mb-2">Categories & Tags</h3>
-                        <div class="flex flex-wrap gap-2">
-                            {% if project.category %}
-                            <div class="badge badge-lg">{{ project.category }}</div>
-                            {% endif %}
-
-                            {% for tag in project.tags.all %}
-                            <div class="badge">{{ tag.name }}</div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    {% endif %}
-
-                    <div class="divider"></div>
-
-                    <!-- User actions -->
-                    {% if user.is_authenticated %}
-                        <!-- Favorite button (for all authenticated users) -->
-                        <div class="flex justify-end mb-4">
-                            <a href="{% url 'toggle_favorite' project_id=project.pk %}"
-                               class="btn btn-circle {% if is_favorited %}favorited{% endif %} fill-primary favorite-btn"
-                               title="{% if is_favorited %}Remove from favorites{% else %}Add to favorites{% endif %}">
-                               <!-- Outline star (shown when not favorited) -->
-                               <svg id="star-outline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                   <path d="m16,8v-2h-1v-2h-1v-2h-1v-1h-2v1h-1v2h-1v2h-1v2H1v2h1v1h1v1h1v1h1v1h1v5h-1v4h2v-1h2v-1h2v-1h2v1h2v1h2v1h2v-4h-1v-5h1v-1h1v-1h1v-1h1v-1h1v-2h-7Zm4,3h-1v1h-1v1h-1v1h-1v5h1v1h-2v-1h-2v-1h-2v1h-2v1h-2v-1h1v-5h-1v-1h-1v-1h-1v-1h-1v-1h4v-1h1v-1h1v-2h1v-2h2v2h1v2h1v1h1v1h4v1Z"/>
-                               </svg>
-                               <!-- Solid star (shown when favorited) -->
-                               <svg id="star-solid" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                   <polygon points="23 8 23 10 22 10 22 11 21 11 21 12 20 12 20 13 19 13 19 14 18 14 18 19 19 19 19 23 17 23 17 22 15 22 15 21 13 21 13 20 11 20 11 21 9 21 9 22 7 22 7 23 5 23 5 19 6 19 6 14 5 14 5 13 4 13 4 12 3 12 3 11 2 11 2 10 1 10 1 8 8 8 8 6 9 6 9 4 10 4 10 2 11 2 11 1 13 1 13 2 14 2 14 4 15 4 15 6 16 6 16 8 23 8"/>
-                               </svg>
-                            </a>
-                        </div>
-
-                        {% if is_owner %}
-                            <div class="flex flex-wrap gap-2">
-                                <a href="{% url 'project_update' pk=project.pk %}" class="btn btn-secondary">
-                                    Edit Project
-                                </a>
-                                <a href="{% url 'project_interested_users' project_id=project.pk %}" class="btn btn-info">
-                                    View Interested Users ({{ interest_count }})
-                                </a>
-                                {% if not project.assigned_wit and not project.old_assigned_wit_id and project.status == 'OPEN' %}
-                                <a href="{% url 'project_delete' pk=project.pk %}" class="btn btn-error">
-                                    Delete Project
-                                </a>
-                                {% endif %}
-                            </div>
-                        {% else %}
-                            <!-- WIT actions -->
-                            {% if user_interested %}
-                                <div class="alert alert-success mb-4">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                                    <span>You have expressed interest in this project!</span>
-                                </div>
-
-                                <a href="{% url 'withdraw_interest' project_id=project.pk %}" class="btn btn-outline btn-error">
-                                    Withdraw Interest
-                                </a>
-                            {% else %}
-                                {% if project.status == 'OPEN' %}
-                                <a href="{% url 'express_interest' project_id=project.pk %}" class="btn btn-primary">
-                                    Express Interest
-                                </a>
-                                {% elif project.status == 'ASSIGNED' %}
-                                    {% if user.women_in_tech_profile %}
-                                        {% if project.assigned_wit == user.women_in_tech_profile %}
-                                            <div class="alert alert-success mb-4">
-                                                <span>You are currently assigned to work on this project!</span>
-                                            </div>
-                                        {% endif %}
-                                    {% endif %}
-                                {% endif %}
-                            {% endif %}
-                        {% endif %}
-                    {% else %}
-                        <div class="alert alert-info">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 w-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-
-                            <div>
-                                <p>Sign in to express interest in this project.</p>
-                                <a href="{% url 'account_login' %}?next={{ request.path }}" class="btn btn-primary btn-sm mt-2">Sign In</a>
-                            </div>
-                        </div>
-                    {% endif %}
+                <div>
+                  <p>Sign in to express interest in this project.</p>
+                  <a href="{% url 'account_login' %}?next={{ request.path }}" class="btn btn-primary btn-sm mt-2">Sign In</a>
                 </div>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="lg:col-span-1">
+        <div class="card bg-base-200 shadow-xl mb-6">
+          <div class="card-body">
+            <h2 class="card-title mb-4">Project Info</h2>
+
+            <div class="mb-4">
+              <p class="text-sm opacity-75">Created</p>
+              <p>{{ project.created_at|date:'F j, Y' }}</p>
             </div>
+
+            <div class="mb-4">
+              <p class="text-sm opacity-75">Last Updated</p>
+              <p>{{ project.updated_at|date:'F j, Y' }}</p>
+            </div>
+
+            <div class="mb-4">
+              <p class="text-sm opacity-75">Project Owner</p>
+              {% if project.owner %}
+                <p>{{ project.owner.user.username }}</p>
+                {% if project.owner.github_username %}
+                  <p class="text-xs">GitHub: {{ project.owner.github_username }}</p>
+                {% endif %}
+              {% elif project.old_owner_id %}
+                <p>User ID: {{ project.old_owner_id }}</p>
+              {% else %}
+                <p>Unknown</p>
+              {% endif %}
+            </div>
+
+            {% if project.assigned_wit or project.old_assigned_wit_id %}
+              <div class="mb-4">
+                <p class="text-sm opacity-75">Assigned Developer</p>
+                {% if project.assigned_wit %}
+                  <p>{{ project.assigned_wit.user.username }}</p>
+                  {% if project.assigned_wit.github_username %}
+                    <p class="text-xs">GitHub: {{ project.assigned_wit.github_username }}</p>
+                  {% endif %}
+                  {% if project.assigned_wit.tech_specialties %}
+                    <p class="text-xs">Specialties: {{ project.assigned_wit.tech_specialties }}</p>
+                  {% endif %}
+                {% elif project.old_assigned_wit_id %}
+                  <p>User ID: {{ project.old_assigned_wit_id }}</p>
+                {% endif %}
+              </div>
+            {% endif %}
+
+            <div class="mb-4">
+              <p class="text-sm opacity-75">Interested Developers</p>
+              <p>{{ interest_count }} interested</p>
+            </div>
+          </div>
         </div>
 
-        <!-- Sidebar -->
-        <div class="lg:col-span-1">
-            <div class="card bg-base-200 shadow-xl mb-6">
-                <div class="card-body">
-                    <h2 class="card-title mb-4">Project Info</h2>
+        <div class="card bg-base-200 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title mb-4">Funding Progress</h2>
 
-                    <div class="mb-4">
-                        <p class="text-sm opacity-75">Created</p>
-                        <p>{{ project.created_at|date:"F j, Y" }}</p>
-                    </div>
-
-                    <div class="mb-4">
-                        <p class="text-sm opacity-75">Last Updated</p>
-                        <p>{{ project.updated_at|date:"F j, Y" }}</p>
-                    </div>
-
-                    <div class="mb-4">
-                        <p class="text-sm opacity-75">Project Owner</p>
-                        {% if project.owner %}
-                            <p>{{ project.owner.user.username }}</p>
-                            {% if project.owner.github_username %}
-                                <p class="text-xs">GitHub: {{ project.owner.github_username }}</p>
-                            {% endif %}
-                        {% elif project.old_owner_id %}
-                            <p>User ID: {{ project.old_owner_id }}</p>
-                        {% else %}
-                            <p>Unknown</p>
-                        {% endif %}
-                    </div>
-
-                    {% if project.assigned_wit or project.old_assigned_wit_id %}
-                    <div class="mb-4">
-                        <p class="text-sm opacity-75">Assigned Developer</p>
-                        {% if project.assigned_wit %}
-                            <p>{{ project.assigned_wit.user.username }}</p>
-                            {% if project.assigned_wit.github_username %}
-                                <p class="text-xs">GitHub: {{ project.assigned_wit.github_username }}</p>
-                            {% endif %}
-                            {% if project.assigned_wit.tech_specialties %}
-                                <p class="text-xs">Specialties: {{ project.assigned_wit.tech_specialties }}</p>
-                            {% endif %}
-                        {% elif project.old_assigned_wit_id %}
-                            <p>User ID: {{ project.old_assigned_wit_id }}</p>
-                        {% endif %}
-                    </div>
-                    {% endif %}
-
-                    <div class="mb-4">
-                        <p class="text-sm opacity-75">Interested Developers</p>
-                        <p>{{ interest_count }} interested</p>
-                    </div>
-                </div>
+            <div class="text-center mb-2">
+              <div class="radial-progress text-primary" style="--value:{{ project.funding_percentage }};">{{ project.funding_percentage }}%</div>
             </div>
 
-            <div class="card bg-base-200 shadow-xl">
-                <div class="card-body">
-                    <h2 class="card-title mb-4">Funding Progress</h2>
+            <div class="stats stats-vertical shadow">
+              <div class="stat">
+                <div class="stat-title">Target</div>
+                <div class="stat-value">€{{ project.funding_goal }}</div>
+              </div>
 
-                    <div class="text-center mb-2">
-                        <div class="radial-progress text-primary" style="--value:{{ project.funding_percentage }};">{{ project.funding_percentage }}%</div>
-                    </div>
-
-                    <div class="stats stats-vertical shadow">
-                        <div class="stat">
-                            <div class="stat-title">Target</div>
-                            <div class="stat-value">€{{ project.funding_goal }}</div>
-                        </div>
-
-                        <div class="stat">
-                            <div class="stat-title">Raised</div>
-                            <div class="stat-value">€{{ project.current_funding }}</div>
-                            <div class="stat-desc">{{ project.funding_percentage }}% of goal</div>
-                        </div>
-                    </div>
-
-                    <!-- TODO: Add "Sponsor Project" button when payments app is implemented -->
-                </div>
+              <div class="stat">
+                <div class="stat-title">Raised</div>
+                <div class="stat-value">€{{ project.current_funding }}</div>
+                <div class="stat-desc">{{ project.funding_percentage }}% of goal</div>
+              </div>
             </div>
+
+            <div class="form-control mt-4">
+              <label class="label"><span class="label-text">Donation Amount (€)</span></label>
+              <div class="input-group">
+                <input type="number" id="donation-amount" min="1" class="input input-bordered w-full" value="20" />
+                <button id="donate-button" class="btn btn-primary mt-2 w-full">Support This Project</button>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
+  </div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'os_project/js/favorite.js' %}"></script>
+  <script src="{% static 'os_project/js/favorite.js' %}"></script>
+  <script src="https://js.stripe.com/v3/"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const stripe = Stripe('{{ stripe_publishable_key }}');
+
+        const donateButton = document.getElementById('donate-button');
+        if (donateButton) {
+            donateButton.addEventListener('click', async function() {
+                const amountInput = document.getElementById('donation-amount');
+                const amount = amountInput.value;
+
+                if (!amount || amount <= 0) {
+                    alert("Please enter a valid donation amount");
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/donations/create-checkout-session/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: JSON.stringify({
+                            type: 'project',
+                            id: {{ project.id }},
+                            amount: amount
+                        })
+                    });
+
+                    const session = await response.json();
+
+                    if (session.error) {
+                        console.error(session.error);
+                        return;
+                    }
+
+                    stripe.redirectToCheckout({ sessionId: session.id });
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+    });
+</script>
 {% endblock %}
