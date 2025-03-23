@@ -10,14 +10,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
+
 import dj_database_url
 
 if not os.path.isfile("env.py"):
     from custom_storages import (
-        EmptySafeStaticCloudinaryStorage,
         EmptySafeMediaCloudinaryStorage,
+        EmptySafeStaticCloudinaryStorage,
     )
 
 if os.path.isfile("env.py"):
@@ -64,8 +65,8 @@ INSTALLED_APPS = [
     "cloudinary",
     "import_export",
     "user_profile",
-    'os_project',
-    'donations',
+    "os_project",
+    "donations",
 ]
 
 MIDDLEWARE = [
@@ -200,3 +201,8 @@ else:
         "staticfiles": {"BACKEND": "custom_storages.EmptySafeStaticCloudinaryStorage"},
         "default": {"BACKEND": "custom_storages.EmptySafeMediaCloudinaryStorage"},
     }
+
+# Stripe
+STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_PUBLISHABLE_KEY")
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
+STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET")

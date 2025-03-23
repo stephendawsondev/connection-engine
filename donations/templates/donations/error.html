@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Success{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'donations/css/donations.css' %}">
+{% endblock %}
+
+
+{% block content %}
+<div class="error-message">
+    <h1>Error</h1>
+    <p>{{ error_message }}</p>
+</div>
+{% endblock %}
+
+{% block postloadjs %}
+{{ block.super }}
+{{ stripe_publishable_key|json_script:"id_stripe_publishable_key" }}
+{{ client_secret|json_script:"id_client_secret" }}
+{% endblock %}
