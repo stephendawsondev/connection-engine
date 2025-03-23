@@ -35,7 +35,7 @@ class Payment(models.Model):
     postcode = models.CharField(max_length=20, null=True, blank=True)
     town_or_city = models.CharField(max_length=40, null=False, blank=False)
     county = models.CharField(max_length=80, null=True, blank=True)
-    country = CountryField(blank_label="Country *", null=False, blank=False, default="Select a Country")  # type: ignore[call-overload]
+    country = CountryField(blank_label="Country *", null=True, blank=True)  # type: ignore[call-overload]
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
         max_length=20,
