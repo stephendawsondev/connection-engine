@@ -14,12 +14,12 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Set the working directory in the container
-WORKDIR /march_hackathon_placeholder
+WORKDIR /connection_engine
 
 RUN mkdir -p /var/log/django
 
-# Copy the current directory contents into the container at /march_hackathon_placeholder
-COPY . /march_hackathon_placeholder/
+# Copy the current directory contents into the container at /connection_engine
+COPY . /connection_engine/
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
@@ -31,4 +31,4 @@ RUN if [ -f package.json ]; then npm install; fi
 EXPOSE 3003
 
 # Run the application using Gunicorn for production
-CMD ["gunicorn", "--bind", "0.0.0.0:3003", "--access-logfile", "-", "--error-logfile", "-", "march_hackathon_placeholder.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:3003", "--access-logfile", "-", "--error-logfile", "-", "connection_engine.wsgi:application"]

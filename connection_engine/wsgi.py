@@ -1,5 +1,5 @@
 """
-WSGI config for march_hackathon_placeholder project.
+WSGI config for connection_engine project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "march_hackathon_placeholder.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "connection_engine.settings")
 
 application = get_wsgi_application()

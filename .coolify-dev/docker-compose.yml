@@ -5,11 +5,17 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["gunicorn", "--bind", "0.0.0.0:3003", "march_hackathon_placeholder.wsgi:application"]
+    command:
+      [
+        "gunicorn",
+        "--bind",
+        "0.0.0.0:3003",
+        "connection_engine.wsgi:application",
+      ]
     ports:
       - "3003:3003"
     environment:
-      - DJANGO_SETTINGS_MODULE=march_hackathon_placeholder.settings
+      - DJANGO_SETTINGS_MODULE=connection_engine.settings
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3003/health/ || exit 1"]
       interval: 30s
