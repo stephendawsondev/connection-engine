@@ -32,15 +32,7 @@ class CustomSignupForm(SignupForm):
 
     def save(self, request):
         user = super().save(request)
-        user_type = self.cleaned_data.get("user_type")
-
-        # Add user type to user object
-        if user_type == "wit":
-            WomenInTech.objects.create(user=user)
-        elif user_type == "osm":
-            OS_Maintainer.objects.create(user=user)
-        elif user_type == "mentor":
-            Mentor.objects.create(user=user)
+        user_type = self.cleaned_data.get("user_type")  # type: ignore
 
         user.save()
         return user
