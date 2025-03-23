@@ -19,6 +19,14 @@ def profile_detail(request, username):
     user = get_object_or_404(User, username=username)
     profile = get_object_or_404(Profile, user=user)
 
+    user_type = None
+    if hasattr(user, "women_in_tech_profile"):
+        user_type = "Women in Tech"
+    elif hasattr(user, "os_maintainer_profile"):
+        user_type = "Open Source Maintainer"
+    elif hasattr(user, "mentor_profile"):
+        user_type = "Mentor"
+
     # Get favorites from the profile model directly
     favorites = profile.favourite_projects.all()
 
@@ -26,6 +34,7 @@ def profile_detail(request, username):
         "profile_user": user,
         "profile": profile,
         "favorites": favorites,
+        "user_type": user_type,
     }
     return render(request, "user_profile/profile_detail.html", context)
 
