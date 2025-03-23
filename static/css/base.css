@@ -69,6 +69,8 @@ html[data-theme="light"] .logo {
 /* Cards & Buttons pixelated border effect */
 
 /* Static cards Retro Effect */
+.btn-error,
+.btn-error--wrapper,
 .btn-retro,
 .btn-retro--wrapper,
 .card,
@@ -95,15 +97,18 @@ html[data-theme="light"] .logo {
     0px 10px);
   position: relative;
 }
+.btn-error,
 .btn-retro,
 .card {
   border: 5px solid transparent;
 }
+.btn-error--wrapper,
 .btn-retro--wrapper,
 .card--wrapper {
   width: fit-content;
   height: fit-content;
 }
+.btn-error--wrapper .btn-error,
 .btn-retro--wrapper .btn-retro,
 .card--wrapper .card {
   display: block;
@@ -120,6 +125,8 @@ html[data-theme="light"] .logo {
     10px calc(100% - 10px),
     5px calc(100% - 10px));
 }
+.btn-error::after,
+.btn-error--wrapper::after,
 .btn-retro::after,
 .btn-retro--wrapper::after,
 .card::after,
@@ -170,9 +177,14 @@ html[data-theme="light"] .logo {
   display: block;
   pointer-events: none;
 }
+.btn-error::after,
 .btn-retro::after,
 .card::after {
   margin: -5px;
+}
+
+.btn-error::after {
+  background: var(--highlight3);
 }
 
 .error-container {
