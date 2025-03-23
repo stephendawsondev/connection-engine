@@ -66,6 +66,107 @@ html[data-theme="light"] .logo {
   background-image: url("https://res.cloudinary.com/dj2lk9daf/image/upload/v1742647700/ce-logo-light-theme_jcwtrv.png");
 }
 
+/* Cards & Buttons pixelated border effect */
+
+/* Static cards Retro Effect */
+.card,
+.card--wrapper {
+  clip-path: polygon(0px calc(100% - 10px),
+    5px calc(100% - 10px),
+    5px calc(100% - 5px),
+    10px calc(100% - 5px),
+    10px 100%,
+    calc(100% - 10px) 100%,
+    calc(100% - 10px) calc(100% - 5px),
+    calc(100% - 5px) calc(100% - 5px),
+    calc(100% - 5px) calc(100% - 10px),
+    100% calc(100% - 10px),
+    100% 10px,
+    calc(100% - 5px) 10px,
+    calc(100% - 5px) 5px,
+    calc(100% - 10px) 5px,
+    calc(100% - 10px) 0px,
+    10px 0px,
+    10px 5px,
+    5px 5px,
+    5px 10px,
+    0px 10px);
+  position: relative;
+}
+.card {
+  border: 5px solid transparent;
+}
+.card--wrapper {
+  width: fit-content;
+  height: fit-content;
+}
+.card--wrapper .card {
+  display: block;
+  clip-path: polygon(5px 10px,
+    10px 10px,
+    10px 5px,
+    calc(100% - 10px) 5px,
+    calc(100% - 10px) 10px,
+    calc(100% - 5px) 10px,
+    calc(100% - 5px) calc(100% - 10px),
+    calc(100% - 10px) calc(100% - 10px),
+    calc(100% - 10px) calc(100% - 5px),
+    10px calc(100% - 5px),
+    10px calc(100% - 10px),
+    5px calc(100% - 10px));
+}
+.card::after,
+.card--wrapper::after {
+  content: "";
+  position: absolute;
+  clip-path: polygon(0px calc(100% - 10px),
+    5px calc(100% - 10px),
+    5px calc(100% - 5px),
+    10px calc(100% - 5px),
+    10px 100%,
+    calc(100% - 10px) 100%,
+    calc(100% - 10px) calc(100% - 5px),
+    calc(100% - 5px) calc(100% - 5px),
+    calc(100% - 5px) calc(100% - 10px),
+    100% calc(100% - 10px),
+    100% 10px,
+    calc(100% - 5px) 10px,
+    calc(100% - 5px) 5px,
+    calc(100% - 10px) 5px,
+    calc(100% - 10px) 0px,
+    10px 0px,
+    10px 5px,
+    5px 5px,
+    5px 10px,
+    0px 10px,
+    0px 50%,
+    5px 50%,
+    5px 10px,
+    10px 10px,
+    10px 5px,
+    calc(100% - 10px) 5px,
+    calc(100% - 10px) 10px,
+    calc(100% - 5px) 10px,
+    calc(100% - 5px) calc(100% - 10px),
+    calc(100% - 10px) calc(100% - 10px),
+    calc(100% - 10px) calc(100% - 5px),
+    10px calc(100% - 5px),
+    10px calc(100% - 10px),
+    5px calc(100% - 10px),
+    5px 50%,
+    0px 50%);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--highlight4);
+  display: block;
+  pointer-events: none;
+}
+.card::after {
+  margin: -5px;
+}
+
 .error-container {
   text-align: center;
   padding: 40px 20px;
