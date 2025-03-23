@@ -14,6 +14,8 @@ from user_profile.models import WomenInTech
 
 from .models import Payment
 
+from .forms import WomenInTechSearchForm
+
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
@@ -234,7 +236,7 @@ class WomenInTechListView(ListView):
     paginate_by = 12
 
     def get_queryset(self):
-        queryset = WomenInTech.objects.filter(is_active=True)
+        queryset = WomenInTech.objects.all()
         form = WomenInTechSearchForm(self.request.GET)
         if form.is_valid():
             search = form.cleaned_data.get("search")
