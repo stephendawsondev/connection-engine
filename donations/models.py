@@ -1,5 +1,6 @@
 import uuid
 from decimal import Decimal
+from typing import Optional
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -9,6 +10,20 @@ from django_countries.fields import CountryField
 
 # Create your models here.
 class Payment(models.Model):
+    project = models.ForeignKey(
+        "os_project.Project",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="donations",
+    )
+    sponsored_user = models.ForeignKey(
+        "user_profile.WomenInTech",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="sponsorships",
+    )
     confirmation_number = models.CharField(max_length=32, null=False, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
@@ -20,7 +35,7 @@ class Payment(models.Model):
     postcode = models.CharField(max_length=20, null=True, blank=True)
     town_or_city = models.CharField(max_length=40, null=False, blank=False)
     county = models.CharField(max_length=80, null=True, blank=True)
-    country = CountryField(null=True, blank=True)
+    country = CountryField(blank_label="Country *", null=False, blank=False, default="Select a Country")  # type: ignore[call-overload]
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
         max_length=20,
@@ -45,7 +60,25 @@ class Payment(models.Model):
         """
         if not self.confirmation_number:
             self.confirmation_number = self._generate_confirmation_number()
+
+        # Update the grand total
+        self.grand_total = self.amount
+
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.confirmation_number
+        return f"Payment {self.confirmation_number}"
+
+
+class ProjectFunding(models.Model):
+    project = models.ForeignKey("os_project.Project", on_delete=models.CASCADE)
+    payment = models.ForeignKey("Payment", on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class WITFunding(models.Model):
+    wit = models.ForeignKey("user_profile.WomenInTech", on_delete=models.CASCADE)
+    payment = models.ForeignKey("Payment", on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
