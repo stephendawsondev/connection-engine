@@ -32,6 +32,8 @@ class CustomSignupForm(SignupForm):
 
     def save(self, request):
         user = super().save(request)
+        user_type = self.cleaned_data.get("user_type")  # type: ignore
+
         user.save()
         return user
 
