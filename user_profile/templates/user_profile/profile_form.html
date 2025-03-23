@@ -136,6 +136,7 @@
           {% endif %}
         </div>
 
+        <!-- WIT Profile Form  -->
         {% if wit_form %}
         <div class="divider">Women in Tech Details</div>
 
@@ -220,6 +221,73 @@
             </span>
           </label>
           {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Mentor Profile Form  -->
+        {% if mentor_form %}
+        <div class="divider">Mentor Details</div>
+
+        <!-- Expertise -->
+        <div class="form-control">
+            <label class="label block" for="{{ mentor_form.expertise.id_for_label }}">
+                <span class="label-text">Expertise</span>
+            </label>
+            <input
+              type="text"
+              name="{{ mentor_form.expertise.html_name }}"
+              id="{{ mentor_form.expertise.id_for_label }}"
+              value="{{ mentor_form.expertise.value|default:'' }}"
+              class="input input-bordered w-full{% if mentor_form.expertise.errors %} input-error{% endif %}"
+            />
+            {% if mentor_form.expertise.errors %}
+            <label class="label">
+              <span class="label-text-alt text-error">
+                {{ mentor_form.expertise.errors|join:", " }}
+              </span>
+            </label>
+            {% endif %}
+        </div>
+
+        <!-- Years of Experience -->
+        <div class="form-control">
+            <label class="label block" for="{{ mentor_form.years_of_experience.id_for_label }}">
+                <span class="label-text">Years of Experience</span>
+            </label>
+            <input
+              type="number"
+              name="{{ mentor_form.years_of_experience.html_name }}"
+              id="{{ mentor_form.years_of_experience.id_for_label }}"
+              value="{{ mentor_form.years_of_experience.value|default:'' }}"
+              class="input input-bordered w-full{% if mentor_form.years_of_experience.errors %} input-error{% endif %}"
+            />
+            {% if mentor_form.years_of_experience.errors %}
+            <label class="label">
+              <span class="label-text-alt text-error">
+                {{ mentor_form.years_of_experience.errors|join:", " }}
+              </span>
+            </label>
+            {% endif %}
+        </div>
+
+        <!-- About -->
+        <div class="form-control">
+            <label class="label block" for="{{ mentor_form.about.id_for_label }}">
+                <span class="label-text">About</span>
+            </label>
+            <textarea
+              name="{{ mentor_form.about.html_name }}"
+              id="{{ mentor_form.about.id_for_label }}"
+              class="textarea textarea-bordered w-full{% if mentor_form.about.errors %} textarea-error{% endif %}"
+              rows="4"
+            >{{ mentor_form.about.value|default:'' }}</textarea>
+            {% if mentor_form.about.errors %}
+            <label class="label">
+              <span class="label-text-alt text-error">
+                {{ mentor_form.about.errors|join:", " }}
+              </span>
+            </label>
+            {% endif %}
         </div>
         {% endif %}
 
