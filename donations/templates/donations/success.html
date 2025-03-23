@@ -125,6 +125,91 @@
             </div>
         </div>
     {% endif %}
+
+    {% if sponsored_user %}
+    <div class="card bg-base-200 shadow-md">
+        <h3>Other Women in Tech</h3>
+        <p>Consider supporting these talented developers too:</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for other_wit in other_women_in_tech %}
+            <div class="card bg-base-200 shadow-xl h-full hover:shadow-2xl transition-shadow duration-300">
+                {% if other_wit.image %}
+                <figure class="h-48">
+                    <img src="{{ other_wit.image.url }}" alt="{{ other_wit.user.username }}" class="object-cover w-full h-full">
+                </figure>
+                {% else %}
+                <figure class="h-48 bg-base-300 flex items-center justify-center">
+                    <div class="text-5xl opacity-30">👤</div>
+                </figure>
+                {% endif %}
+                <div class="card-body">
+                    <div class="flex items-center justify-between">
+                        <h2 class="card-title text-xs">{{ other_wit.user.username }}</h2>
+                        <div class="badge badge-lg badge-primary">{{ other_wit.experience_level }}</div>
+                    </div>
+                    <p class="line-clamp-3">{{ other_wit.tech_specialties }}</p>
+                    <div class="flex flex-wrap gap-1 mt-2">
+                        {% for specialty in other_wit.specialties.all %}
+                        <div class="badge badge-outline">{{ specialty.name }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="mt-4">
+                        <div class="text-sm mb-1">Total Sponsorships: €{{ other_wit.total_sponsorships }}</div>
+                        <progress class="progress progress-primary w-full" value="{{ other_wit.sponsorship_percentage }}" max="100"></progress>
+                    </div>
+                    <div class="card-actions justify-end mt-4">
+                        <a href="{% url 'profile_detail' pk=other_wit.user.id %}" class="btn btn-retro btn-sm">View Profile</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    <br>
+    <br>
+    {% if sponsored_user %}
+        <div class="card bg-base-200 shadow-md">
+            <h3>Recent Payments</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr>
+                            <th class="border-b border-gray-200 px-4 py-2">Date</th>
+                            <th class="border-b border-gray-200 px-4 py-2">User</th>
+                            <th class="border-b border-gray-200 px-4 py-2">Amount</th>
+                            <th class="border-b border-gray-200 px-4 py-2">Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pay in recent_payments %}
+                        <tr>
+                            <td class="px-4 py-2">{{ pay.created_at|date:"Y-m-d H:i" }}</td>
+                            <td class="px-4 py-2">{{ pay.user.username }}</td>
+                            <td class="px-4 py-2">€{{ pay.amount }}</td>
+                            <td class="px-4 py-2">
+                                {% if pay.project %}
+                                    Project Donation
+                                {% elif pay.sponsored_user %}
+                                    Sponsorship
+                                {% else %}
+                                    General Donation
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="px-4 py-2 text-center text-muted-foreground">
+                                No recent payments found
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+
 </div>
 {% endblock %}
 {% block postloadjs %}

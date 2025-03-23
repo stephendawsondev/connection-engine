@@ -12,7 +12,6 @@ from django.views.generic import ListView
 from os_project.models import Project
 from user_profile.models import WomenInTech
 
-from .forms import WomenInTechSearchForm
 from .models import Payment
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -151,7 +150,6 @@ def success(request):
         return render(
             request, "donations/error.html", {"error_message": "No session ID provided"}
         )
-
     try:
         # Retrieve the session from Stripe
         session = stripe.checkout.Session.retrieve(session_id)
@@ -193,50 +191,41 @@ def success(request):
                         payment.save()
                     except WomenInTech.DoesNotExist:
                         payment.save()
-            else:
-                payment.save()
+                else:
+                    payment.save()
 
         # Get project information if applicable
         project = payment.project
+        context = {
+            "payment": payment,
+            "save_info": request.session.get("save_info"),
+        }
+
         if project:
             remaining_funding = project.funding_goal - project.current_funding
             funding_progress = project.funding_percentage()
-
-            # Add recent payments to the context
-            recent_payments = Payment.objects.exclude(status="PENDING").order_by(
-                "-created_at"
-            )[:5]
-
-            return render(
-                request,
-                "donations/success.html",
+            context.update(
                 {
-                    "payment": payment,
                     "project": project,
                     "remaining_funding": remaining_funding,
                     "funding_progress": funding_progress,
-                    "recent_payments": recent_payments,  # Add this line
-                    "save_info": request.session.get("save_info"),
-                },
+                }
             )
 
-            return render(
-                request,
-                "donations/success.html",
-                {
-                    "payment": payment,
-                    "project": project,
-                    "remaining_funding": remaining_funding,
-                    "funding_progress": funding_progress,
-                    "save_info": request.session.get("save_info"),
-                },
-            )
-        else:
-            return render(
-                request,
-                "donations/success.html",
-                {"payment": payment, "save_info": request.session.get("save_info")},
-            )
+        # Add recent payments to the context
+        recent_payments = Payment.objects.exclude(status="PENDING").order_by(
+            "-created_at"
+        )[:5]
+        context["recent_payments"] = recent_payments
+
+        # Add other women in tech if this was a sponsorship
+        if payment.sponsored_user:
+            context["sponsored_user"] = payment.sponsored_user
+            context["other_women_in_tech"] = WomenInTech.objects.exclude(
+                user=payment.sponsored_user.user
+            ).order_by("-created_at")[:5]
+        return render(request, "donations/success.html", context)
+
     except Exception as e:
         return render(
             request,
@@ -246,40 +235,6 @@ def success(request):
 
 
 # Women iIn Tech List
-class WomenInTechListView(ListView):
-    model = WomenInTech
-    template_name = "donations/sponsorship.html"
-    context_object_name = "women_in_tech"
-    paginate_by = 12
-
-    def get_queryset(self):
-        queryset = WomenInTech.objects.all()
-        form = WomenInTechSearchForm(self.request.GET)
-        if form.is_valid():
-            search = form.cleaned_data.get("search")
-            tech_specialties = form.cleaned_data.get("tech_specialties")
-            experience_level = form.cleaned_data.get("experience_level")
-
-            if search:
-                queryset = queryset.filter(
-                    Q(user__username__icontains=search)
-                    | Q(tech_specialties__icontains=search)
-                    | Q(user__first_name__icontains=search)
-                    | Q(user__last_name__icontains=search)
-                )
-
-            if tech_specialties:
-                queryset = queryset.filter(specialties=tech_specialties)
-
-            if experience_level:
-                queryset = queryset.filter(experience_level=experience_level)
-
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["search_form"] = WomenInTechSearchForm(self.request.GET)
-        return context
 
 
 @csrf_exempt
