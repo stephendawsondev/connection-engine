@@ -26,31 +26,31 @@
                 </div>
                 {% endif %}
 
-                <div class="divider">Basic Information</div>
+                <div class="divider my-3">Basic Information</div>
 
                 <div class="form-control">
-                    <label class="label" for="{{ form.title.id_for_label }}">
+                    <label class="label block mb-1" for="{{ form.title.id_for_label }}">
                         <span class="label-text">Project Title*</span>
                     </label>
                     <input type="text" name="{{ form.title.name }}" id="{{ form.title.id_for_label }}"
-                           class="input input-bordered {% if form.title.errors %}input-error{% endif %}"
+                           class="input input-bordered w-full {% if form.title.errors %}input-error{% endif %}"
                            value="{{ form.title.value|default:'' }}" required>
                     {% if form.title.errors %}
-                    <label class="label">
+                    <label class="label block mb-1">
                         <span class="label-text-alt text-error">{{ form.title.errors.0 }}</span>
                     </label>
                     {% endif %}
                 </div>
 
                 <div class="form-control">
-                    <label class="label" for="{{ form.description.id_for_label }}">
+                    <label class="label block mb-1" for="{{ form.description.id_for_label }}">
                         <span class="label-text">Description*</span>
                     </label>
                     <textarea name="{{ form.description.name }}" id="{{ form.description.id_for_label }}"
-                              class="textarea textarea-bordered h-32 {% if form.description.errors %}textarea-error{% endif %}"
+                              class="textarea textarea-bordered h-32 w-full {% if form.description.errors %}textarea-error{% endif %}"
                               required>{{ form.description.value|default:'' }}</textarea>
                     {% if form.description.errors %}
-                    <label class="label">
+                    <label class="label block mb-1">
                         <span class="label-text-alt text-error">{{ form.description.errors.0 }}</span>
                     </label>
                     {% endif %}
@@ -58,7 +58,7 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="form-control">
-                        <label class="label" for="{{ form.category.id_for_label }}">
+                        <label class="label block mb-1" for="{{ form.category.id_for_label }}">
                             <span class="label-text">Category</span>
                         </label>
                         <select name="{{ form.category.name }}" id="{{ form.category.id_for_label }}"
@@ -71,20 +71,20 @@
                             {% endfor %}
                         </select>
                         {% if form.category.errors %}
-                        <label class="label">
+                        <label class="label block mb-1">
                             <span class="label-text-alt text-error">{{ form.category.errors.0 }}</span>
                         </label>
                         {% endif %}
                     </div>
 
                     <div class="form-control">
-                        <label class="label" for="{{ form.image.id_for_label }}">
+                        <label class="label block mb-1" for="{{ form.image.id_for_label }}">
                             <span class="label-text">Project Image</span>
                         </label>
                         <input type="file" name="{{ form.image.name }}" id="{{ form.image.id_for_label }}"
                                class="file-input file-input-bordered {% if form.image.errors %}file-input-error{% endif %}">
                         {% if form.image.errors %}
-                        <label class="label">
+                        <label class="label block mb-1">
                             <span class="label-text-alt text-error">{{ form.image.errors.0 }}</span>
                         </label>
                         {% endif %}
@@ -96,42 +96,40 @@
                         {% endif %}
                     </div>
                 </div>
-
-                <div class="divider">Project Details</div>
+                <div class="divider my-3">Project Details</div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="form-control">
-                        <label class="label" for="{{ form.repo_link.id_for_label }}">
+                        <label class="label block mb-1" for="{{ form.repo_link.id_for_label }}">
                             <span class="label-text">Repository Link*</span>
                         </label>
                         <input type="url" name="{{ form.repo_link.name }}" id="{{ form.repo_link.id_for_label }}"
                                class="input input-bordered {% if form.repo_link.errors %}input-error{% endif %}"
                                value="{{ form.repo_link.value|default:'' }}" required>
                         {% if form.repo_link.errors %}
-                        <label class="label">
+                        <label class="label block mb-1">
                             <span class="label-text-alt text-error">{{ form.repo_link.errors.0 }}</span>
                         </label>
                         {% endif %}
                     </div>
 
                     <div class="form-control">
-                        <label class="label" for="{{ form.deploy_link.id_for_label }}">
+                        <label class="label block mb-1" for="{{ form.deploy_link.id_for_label }}">
                             <span class="label-text">Demo/Deploy Link (Optional)</span>
                         </label>
                         <input type="url" name="{{ form.deploy_link.name }}" id="{{ form.deploy_link.id_for_label }}"
                                class="input input-bordered {% if form.deploy_link.errors %}input-error{% endif %}"
                                value="{{ form.deploy_link.value|default:'' }}">
                         {% if form.deploy_link.errors %}
-                        <label class="label">
+                        <label class="label block mb-1">
                             <span class="label-text-alt text-error">{{ form.deploy_link.errors.0 }}</span>
                         </label>
                         {% endif %}
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="form-control">
-                        <label class="label" for="{{ form.status.id_for_label }}">
+                        <label class="label block mb-1" for="{{ form.status.id_for_label }}">
                             <span class="label-text">Project Status*</span>
                         </label>
                         <select name="{{ form.status.name }}" id="{{ form.status.id_for_label }}"
@@ -143,14 +141,14 @@
                             {% endfor %}
                         </select>
                         {% if form.status.errors %}
-                        <label class="label">
+                        <label class="label block mb-1">
                             <span class="label-text-alt text-error">{{ form.status.errors.0 }}</span>
                         </label>
                         {% endif %}
                     </div>
 
                     <div class="form-control">
-                        <label class="label" for="{{ form.difficulty.id_for_label }}">
+                        <label class="label block mb-1" for="{{ form.difficulty.id_for_label }}">
                             <span class="label-text">Difficulty Level*</span>
                         </label>
                         <select name="{{ form.difficulty.name }}" id="{{ form.difficulty.id_for_label }}"
@@ -162,36 +160,35 @@
                             {% endfor %}
                         </select>
                         {% if form.difficulty.errors %}
-                        <label class="label">
+                        <label class="label block mb-1">
                             <span class="label-text-alt text-error">{{ form.difficulty.errors.0 }}</span>
                         </label>
                         {% endif %}
                     </div>
-                </div>
 
                 <div class="form-control">
-                    <label class="label" for="{{ form.technologies.id_for_label }}">
+                    <label class="label block mb-1" for="{{ form.technologies.id_for_label }}">
                         <span class="label-text">Technologies*</span>
                     </label>
                     <input type="text" name="{{ form.technologies.name }}" id="{{ form.technologies.id_for_label }}"
                            placeholder="e.g., Python, Django, React"
-                           class="input input-bordered {% if form.technologies.errors %}input-error{% endif %}"
+                           class="input input-bordered w-full {% if form.technologies.errors %}input-error{% endif %}"
                            value="{{ form.technologies.value|default:'' }}" required>
                     {% if form.technologies.errors %}
-                    <label class="label">
+                    <label class="label block mb-1">
                         <span class="label-text-alt text-error">{{ form.technologies.errors.0 }}</span>
                     </label>
                     {% endif %}
-                    <label class="label">
-                        <span class="label-text-alt">Enter technologies as a comma-separated list</span>
+                    <label class="label block mt-1 text-wrap">
+                        <span class="label-text-alt">(Enter technologies as a comma-separated list)</span>
                     </label>
                 </div>
 
                 <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">Tags</span>
+                    <label class="label block mb-1">
+                        <span class="label-text mb-2">Tags</span>
                     </label>
-                    <div class="flex flex-wrap gap-2">
+                    <div class="flex flex-col flex-wrap md:flex-row gap-2">
                         {% for tag in form.tags.field.queryset %}
                         <label class="label cursor-pointer gap-2">
                             <input type="checkbox" name="{{ form.tags.name }}" value="{{ tag.pk }}"
@@ -202,33 +199,33 @@
                         {% endfor %}
                     </div>
                     {% if form.tags.errors %}
-                    <label class="label">
+                    <label class="label block mb-1">
                         <span class="label-text-alt text-error">{{ form.tags.errors.0 }}</span>
                     </label>
                     {% endif %}
                 </div>
 
-                <div class="divider">Funding</div>
+                <div class="divider my-3">Funding</div>
 
                 <div class="form-control">
-                    <label class="label" for="{{ form.funding_goal.id_for_label }}">
-                        <span class="label-text">Funding Goal (USD)*</span>
+                    <label class="label block mb-1" for="{{ form.funding_goal.id_for_label }}">
+                        <span class="label-text">Funding Goal (EUR)*</span>
                     </label>
                     <input type="number" name="{{ form.funding_goal.name }}" id="{{ form.funding_goal.id_for_label }}"
                            class="input input-bordered {% if form.funding_goal.errors %}input-error{% endif %}"
                            value="{{ form.funding_goal.value|default:'' }}" required step="0.01" min="0">
                     {% if form.funding_goal.errors %}
-                    <label class="label">
+                    <label class="label block mb-1">
                         <span class="label-text-alt text-error">{{ form.funding_goal.errors.0 }}</span>
                     </label>
                     {% endif %}
-                    <label class="label">
-                        <span class="label-text-alt">How much funding do you need to support a woman in tech working on this project?</span>
+                    <label class="label block mt-1 text-wrap">
+                        <span class="label-text-alt">(How much funding do you need to support a Woman in Tech to work on this project?)</span>
                     </label>
                 </div>
 
                 <div class="form-control mt-6">
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary btn-retro">
                         {% if form.instance.pk %}Update{% else %}Create{% endif %} Project
                     </button>
                 </div>

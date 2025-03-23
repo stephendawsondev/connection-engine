@@ -1,29 +1,50 @@
 /* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Jersey+10&family=Orbitron:wght@400..900&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Jersey+10&family=Orbitron:wght@400..900&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P&display=swap");
 
 /* Light Mode Variables */
 :root {
-  --highlight1: #30CEEC;
-  --highlight2: #7ACA09;
-  --highlight3: #DD1026;
-  --highlight4: #8C4FFE;
-  --highlight5: #F5A742;
-  --bg: #FAFAFA; /* Light mode background */
-  --text: #0A0A0B; /* Light mode text */
-  --font-primary: 'Press Start 2P', sans-serif;
-  --font-secondary: 'Orbitron', sans-serif;
+  --highlight1: #30ceec;
+  --highlight2: #7aca09;
+  --highlight3: #dd1026;
+  --highlight4: #8c4ffe;
+  --highlight5: #f5a742;
+  --bg: #fafafa; /* Light mode background */
+  --text: #0a0a0b; /* Light mode text */
+  --font-primary: "Press Start 2P", sans-serif;
+  --font-secondary: "Orbitron", sans-serif;
 }
 
 h1,
 h2,
 h3,
-a {
+a,
+button,
+th,
+.stat {
   font-family: var(--font-primary);
 }
 
-p {
+p,
+input,
+select,
+details,
+summary,
+checkbox,
+label,
+td,
+textarea,
+.toast,
+.alert,
+.badge,
+.divider,
+.radial-progress,
+.recent-donations {
   font-family: var(--font-secondary);
   letter-spacing: 2px;
+}
+
+select {
+  font-size: 0.75rem;
 }
 
 .badge {
@@ -45,8 +66,114 @@ html[data-theme="light"] .logo {
   background-image: url("https://res.cloudinary.com/dj2lk9daf/image/upload/v1742647700/ce-logo-light-theme_jcwtrv.png");
 }
 
+/* Cards & Buttons pixelated border effect */
 
-
+/* Static cards Retro Effect */
+.btn-retro,
+.btn-retro--wrapper,
+.card,
+.card--wrapper {
+    clip-path: polygon(0px calc(100% - 10px),
+    5px calc(100% - 10px),
+    5px calc(100% - 5px),
+    10px calc(100% - 5px),
+    10px 100%,
+    calc(100% - 10px) 100%,
+    calc(100% - 10px) calc(100% - 5px),
+    calc(100% - 5px) calc(100% - 5px),
+    calc(100% - 5px) calc(100% - 10px),
+    100% calc(100% - 10px),
+    100% 10px,
+    calc(100% - 5px) 10px,
+    calc(100% - 5px) 5px,
+    calc(100% - 10px) 5px,
+    calc(100% - 10px) 0px,
+    10px 0px,
+    10px 5px,
+    5px 5px,
+    5px 10px,
+    0px 10px);
+  position: relative;
+}
+.btn-retro,
+.card {
+  border: 5px solid transparent;
+}
+.btn-retro--wrapper,
+.card--wrapper {
+  width: fit-content;
+  height: fit-content;
+}
+.btn-retro--wrapper .btn-retro,
+.card--wrapper .card {
+  display: block;
+  clip-path: polygon(5px 10px,
+    10px 10px,
+    10px 5px,
+    calc(100% - 10px) 5px,
+    calc(100% - 10px) 10px,
+    calc(100% - 5px) 10px,
+    calc(100% - 5px) calc(100% - 10px),
+    calc(100% - 10px) calc(100% - 10px),
+    calc(100% - 10px) calc(100% - 5px),
+    10px calc(100% - 5px),
+    10px calc(100% - 10px),
+    5px calc(100% - 10px));
+}
+.btn-retro::after,
+.btn-retro--wrapper::after,
+.card::after,
+.card--wrapper::after {
+  content: "";
+  position: absolute;
+  clip-path: polygon(0px calc(100% - 10px),
+    5px calc(100% - 10px),
+    5px calc(100% - 5px),
+    10px calc(100% - 5px),
+    10px 100%,
+    calc(100% - 10px) 100%,
+    calc(100% - 10px) calc(100% - 5px),
+    calc(100% - 5px) calc(100% - 5px),
+    calc(100% - 5px) calc(100% - 10px),
+    100% calc(100% - 10px),
+    100% 10px,
+    calc(100% - 5px) 10px,
+    calc(100% - 5px) 5px,
+    calc(100% - 10px) 5px,
+    calc(100% - 10px) 0px,
+    10px 0px,
+    10px 5px,
+    5px 5px,
+    5px 10px,
+    0px 10px,
+    0px 50%,
+    5px 50%,
+    5px 10px,
+    10px 10px,
+    10px 5px,
+    calc(100% - 10px) 5px,
+    calc(100% - 10px) 10px,
+    calc(100% - 5px) 10px,
+    calc(100% - 5px) calc(100% - 10px),
+    calc(100% - 10px) calc(100% - 10px),
+    calc(100% - 10px) calc(100% - 5px),
+    10px calc(100% - 5px),
+    10px calc(100% - 10px),
+    5px calc(100% - 10px),
+    5px 50%,
+    0px 50%);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--highlight4);
+  display: block;
+  pointer-events: none;
+}
+.btn-retro::after,
+.card::after {
+  margin: -5px;
+}
 
 .error-container {
   text-align: center;

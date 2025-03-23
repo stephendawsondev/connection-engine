@@ -1,37 +1,41 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load i18n %}
 
-{% block title %}Delete Account{% endblock %}
+{% block title %}
+  Delete Account
+{% endblock %}
 
 {% block content %}
-<div class="max-w-md mx-auto">
+  <div class="max-w-md mx-auto">
     <div class="card bg-base-200 shadow-xl">
-        <div class="card-body">
-            <h2 class="card-title text-2xl mb-4">{% trans "Delete Account" %}</h2>
+      <div class="card-body">
+        <h2 class="card-title text-2xl mb-4">{% trans 'Delete Account' %}</h2>
 
-            <div class="alert alert-warning mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-                <span>{% trans "Warning: This action cannot be undone!" %}</span>
-            </div>
-
-            <p class="mb-6">{% trans "Are you sure you want to delete your account? This will permanently remove your account and all associated data. This action cannot be undone." %}</p>
-
-            <form method="post" class="space-y-4">
-                {% csrf_token %}
-
-                <div class="form-control flex justify-between">
-                  <span class="label-text">{% trans "I understand that this action is permanent" %}</span>
-                    <label class="label cursor-pointer">
-                        <input type="checkbox" class="checkbox checkbox-error" required>
-                    </label>
-                </div>
-
-                <div class="flex flex-col sm:flex-row gap-4 justify-between mt-6">
-                    <a href="{% url 'profile_detail' username=user.username %}" class="btn btn-outline">{% trans "Cancel" %}</a>
-                    <button type="submit" class="btn btn-error">{% trans "Delete My Account" %}</button>
-                </div>
-            </form>
+        <div class="alert alert-warning mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          <span>{% trans 'Warning: This action cannot be undone!' %}</span>
         </div>
+
+        <p class="mb-6">
+          {% trans 'Are you sure you want to delete your account? This will permanently remove your account and all associated data. This action cannot be undone.' %}
+        </p>
+
+        <form method="post" class="space-y-4">
+          {% csrf_token %}
+
+          <div class="form-control flex justify-between">
+            <span class="label-text">{% trans 'I understand that this action is permanent' %}</span>
+            <label class="label cursor-pointer"><input type="checkbox" class="checkbox checkbox-error" required /></label>
+          </div>
+
+          <div class="flex flex-col gap-4 justify-between mt-6">
+            <a href="{% url 'profile_detail' username=user.username %}" class="btn btn-outline">{% trans 'Cancel' %}</a>
+            <button type="submit" class="btn btn-error">{% trans 'Delete My Account' %}</button>
+          </div>
+        </form>
+      </div>
     </div>
-</div>
+  </div>
 {% endblock %}

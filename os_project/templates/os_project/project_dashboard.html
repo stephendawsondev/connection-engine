@@ -1,122 +1,128 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Project Dashboard{% endblock %}
+{% block title %}
+  Project Dashboard
+{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-6">
+  <div class="container mx-auto px-4 py-6">
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold">Project Dashboard</h1>
-        <a href="{% url 'project_create' %}" class="btn btn-primary">Create New Project</a>
+      <h1 class="text-3xl font-bold">Project Dashboard</h1>
+      <a href="{% url 'project_create' %}" class="btn btn-primary btn-retro">Create New Project</a>
     </div>
 
     {% if owned_projects %}
-    <div class="overflow-x-auto">
+      <div class="overflow-x-auto">
         <table class="table bg-base-200 shadow-xl w-full">
-            <thead>
-                <tr>
-                    <th>Project</th>
-                    <th>Status</th>
-                    <th>Interested WITs</th>
-                    <th>Assigned WIT</th>
-                    <th>Funding</th>
-                    <th>Created</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for project in owned_projects %}
-                <tr class="hover">
-                    <td>
-                        <div class="flex items-center gap-3">
-                            {% if project.image %}
-                            <div class="avatar">
-                                <div class="mask mask-squircle w-12 h-12">
-                                    <img src="{{ project.image.url }}" alt="{{ project.title }}">
-                                </div>
-                            </div>
-                            {% endif %}
-                            <div>
-                                <div class="font-bold">{{ project.title }}</div>
-                                <div class="text-sm opacity-50">{{ project.get_difficulty_display }}</div>
-                            </div>
+          <thead>
+            <tr>
+              <th>Project</th>
+              <th>Status</th>
+              <th>Interested WITs</th>
+              <th>Assigned WIT</th>
+              <th>Funding</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for project in owned_projects %}
+              <tr class="hover">
+                <td>
+                  <div class="flex items-center gap-3">
+                    {% if project.image %}
+                      <div class="avatar">
+                        <div class="mask mask-squircle w-12 h-12">
+                          <img src="{{ project.image.url }}" alt="{{ project.title }}" />
                         </div>
-                    </td>
-                    <td>
-                        <div class="badge
-                            {% if project.status == 'OPEN' %}badge-success
-                            {% elif project.status == 'ASSIGNED' %}badge-warning
-                            {% elif project.status == 'IN_PROGRESS' %}badge-info
-                            {% elif project.status == 'COMPLETED' %}badge-secondary
-                            {% endif %}">
-                            {{ project.get_status_display }}
-                        </div>
-                    </td>
-                    <td>
-                        {% with interest_count=project.interested_users.count %}
-                        {% if interest_count > 0 %}
-                        <a href="{% url 'project_interested_users' project_id=project.pk %}" class="link">
-                            {{ interest_count }} interested
-                        </a>
-                        {% else %}
-                        <span>No interest yet</span>
-                        {% endif %}
-                        {% endwith %}
-                    </td>
-                    <td>
-                        {% if project.assigned_wit %}
-                            <div class="font-bold">{{ project.assigned_wit.user.username }}</div>
-                        {% elif project.old_assigned_wit_id %}
-                            <div>User ID: {{ project.old_assigned_wit_id }}</div>
-                        {% else %}
-                            <div>None</div>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <div class="flex items-center gap-2">
-                            <progress class="progress progress-primary w-20" value="{{ project.funding_percentage }}" max="100"></progress>
-                            <span>{{ project.funding_percentage }}%</span>
-                        </div>
-                    </td>
-                    <td>{{ project.created_at|date:"M d, Y" }}</td>
-                    <td>
-                        <div class="flex gap-2">
-                            <a href="{% url 'project_detail' pk=project.pk %}" class="btn btn-sm btn-circle btn-ghost">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                            </a>
-                            <a href="{% url 'project_update' pk=project.pk %}" class="btn btn-sm btn-circle btn-ghost">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                </svg>
-                            </a>
-                            {% if not project.assigned_wit and not project.old_assigned_wit_id and project.status == 'OPEN' %}
-                            <a href="{% url 'project_delete' pk=project.pk %}" class="btn btn-sm btn-circle btn-ghost text-error">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                            </a>
-                            {% endif %}
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% else %}
-    <div class="card bg-base-200 shadow-md">
-        <div class="card-body text-center">
-            <h3 class="text-xl mb-4">You haven't created any projects yet</h3>
-            <p>Create your first project to get started!</p>
+                      </div>
+                    {% endif %}
+                    <div>
+                      <div class="font-bold">{{ project.title }}</div>
+                      <div class="text-sm opacity-50">{{ project.get_difficulty_display }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="badge
+                            {% if project.status == 'OPEN' %}
+                      badge-success
 
-            <div class="mt-6">
-                <a href="{% url 'project_create' %}" class="btn btn-primary">Create New Project</a>
-            </div>
+                    {% elif project.status == 'ASSIGNED' %}
+                      badge-warning
+
+                    {% elif project.status == 'IN_PROGRESS' %}
+                      badge-info
+
+                    {% elif project.status == 'COMPLETED' %}
+                      badge-secondary
+
+                    {% endif %}">{{ project.get_status_display }}</div>
+                </td>
+                <td>
+                  {% with interest_count=project.interested_users.count %}
+                    {% if interest_count > 0 %}
+                      <a href="{% url 'project_interested_users' project_id=project.pk %}" class="link">{{ interest_count }} interested</a>
+                    {% else %}
+                      <span>No interest yet</span>
+                    {% endif %}
+                  {% endwith %}
+                </td>
+                <td>
+                  {% if project.assigned_wit %}
+                    <div class="font-bold">{{ project.assigned_wit.user.username }}</div>
+                  {% elif project.old_assigned_wit_id %}
+                    <div>User ID: {{ project.old_assigned_wit_id }}</div>
+                  {% else %}
+                    <div>None</div>
+                  {% endif %}
+                </td>
+                <td>
+                  <div class="flex items-center gap-2">
+                    <progress class="progress progress-primary w-20" value="{{ project.funding_percentage }}" max="100"></progress>
+                    <span>{{ project.funding_percentage }}%</span>
+                  </div>
+                </td>
+                <td>{{ project.created_at|date:'M d, Y' }}</td>
+                <td>
+                  <div class="flex gap-2">
+                    <a href="{% url 'project_detail' pk=project.pk %}" class="btn btn-sm btn-circle btn-ghost">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                    </a>
+                    <a href="{% url 'project_update' pk=project.pk %}" class="btn btn-sm btn-circle btn-ghost">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                      </svg>
+                    </a>
+                    {% if not project.assigned_wit and not project.old_assigned_wit_id and project.status == 'OPEN' %}
+                      <a href="{% url 'project_delete' pk=project.pk %}" class="btn btn-sm btn-circle btn-ghost text-error">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </a>
+                    {% endif %}
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="card bg-base-200 shadow-md">
+        <div class="card-body text-center">
+          <h3 class="text-xl mb-4">You haven't created any projects yet</h3>
+          <p>Create your first project to get started!</p>
+
+          <div class="mt-6">
+            <a href="{% url 'project_create' %}" class="btn btn-primary btn-retro">Create New Project</a>
+          </div>
         </div>
-    </div>
+      </div>
     {% endif %}
-</div>
+  </div>
 {% endblock %}
