@@ -60,7 +60,7 @@
   --color-info: oklch(78% 0.154 211.53);
   --color-info-content: oklch(14% 0.005 285.823);
   --color-success: oklch(76% 0.233 130.85);
-  --color-success-content: oklch(97% 0 0);
+  --color-success-content: oklch(20% 0 0);
   --color-warning: oklch(45% 0.187 3.815);
   --color-warning-content: oklch(97% 0 0);
   --color-error: oklch(57% 0.245 27.325);

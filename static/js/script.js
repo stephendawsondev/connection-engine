@@ -25,3 +25,23 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 3000);
   }
 });
+
+//** Funtion to track and store preferred theme */
+document.addEventListener("DOMContentLoaded", function () {
+  const themeToggle = document.querySelector(".theme-controller");
+  const themeKey = themeToggle.getAttribute("data-key") || "theme"; // Defaults to "theme" if no key is set
+
+  // Apply stored theme preference
+  const savedTheme = localStorage.getItem(themeKey);
+  if (savedTheme) {
+    document.documentElement.setAttribute("data-theme", savedTheme);
+    themeToggle.checked = savedTheme === "light";
+  }
+
+  // Listen for changes
+  themeToggle.addEventListener("change", function () {
+    const newTheme = themeToggle.checked ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", newTheme);
+    localStorage.setItem(themeKey, newTheme);
+  });
+});

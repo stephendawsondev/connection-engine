@@ -4,22 +4,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let isLockedOpen = false;
 
-  // Open on mouseover of the whole sidebar
-  sidebar.addEventListener("mouseover", function () {
-    if (!sidebar.classList.contains("open")) {
-      sidebar.classList.add("open");
-      sidebar.classList.remove("closed");
-    }
-  });
-
-  // Close on mouseleave, if not locked
-  sidebar.addEventListener("mouseleave", function () {
-    if (!isLockedOpen) {
-      sidebar.classList.remove("open");
-      sidebar.classList.add("closed");
-    }
-  });
-
   // Click to lock/unlock
   sidebar.addEventListener("click", function (e) {
     // Avoid closing if clicking a link

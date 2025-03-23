@@ -31,4 +31,9 @@ urlpatterns = [
         views.select_wit,
         name="select_wit",
     ),
+    path(
+        "<int:project_id>/toggle-favorite/",
+        views.toggle_favorite,
+        name="toggle_favorite",
+    ),
 ]

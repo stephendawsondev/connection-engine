@@ -1,0 +1,25 @@
+/* Team page styling */
+#iliana-card {
+    background-color: var(--highlight1);
+    border: 1px solid var(--highlight1);
+  }
+
+  #lucy-card {
+    background-color: var(--highlight2);
+    border: 1px solid var(--highlight2);
+  }
+
+  #soroush-card {
+    background-color: var(--highlight3);
+    border: 1px solid var(--highlight3);
+  }
+
+  #stephen-card {
+    background-color: var(--highlight4);
+    border: 1px solid var(--highlight4);
+  }
+
+  #warren-card {
+    background-color: var(--highlight5);
+    border: 1px solid var(--highlight5);
+  }
