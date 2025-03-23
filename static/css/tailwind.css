@@ -11,6 +11,7 @@
     --color-blue-400: oklch(0.707 0.165 254.624);
     --color-pink-50: oklch(0.971 0.014 343.198);
     --color-pink-500: oklch(0.656 0.241 354.308);
+    --color-gray-100: oklch(0.967 0.003 264.542);
     --color-black: #000;
     --color-white: #fff;
     --spacing: 0.25rem;
@@ -3074,6 +3075,9 @@
   .max-w-389 {
     max-width: calc(var(--spacing) * 389);
   }
+  .max-w-full {
+    max-width: 100%;
+  }
   .max-w-lg {
     max-width: var(--container-lg);
   }
@@ -3362,6 +3366,9 @@
   .overflow-x-auto {
     overflow-x: auto;
   }
+  .overflow-y-auto {
+    overflow-y: auto;
+  }
   .overflow-y-scroll {
     overflow-y: scroll;
   }
@@ -3444,6 +3451,9 @@
   }
   .bg-base-300 {
     background-color: var(--color-base-300);
+  }
+  .bg-gray-100 {
+    background-color: var(--color-gray-100);
   }
   .bg-primary {
     background-color: var(--color-primary);
@@ -3825,6 +3835,11 @@
   .sm\:block {
     @media (width >= 40rem) {
       display: block;
+    }
+  }
+  .sm\:h-64 {
+    @media (width >= 40rem) {
+      height: calc(var(--spacing) * 64);
     }
   }
   .sm\:min-h-\[70vh\] {
