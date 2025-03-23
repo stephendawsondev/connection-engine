@@ -213,3 +213,27 @@ class MilestoneGoal(models.Model):
     def __str__(self):
         return self.title
 
+
+class ProjectMentor(models.Model):
+    """Mentors associated with a specific project"""
+
+    project = models.ForeignKey(
+        Project, on_delete=models.CASCADE, related_name="mentors"
+    )
+    mentor = models.ForeignKey(
+        "user_profile.Mentor",
+        on_delete=models.CASCADE,
+        related_name="mentored_projects",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    # Optional fields for mentor details specific to this project
+    expertise_areas = models.CharField(max_length=200, blank=True)
+    availability = models.CharField(max_length=200, blank=True)
+    notes = models.TextField(blank=True)
+
+    class Meta:
+        unique_together = ("project", "mentor")
+
+    def __str__(self):
+        return f"{self.mentor.user.username} mentoring {self.project.title}"
