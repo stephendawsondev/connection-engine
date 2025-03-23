@@ -2,10 +2,10 @@
 import json
 
 import stripe
+from decimal import Decimal
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
 from os_project.models import Project
@@ -22,9 +22,9 @@ def create_checkout_session(request):
     amount = int(float(data.get("amount", 10)) * 100)  # Convert to cents
     type = data.get("type")
     id = data.get("id")
-
-    success_url = request.build_absolute_uri(
-        reverse("success_with_id", args=["CHECKOUT_SESSION_ID"])
+    success_url = (
+        request.build_absolute_uri("/donations/success/")
+        + "?session_id={CHECKOUT_SESSION_ID}"
     )
     cancel_url = request.build_absolute_uri("/donations/cancel/")
 
@@ -120,30 +120,63 @@ def handle_completed_checkout(session):
     payment.save()
 
 
-def success(request, session_id=None):
+@csrf_exempt
+def success(request):
     """
     Handle successful payments
     """
-    save_info = request.session.get("save_info")
+    # Get the session ID from query parameters
+    session_id = request.GET.get("session_id")
 
-    # If session_id is not provided in the URL, try to get it from the query parameter
     if not session_id:
-        session_id = request.GET.get("session_id")
-        if not session_id:
-            return render(
-                request,
-                "donations/error.html",
-                {"error_message": "No session ID provided"},
-            )
+        return render(
+            request, "donations/error.html", {"error_message": "No session ID provided"}
+        )
 
     try:
-        payment = Payment.objects.get(confirmation_number=session_id)
+        # Retrieve the session from Stripe
+        session = stripe.checkout.Session.retrieve(session_id)
+
+        # Look for an existing payment or create one
+        try:
+            payment = Payment.objects.get(confirmation_number=session_id)
+        except Payment.DoesNotExist:
+            # Create payment record from session data
+            payment = Payment(
+                confirmation_number=session_id,
+                user_id=request.user.id,
+                amount=Decimal(str(session.amount_total / 100)),  # Convert from cents
+                email=(
+                    session.customer_details.email
+                    if hasattr(session, "customer_details")
+                    else request.user.email
+                ),
+                full_name=request.user.get_full_name() or request.user.username,
+                status="SUCCESS",
+                stripe_payment_intent_id=session.payment_intent,
+            )
+
+            # Handle project and WIT data from metadata
+            if hasattr(session, "metadata"):
+                if session.metadata.get("project_id"):
+                    project = Project.objects.get(id=session.metadata.get("project_id"))
+                    payment.project = project
+                    # Update project funding
+                    project.current_funding += payment.amount
+                    project.save()
+
+                if session.metadata.get("wit_id"):
+                    payment.sponsored_user = WomenInTech.objects.get(
+                        id=session.metadata.get("wit_id")
+                    )
+
+            payment.save()
+
+        return render(request, "donations/success.html", {"payment": payment})
+
+    except Exception as e:
         return render(
             request,
-            "donations/success.html",
-            {"payment": payment, "save_info": save_info},
-        )
-    except Payment.DoesNotExist:
-        return render(
-            request, "donations/error.html", {"error_message": "Payment not found"}
+            "donations/error.html",
+            {"error_message": f"Error retrieving payment: {str(e)}"},
         )
