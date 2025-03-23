@@ -1,112 +1,110 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Interested Users - {{ project.title }}{% endblock %}
+{% block title %}
+  Interested Users - {{ project.title }}
+{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-6">
+  <div class="container mx-auto px-4 py-6">
     <div class="mb-4">
-        <a href="{% url 'project_dashboard' %}" class="btn btn-ghost btn-sm">
-            ← Back to Dashboard
-        </a>
+      <a href="{% url 'project_dashboard' %}" class="btn btn-ghost btn-sm">← Back to Dashboard</a>
     </div>
 
     <div class="card bg-base-200 shadow-xl mb-6">
-        <div class="card-body">
-            <h1 class="card-title text-2xl mb-2">Interested Users</h1>
-            <h2 class="text-xl mb-4">{{ project.title }}</h2>
+      <div class="card-body">
+        <h1 class="card-title text-2xl mb-2">Interested Users</h1>
+        <h2 class="text-xl mb-4">{{ project.title }}</h2>
 
-            <div class="alert alert-info mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <div>
-                    <p>These are Women in Tech who have expressed interest in working on your project.</p>
-                    {% if not project.assigned_wit and not project.old_assigned_wit_id %}
-                    <p>You can select one of them to work on your project.</p>
-                    {% else %}
-                    <p class="font-bold">A Woman in Tech is already assigned to this project.</p>
-                    {% endif %}
-                </div>
-            </div>
-
-            {% if interested_users %}
-            <div class="overflow-x-auto">
-                <table class="table w-full">
-                    <thead>
-                        <tr>
-                            <th>User</th>
-                            <th>Interested Since</th>
-                            <th>Note</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for interest in interested_users %}
-                        <tr class="hover">
-                            <td>
-                                {% if interest.wit %}
-                                    <div class="flex items-center gap-3">
-                                        {% if interest.wit.image %}
-                                        <div class="avatar">
-                                            <div class="mask mask-squircle w-12 h-12">
-                                                <img src="{{ interest.wit.image.url }}" alt="{{ interest.wit.user.username }}">
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        <div>
-                                            <div class="font-bold">{{ interest.wit.user.username }}</div>
-                                            {% if interest.wit.tech_specialties %}
-                                            <div class="text-sm opacity-50">{{ interest.wit.tech_specialties }}</div>
-                                            {% endif %}
-                                            {% if interest.wit.github_username %}
-                                            <div class="text-xs">GitHub: {{ interest.wit.github_username }}</div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                {% elif interest.old_user_id %}
-                                <div class="font-bold">User ID: {{ interest.old_user_id }}</div>
-                                {% endif %}
-                            </td>
-                            <td>{{ interest.created_at|date:"M d, Y" }}</td>
-                            <td>
-                                {% if interest.note %}
-                                {{ interest.note|truncatewords:15 }}
-                                <label for="modal-{{ interest.id }}" class="link link-hover text-sm">Read more</label>
-
-                                <!-- Modal for full note -->
-                                <input type="checkbox" id="modal-{{ interest.id }}" class="modal-toggle" />
-                                <div class="modal">
-                                    <div class="modal-box">
-                                        <h3 class="font-bold text-lg">Interest Note</h3>
-                                        <p class="py-4">{{ interest.note|linebreaks }}</p>
-                                        <div class="modal-action">
-                                            <label for="modal-{{ interest.id }}" class="btn">Close</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% else %}
-                                <em>No note provided</em>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if not project.assigned_wit and not project.old_assigned_wit_id %}
-                                <a href="{% url 'select_wit' project_id=project.pk interest_id=interest.id %}"
-                                   class="btn btn-primary btn-sm"
-                                   onclick="return confirm('Are you sure you want to select this user to work on your project?')">
-                                    Select
-                                </a>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        <div class="alert alert-info mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <div>
+            <p>These are Women in Tech who have expressed interest in working on your project.</p>
+            {% if not project.assigned_wit and not project.old_assigned_wit_id %}
+              <p>You can select one of them to work on your project.</p>
             {% else %}
-            <div class="alert">
-                <span>No users have expressed interest in this project yet.</span>
-            </div>
+              <p class="font-bold">A Woman in Tech is already assigned to this project.</p>
             {% endif %}
+          </div>
         </div>
+
+        {% if interested_users %}
+          <div class="overflow-x-auto">
+            <table class="table w-full">
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Interested Since</th>
+                  <th>Note</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for interest in interested_users %}
+                  <tr class="hover">
+                    <td>
+                      {% if interest.wit %}
+                        <div class="flex items-center gap-3">
+                          {% if interest.wit.image %}
+                            <div class="avatar">
+                              <div class="mask mask-squircle w-12 h-12">
+                                <img src="{{ interest.wit.image.url }}" alt="{{ interest.wit.user.username }}" />
+                              </div>
+                            </div>
+                          {% endif %}
+                          <div>
+                            <div class="font-bold">{{ interest.wit.user.username }}</div>
+                            {% if interest.wit.tech_specialties %}
+                              <div class="text-sm opacity-50">{{ interest.wit.tech_specialties }}</div>
+                            {% endif %}
+                            {% if interest.wit.github_username %}
+                              <div class="text-xs">GitHub: {{ interest.wit.github_username }}</div>
+                            {% endif %}
+                          </div>
+                        </div>
+                      {% elif interest.old_user_id %}
+                        <div class="font-bold">User ID: {{ interest.old_user_id }}</div>
+                      {% endif %}
+                    </td>
+                    <td>{{ interest.created_at|date:'M d, Y' }}</td>
+                    <td>
+                      {% if interest.note %}
+                        {{ interest.note|truncatewords:15 }}
+                        <label for="modal-{{ interest.id }}" class="link link-hover text-sm">Read more</label>
+
+                        <!-- Modal for full note -->
+                        <input type="checkbox" id="modal-{{ interest.id }}" class="modal-toggle" />
+                        <div class="modal">
+                          <div class="modal-box">
+                            <h3 class="font-bold text-lg">Interest Note</h3>
+                            <p class="py-4">{{ interest.note|linebreaks }}</p>
+                            <div class="modal-action">
+                              <label for="modal-{{ interest.id }}" class="btn">Close</label>
+                            </div>
+                          </div>
+                        </div>
+                      {% else %}
+                        <em>No note provided</em>
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% if not project.assigned_wit and not project.old_assigned_wit_id %}
+                        <a href="{% url 'select_wit' project_id=project.pk interest_id=interest.id %}" class="btn btn-primary btn-retro btn-sm" onclick="return confirm('Are you sure you want to select this user to work on your project?')">Select</a>
+                      {% endif %}
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <div class="alert">
+            <span>No users have expressed interest in this project yet.</span>
+          </div>
+        {% endif %}
+      </div>
     </div>
-</div>
+  </div>
 {% endblock %}
