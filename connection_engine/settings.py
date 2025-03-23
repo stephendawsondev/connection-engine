@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "unfold.contrib.import_export",
     "django.contrib.admin",
     "django.contrib.auth",
+    "django.contrib.sites",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
@@ -87,6 +88,7 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
+ACCOUNT_SIGNUP_FIELDS = ["email*", "username*", "password1*", "password2*"]
 ACCOUNT_LOGIN_METHODS = {"email", "username"}
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"
@@ -97,6 +99,15 @@ ACCOUNT_ADAPTER = "user_profile.adapter.CustomAccountAdapter"
 ACCOUNT_FORMS = {
     "signup": "user_profile.forms.CustomSignupForm",
 }
+
+# Email configuration
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST_USER = os.environ.get("EMAIL_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PASSWORD", "")
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 
 
 TEMPLATES = [
