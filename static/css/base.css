@@ -1,29 +1,50 @@
 /* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Jersey+10&family=Orbitron:wght@400..900&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Jersey+10&family=Orbitron:wght@400..900&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P&display=swap");
 
 /* Light Mode Variables */
 :root {
-  --highlight1: #30CEEC;
-  --highlight2: #7ACA09;
-  --highlight3: #DD1026;
-  --highlight4: #8C4FFE;
-  --highlight5: #F5A742;
-  --bg: #FAFAFA; /* Light mode background */
-  --text: #0A0A0B; /* Light mode text */
-  --font-primary: 'Press Start 2P', sans-serif;
-  --font-secondary: 'Orbitron', sans-serif;
+  --highlight1: #30ceec;
+  --highlight2: #7aca09;
+  --highlight3: #dd1026;
+  --highlight4: #8c4ffe;
+  --highlight5: #f5a742;
+  --bg: #fafafa; /* Light mode background */
+  --text: #0a0a0b; /* Light mode text */
+  --font-primary: "Press Start 2P", sans-serif;
+  --font-secondary: "Orbitron", sans-serif;
 }
 
 h1,
 h2,
 h3,
-a {
+a,
+button,
+th,
+.stat {
   font-family: var(--font-primary);
 }
 
-p {
+p,
+input,
+select,
+details,
+summary,
+checkbox,
+label,
+td,
+textarea,
+.toast,
+.alert,
+.badge,
+.divider,
+.radial-progress,
+.recent-donations {
   font-family: var(--font-secondary);
   letter-spacing: 2px;
+}
+
+select {
+  font-size: 0.75rem;
 }
 
 .badge {
@@ -44,9 +65,6 @@ p {
 html[data-theme="light"] .logo {
   background-image: url("https://res.cloudinary.com/dj2lk9daf/image/upload/v1742647700/ce-logo-light-theme_jcwtrv.png");
 }
-
-
-
 
 .error-container {
   text-align: center;

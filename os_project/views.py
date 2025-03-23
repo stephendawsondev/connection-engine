@@ -230,7 +230,9 @@ def express_interest(request, project_id):
     try:
         wit_profile = WomenInTech.objects.get(user=user)
     except WomenInTech.DoesNotExist:
-        messages.error(request, "Only Women in Tech can express interest in projects.")
+        messages.error(
+            request, "Only Women in Tech can express interest in joining a project."
+        )
         return redirect("project_detail", pk=project_id)
 
     # Check if user has already expressed interest
