@@ -10,6 +10,7 @@ from .forms import (
     ProfileUpdateForm,
     WomenInTechUpdateForm,
     MentorUpdateForm,
+    OS_MaintainerUpdateForm,
 )
 
 
@@ -52,6 +53,12 @@ def profile_update(request):
         else:
             mentor_form = None
 
+        osm_form = None
+        if hasattr(request.user, "os_maintainer_profile"):
+            osm_form = OS_MaintainerUpdateForm(
+                request.POST, request.FILES, instance=request.user.os_maintainer_profile
+            )
+
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
@@ -61,6 +68,9 @@ def profile_update(request):
 
             if mentor_form and mentor_form.is_valid():
                 mentor_form.save()
+
+            if osm_form and osm_form.is_valid():
+                osm_form.save()
 
             messages.success(request, "Your profile has been updated!")
             return redirect("profile_detail", username=request.user.username)
@@ -80,11 +90,19 @@ def profile_update(request):
         else:
             mentor_form = None
 
+        if hasattr(request.user, "os_maintainer_profile"):
+            osm_form = OS_MaintainerUpdateForm(
+                instance=request.user.os_maintainer_profile
+            )
+        else:
+            osm_form = None
+
     context = {
         "user_form": user_form,
         "profile_form": profile_form,
         "wit_form": wit_form,
         "mentor_form": mentor_form,
+        "osm_form": osm_form,
     }
     return render(request, "user_profile/profile_form.html", context)
 

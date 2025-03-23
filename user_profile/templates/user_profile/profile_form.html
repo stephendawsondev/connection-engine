@@ -291,6 +291,53 @@
         </div>
         {% endif %}
 
+        <!-- OS Maintainer profile Form  -->
+        {% if osm_form %}
+        <div class="divider">Open Source Maintainer Details</div>
+
+        <!-- GitHub Username -->
+        <div class="form-control">
+          <label class="label block" for="{{ osm_form.github_username.id_for_label }}">
+            <span class="label-text">GitHub Username</span>
+          </label>
+          <input
+            type="text"
+            name="{{ osm_form.github_username.html_name }}"
+            id="{{ osm_form.github_username.id_for_label }}"
+            value="{{ osm_form.github_username.value|default:'' }}"
+            class="input input-bordered w-full{% if osm_form.github_username.errors %} input-error{% endif %}"
+          />
+          {% if osm_form.github_username.errors %}
+          <label class="label">
+            <span class="label-text-alt text-error">
+              {{ osm_form.github_username.errors|join:", " }}
+            </span>
+          </label>
+          {% endif %}
+        </div>
+
+        <!-- About -->
+        <div class="form-control">
+          <label class="label block" for="{{ osm_form.about.id_for_label }}">
+            <span class="label-text">About</span>
+          </label>
+          <textarea
+            name="{{ osm_form.about.html_name }}"
+            id="{{ osm_form.about.id_for_label }}"
+            class="textarea textarea-bordered w-full{% if osm_form.about.errors %} textarea-error{% endif %}"
+            rows="4"
+          >{{ osm_form.about.value|default:'' }}</textarea>
+          {% if osm_form.about.errors %}
+          <label class="label">
+            <span class="label-text-alt text-error">
+              {{ osm_form.about.errors|join:", " }}
+            </span>
+          </label>
+          {% endif %}
+        </div>
+        {% endif %}
+
+
 
         <div class="form-control mt-6">
           <button class="btn btn-primary" type="submit">
