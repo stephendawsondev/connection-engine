@@ -22,6 +22,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicons/apple-touch-icon.png' %}" />
     <link rel="manifest" href="{% static 'favicons/site.webmanifest' %}" />
     {% block extra_css %}
+
     {% endblock %}
   </head>
   <body class="min-h-screen bg-base-100 flex flex-col">
@@ -124,7 +125,7 @@
           </div>
         {% else %}
           <a href="{% url 'account_login' %}" class="btn btn-ghost hidden md:flex">Login</a>
-          <a href="{% url 'account_signup' %}" class="btn btn-primary hidden md:flex">Sign Up</a>
+          <a href="{% url 'account_signup' %}" class="btn btn-primary btn-retro hidden md:flex">Sign Up</a>
         {% endif %}
 
         <!-- Theme toggle -->
@@ -145,15 +146,25 @@
       <div class="toast toast-bottom toast-end z-40">
         {% for message in messages %}
           <div class="alert {% if message.tags == 'error' %}
+              
               alert-error
+
             {% elif message.tags == 'success' %}
+              
               alert-success
+
             {% elif message.tags == 'info' %}
+              
               alert-info
+
             {% elif message.tags == 'warning' %}
+              
               alert-warning
+
             {% else %}
+              
               alert-info
+
             {% endif %}">
             <span>{{ message }}</span>
           </div>
@@ -180,6 +191,7 @@
     <!-- JavaScript -->
     <script src="{% static 'js/script.js' %}"></script>
     {% block extra_js %}
+
     {% endblock %}
   </body>
 </html>

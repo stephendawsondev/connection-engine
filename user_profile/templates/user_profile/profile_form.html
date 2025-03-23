@@ -1,375 +1,196 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load i18n %}
-{% block title %}Edit Profile{% endblock %}
+{% block title %}
+  Edit Profile
+{% endblock %}
 {% block content %}
-
-<div class="max-w-2xl mx-auto">
-  <div class="card bg-base-200 shadow-xl">
-    <div class="card-body">
-      <h2 class="card-title text-2xl mb-4">{% trans "Edit Profile" %}</h2>
-
-      <form method="POST" enctype="multipart/form-data" class="space-y-6">
-        {% csrf_token %} {% if user_form.non_field_errors %}
-        <div class="alert alert-error">
-          {% for error in user_form.non_field_errors %}
-          <span>{{ error }}</span>
-          {% endfor %}
-        </div>
-        {% endif %}
-
-        {% if profile_form.non_field_errors %}
-        <div class="alert alert-error">
-          {% for error in profile_form.non_field_errors %}
-          <span>{{ error }}</span>
-          {% endfor %}
-        </div>
-        {% endif %}
-
-        <!-- Profile Image -->
-        <div class="divider">Profile Image</div>
-
-        {% if user.profile.image %}
-        <div class="flex justify-center mb-4">
-          <div class="avatar">
-            <div class="w-24 rounded-full">
-              <img
-                src="{{ user.profile.image.url }}"
-                alt="Current profile image"
-              />
-            </div>
-          </div>
-        </div>
-        {% endif %}
-
-        <div class="form-control">
-          <label
-            class="label block"
-            for="{{ profile_form.image.id_for_label }}"
-          >
-            <span class="label-text">{% trans "Profile Image" %}</span>
-          </label>
-          <input
-            type="file"
-            name="{{ profile_form.image.html_name }}"
-            class="file-input file-input-bordered w-full {% if profile_form.image.errors %}file-input-error{% endif %}"
-            id="{{ profile_form.image.id_for_label }}"
-          />
-          {% if profile_form.image.errors %}
-          <label class="label">
-            <span class="label-text-alt text-error"
-              >{{ profile_form.image.errors|join:", " }}</span
-            >
-          </label>
-          {% endif %}
-          <label class="label">
-            <span class="label-text-alt"
-              >Leave empty to keep the current image</span
-            >
-          </label>
-        </div>
-
-        <div class="divider">Personal Information</div>
-
-        <div class="form-control">
-          <label
-            class="label block"
-            for="{{ user_form.first_name.id_for_label }}"
-          >
-            <span class="label-text">{% trans "First Name" %}</span>
-          </label>
-          <input
-            type="text"
-            name="{{ user_form.first_name.html_name }}"
-            value="{{ user_form.first_name.value|default:'' }}"
-            class="input input-bordered w-full{% if user_form.first_name.errors %}input-error{% endif %}"
-            id="{{ user_form.first_name.id_for_label }}"
-          />
-          {% if user_form.first_name.errors %}
-          <label class="label block">
-            <span class="label-text-alt text-error"
-              >{{ user_form.first_name.errors|join:", " }}</span
-            >
-          </label>
-          {% endif %}
-        </div>
-
-        <div class="form-control">
-          <label
-            class="label block"
-            for="{{ user_form.last_name.id_for_label }}"
-          >
-            <span class="label-text">{% trans "Last Name" %}</span>
-          </label>
-          <input
-            type="text"
-            name="{{ user_form.last_name.html_name }}"
-            value="{{ user_form.last_name.value|default:'' }}"
-            class="input input-bordered w-full{% if user_form.last_name.errors %}input-error{% endif %}"
-            id="{{ user_form.last_name.id_for_label }}"
-          />
-          {% if user_form.last_name.errors %}
-          <label class="label block">
-            <span class="label-text-alt text-error"
-              >{{ user_form.last_name.errors|join:", " }}</span
-            >
-          </label>
-          {% endif %}
-        </div>
-
-        <div class="form-control">
-          <label class="label block" for="{{ user_form.email.id_for_label }}">
-            <span class="label-text">{% trans "Email" %}</span>
-          </label>
-          <input
-            type="email"
-            name="{{ user_form.email.html_name }}"
-            value="{{ user_form.email.value|default:'' }}"
-            class="input input-bordered w-full{% if user_form.email.errors %}input-error{% endif %}"
-            id="{{ user_form.email.id_for_label }}"
-          />
-          {% if user_form.email.errors %}
-          <label class="label">
-            <span class="label-text-alt text-error"
-              >{{ user_form.email.errors|join:", " }}</span
-            >
-          </label>
-          {% endif %}
-        </div>
-
-        <!-- WIT Profile Form  -->
-        {% if wit_form %}
-        <div class="divider">Women in Tech Details</div>
-
-        <!-- Tech Specialties -->
-        <div class="form-control">
-          <label class="label block" for="{{ wit_form.tech_specialties.id_for_label }}">
-            <span class="label-text">Tech Specialties</span>
-          </label>
-          <input
-            type="text"
-            name="{{ wit_form.tech_specialties.html_name }}"
-            id="{{ wit_form.tech_specialties.id_for_label }}"
-            value="{{ wit_form.tech_specialties.value|default:'' }}"
-            class="input input-bordered w-full{% if wit_form.tech_specialties.errors %} input-error{% endif %}"
-          />
-          {% if wit_form.tech_specialties.errors %}
-          <label class="label">
-            <span class="label-text-alt text-error">
-              {{ wit_form.tech_specialties.errors|join:", " }}
-            </span>
-          </label>
-          {% endif %}
-        </div>
-
-        <!-- Years of Experience -->
-        <div class="form-control">
-          <label class="label block" for="{{ wit_form.years_of_experience.id_for_label }}">
-            <span class="label-text">Years of Experience</span>
-          </label>
-          <input
-            type="number"
-            name="{{ wit_form.years_of_experience.html_name }}"
-            id="{{ wit_form.years_of_experience.id_for_label }}"
-            value="{{ wit_form.years_of_experience.value|default:'' }}"
-            class="input input-bordered w-full{% if wit_form.years_of_experience.errors %} input-error{% endif %}"
-          />
-          {% if wit_form.years_of_experience.errors %}
-          <label class="label">
-            <span class="label-text-alt text-error">
-              {{ wit_form.years_of_experience.errors|join:", " }}
-            </span>
-          </label>
-          {% endif %}
-        </div>
-
-        <!-- GitHub Username -->
-        <div class="form-control">
-          <label class="label block" for="{{ wit_form.github_username.id_for_label }}">
-            <span class="label-text">GitHub Username</span>
-          </label>
-          <input
-            type="text"
-            name="{{ wit_form.github_username.html_name }}"
-            id="{{ wit_form.github_username.id_for_label }}"
-            value="{{ wit_form.github_username.value|default:'' }}"
-            class="input input-bordered w-full{% if wit_form.github_username.errors %} input-error{% endif %}"
-          />
-          {% if wit_form.github_username.errors %}
-          <label class="label">
-            <span class="label-text-alt text-error">
-              {{ wit_form.github_username.errors|join:", " }}
-            </span>
-          </label>
-          {% endif %}
-        </div>
-
-        <!-- About -->
-        <div class="form-control">
-          <label class="label block" for="{{ wit_form.about.id_for_label }}">
-            <span class="label-text">About</span>
-          </label>
-          <textarea
-            name="{{ wit_form.about.html_name }}"
-            id="{{ wit_form.about.id_for_label }}"
-            class="textarea textarea-bordered w-full{% if wit_form.about.errors %} textarea-error{% endif %}"
-            rows="4"
-          >{{ wit_form.about.value|default:'' }}</textarea>
-          {% if wit_form.about.errors %}
-          <label class="label">
-            <span class="label-text-alt text-error">
-              {{ wit_form.about.errors|join:", " }}
-            </span>
-          </label>
-          {% endif %}
-        </div>
-        {% endif %}
-
-        <!-- Mentor Profile Form  -->
-        {% if mentor_form %}
-        <div class="divider">Mentor Details</div>
-
-        <!-- Expertise -->
-        <div class="form-control">
-            <label class="label block" for="{{ mentor_form.expertise.id_for_label }}">
-                <span class="label-text">Expertise</span>
-            </label>
-            <input
-              type="text"
-              name="{{ mentor_form.expertise.html_name }}"
-              id="{{ mentor_form.expertise.id_for_label }}"
-              value="{{ mentor_form.expertise.value|default:'' }}"
-              class="input input-bordered w-full{% if mentor_form.expertise.errors %} input-error{% endif %}"
-            />
-            {% if mentor_form.expertise.errors %}
-            <label class="label">
-              <span class="label-text-alt text-error">
-                {{ mentor_form.expertise.errors|join:", " }}
-              </span>
-            </label>
-            {% endif %}
-        </div>
-
-        <!-- Years of Experience -->
-        <div class="form-control">
-            <label class="label block" for="{{ mentor_form.years_of_experience.id_for_label }}">
-                <span class="label-text">Years of Experience</span>
-            </label>
-            <input
-              type="number"
-              name="{{ mentor_form.years_of_experience.html_name }}"
-              id="{{ mentor_form.years_of_experience.id_for_label }}"
-              value="{{ mentor_form.years_of_experience.value|default:'' }}"
-              class="input input-bordered w-full{% if mentor_form.years_of_experience.errors %} input-error{% endif %}"
-            />
-            {% if mentor_form.years_of_experience.errors %}
-            <label class="label">
-              <span class="label-text-alt text-error">
-                {{ mentor_form.years_of_experience.errors|join:", " }}
-              </span>
-            </label>
-            {% endif %}
-        </div>
-
-        <!-- About -->
-        <div class="form-control">
-            <label class="label block" for="{{ mentor_form.about.id_for_label }}">
-                <span class="label-text">About</span>
-            </label>
-            <textarea
-              name="{{ mentor_form.about.html_name }}"
-              id="{{ mentor_form.about.id_for_label }}"
-              class="textarea textarea-bordered w-full{% if mentor_form.about.errors %} textarea-error{% endif %}"
-              rows="4"
-            >{{ mentor_form.about.value|default:'' }}</textarea>
-            {% if mentor_form.about.errors %}
-            <label class="label">
-              <span class="label-text-alt text-error">
-                {{ mentor_form.about.errors|join:", " }}
-              </span>
-            </label>
-            {% endif %}
-        </div>
-        {% endif %}
-
-        <!-- OS Maintainer profile Form  -->
-        {% if osm_form %}
-        <div class="divider">Open Source Maintainer Details</div>
-
-        <!-- GitHub Username -->
-        <div class="form-control">
-          <label class="label block" for="{{ osm_form.github_username.id_for_label }}">
-            <span class="label-text">GitHub Username</span>
-          </label>
-          <input
-            type="text"
-            name="{{ osm_form.github_username.html_name }}"
-            id="{{ osm_form.github_username.id_for_label }}"
-            value="{{ osm_form.github_username.value|default:'' }}"
-            class="input input-bordered w-full{% if osm_form.github_username.errors %} input-error{% endif %}"
-          />
-          {% if osm_form.github_username.errors %}
-          <label class="label">
-            <span class="label-text-alt text-error">
-              {{ osm_form.github_username.errors|join:", " }}
-            </span>
-          </label>
-          {% endif %}
-        </div>
-
-        <!-- About -->
-        <div class="form-control">
-          <label class="label block" for="{{ osm_form.about.id_for_label }}">
-            <span class="label-text">About</span>
-          </label>
-          <textarea
-            name="{{ osm_form.about.html_name }}"
-            id="{{ osm_form.about.id_for_label }}"
-            class="textarea textarea-bordered w-full{% if osm_form.about.errors %} textarea-error{% endif %}"
-            rows="4"
-          >{{ osm_form.about.value|default:'' }}</textarea>
-          {% if osm_form.about.errors %}
-          <label class="label">
-            <span class="label-text-alt text-error">
-              {{ osm_form.about.errors|join:", " }}
-            </span>
-          </label>
-          {% endif %}
-        </div>
-        {% endif %}
-
-
-
-        <div class="form-control mt-6">
-          <button class="btn btn-primary" type="submit">
-            {% trans "Save Changes" %}
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div class="mt-6">
+  <div class="max-w-2xl mx-auto">
     <div class="card bg-base-200 shadow-xl">
       <div class="card-body">
-        <h3 class="card-title text-lg">Account Management</h3>
-        <p class="mb-4">
-          If you want to change your password, you can do it here:
-        </p>
-        <a href="{% url 'account_change_password' %}" class="btn btn-outline"
-          >Change Password</a
-        >
+        <h2 class="card-title text-2xl mb-4">{% trans 'Edit Profile' %}</h2>
 
-        <div class="divider"></div>
+        <form method="POST" enctype="multipart/form-data" class="space-y-6">
+          {% csrf_token %} {% if user_form.non_field_errors %}
+            <div class="alert alert-error">
+              {% for error in user_form.non_field_errors %}
+                <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+          {% endif %}
 
-        <h3 class="card-title text-lg text-error">Danger Zone</h3>
-        <p class="mb-4">
-          Permanently delete your account and all associated data:
-        </p>
-        <a href="{% url 'profile_delete' %}" class="btn btn-error text-white"
-          >Delete Account</a
-        >
+          {% if profile_form.non_field_errors %}
+            <div class="alert alert-error">
+              {% for error in profile_form.non_field_errors %}
+                <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <!-- Profile Image -->
+          <div class="divider">Profile Image</div>
+
+          {% if user.profile.image %}
+            <div class="flex justify-center mb-4">
+              <div class="avatar">
+                <div class="w-24 rounded-full">
+                  <img src="{{ user.profile.image.url }}" alt="Current profile image" />
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          <div class="form-control">
+            <label class="label block" for="{{ profile_form.image.id_for_label }}"><span class="label-text">{% trans 'Profile Image' %}</span></label>
+            <input type="file" name="{{ profile_form.image.html_name }}" class="file-input file-input-bordered w-full {% if profile_form.image.errors %}file-input-error{% endif %}" id="{{ profile_form.image.id_for_label }}" />
+            {% if profile_form.image.errors %}
+              <label class="label"><span class="label-text-alt text-error">{{ profile_form.image.errors|join:', ' }}</span></label>
+            {% endif %}
+            <label class="label"><span class="label-text-alt">Leave empty to keep the current image</span></label>
+          </div>
+
+          <div class="divider">Personal Information</div>
+
+          <div class="form-control">
+            <label class="label block" for="{{ user_form.first_name.id_for_label }}"><span class="label-text">{% trans 'First Name' %}</span></label>
+            <input type="text" name="{{ user_form.first_name.html_name }}" value="{{ user_form.first_name.value|default:'' }}" class="input input-bordered w-full{% if user_form.first_name.errors %}input-error{% endif %}" id="{{ user_form.first_name.id_for_label }}" />
+            {% if user_form.first_name.errors %}
+              <label class="label block"><span class="label-text-alt text-error">{{ user_form.first_name.errors|join:', ' }}</span></label>
+            {% endif %}
+          </div>
+
+          <div class="form-control">
+            <label class="label block" for="{{ user_form.last_name.id_for_label }}"><span class="label-text">{% trans 'Last Name' %}</span></label>
+            <input type="text" name="{{ user_form.last_name.html_name }}" value="{{ user_form.last_name.value|default:'' }}" class="input input-bordered w-full{% if user_form.last_name.errors %}input-error{% endif %}" id="{{ user_form.last_name.id_for_label }}" />
+            {% if user_form.last_name.errors %}
+              <label class="label block"><span class="label-text-alt text-error">{{ user_form.last_name.errors|join:', ' }}</span></label>
+            {% endif %}
+          </div>
+
+          <div class="form-control">
+            <label class="label block" for="{{ user_form.email.id_for_label }}"><span class="label-text">{% trans 'Email' %}</span></label>
+            <input type="email" name="{{ user_form.email.html_name }}" value="{{ user_form.email.value|default:'' }}" class="input input-bordered w-full{% if user_form.email.errors %}input-error{% endif %}" id="{{ user_form.email.id_for_label }}" />
+            {% if user_form.email.errors %}
+              <label class="label"><span class="label-text-alt text-error">{{ user_form.email.errors|join:', ' }}</span></label>
+            {% endif %}
+          </div>
+
+          <!-- WIT Profile Form -->
+          {% if wit_form %}
+            <div class="divider">Women in Tech Details</div>
+
+            <!-- Tech Specialties -->
+            <div class="form-control">
+              <label class="label block" for="{{ wit_form.tech_specialties.id_for_label }}"><span class="label-text">Tech Specialties</span></label>
+              <input type="text" name="{{ wit_form.tech_specialties.html_name }}" id="{{ wit_form.tech_specialties.id_for_label }}" value="{{ wit_form.tech_specialties.value|default:'' }}" class="input input-bordered w-full{% if wit_form.tech_specialties.errors %} input-error{% endif %}" />
+              {% if wit_form.tech_specialties.errors %}
+                <label class="label"><span class="label-text-alt text-error">{{ wit_form.tech_specialties.errors|join:', ' }}</span></label>
+              {% endif %}
+            </div>
+
+            <!-- Years of Experience -->
+            <div class="form-control">
+              <label class="label block" for="{{ wit_form.years_of_experience.id_for_label }}"><span class="label-text">Years of Experience</span></label>
+              <input type="number" name="{{ wit_form.years_of_experience.html_name }}" id="{{ wit_form.years_of_experience.id_for_label }}" value="{{ wit_form.years_of_experience.value|default:'' }}" class="input input-bordered w-full{% if wit_form.years_of_experience.errors %} input-error{% endif %}" />
+              {% if wit_form.years_of_experience.errors %}
+                <label class="label"><span class="label-text-alt text-error">{{ wit_form.years_of_experience.errors|join:', ' }}</span></label>
+              {% endif %}
+            </div>
+
+            <!-- GitHub Username -->
+            <div class="form-control">
+              <label class="label block" for="{{ wit_form.github_username.id_for_label }}"><span class="label-text">GitHub Username</span></label>
+              <input type="text" name="{{ wit_form.github_username.html_name }}" id="{{ wit_form.github_username.id_for_label }}" value="{{ wit_form.github_username.value|default:'' }}" class="input input-bordered w-full{% if wit_form.github_username.errors %} input-error{% endif %}" />
+              {% if wit_form.github_username.errors %}
+                <label class="label"><span class="label-text-alt text-error">{{ wit_form.github_username.errors|join:', ' }}</span></label>
+              {% endif %}
+            </div>
+
+            <!-- About -->
+            <div class="form-control">
+              <label class="label block" for="{{ wit_form.about.id_for_label }}"><span class="label-text">About</span></label>
+              <textarea name="{{ wit_form.about.html_name }}" id="{{ wit_form.about.id_for_label }}" class="textarea textarea-bordered w-full{% if wit_form.about.errors %} textarea-error{% endif %}" rows="4">{{ wit_form.about.value|default:'' }}</textarea>
+              {% if wit_form.about.errors %}
+                <label class="label"><span class="label-text-alt text-error">{{ wit_form.about.errors|join:', ' }}</span></label>
+              {% endif %}
+            </div>
+          {% endif %}
+
+          <!-- Mentor Profile Form -->
+          {% if mentor_form %}
+            <div class="divider">Mentor Details</div>
+
+            <!-- Expertise -->
+            <div class="form-control">
+              <label class="label block" for="{{ mentor_form.expertise.id_for_label }}"><span class="label-text">Expertise</span></label>
+              <input type="text" name="{{ mentor_form.expertise.html_name }}" id="{{ mentor_form.expertise.id_for_label }}" value="{{ mentor_form.expertise.value|default:'' }}" class="input input-bordered w-full{% if mentor_form.expertise.errors %} input-error{% endif %}" />
+              {% if mentor_form.expertise.errors %}
+                <label class="label"><span class="label-text-alt text-error">{{ mentor_form.expertise.errors|join:', ' }}</span></label>
+              {% endif %}
+            </div>
+
+            <!-- Years of Experience -->
+            <div class="form-control">
+              <label class="label block" for="{{ mentor_form.years_of_experience.id_for_label }}"><span class="label-text">Years of Experience</span></label>
+              <input type="number" name="{{ mentor_form.years_of_experience.html_name }}" id="{{ mentor_form.years_of_experience.id_for_label }}" value="{{ mentor_form.years_of_experience.value|default:'' }}" class="input input-bordered w-full{% if mentor_form.years_of_experience.errors %} input-error{% endif %}" />
+              {% if mentor_form.years_of_experience.errors %}
+                <label class="label"><span class="label-text-alt text-error">{{ mentor_form.years_of_experience.errors|join:', ' }}</span></label>
+              {% endif %}
+            </div>
+
+            <!-- About -->
+            <div class="form-control">
+              <label class="label block" for="{{ mentor_form.about.id_for_label }}"><span class="label-text">About</span></label>
+              <textarea name="{{ mentor_form.about.html_name }}" id="{{ mentor_form.about.id_for_label }}" class="textarea textarea-bordered w-full{% if mentor_form.about.errors %} textarea-error{% endif %}" rows="4">{{ mentor_form.about.value|default:'' }}</textarea>
+              {% if mentor_form.about.errors %}
+                <label class="label"><span class="label-text-alt text-error">{{ mentor_form.about.errors|join:', ' }}</span></label>
+              {% endif %}
+            </div>
+          {% endif %}
+
+          <!-- OS Maintainer profile Form -->
+          {% if osm_form %}
+            <div class="divider">Open Source Maintainer Details</div>
+
+            <!-- GitHub Username -->
+            <div class="form-control">
+              <label class="label block" for="{{ osm_form.github_username.id_for_label }}"><span class="label-text">GitHub Username</span></label>
+              <input type="text" name="{{ osm_form.github_username.html_name }}" id="{{ osm_form.github_username.id_for_label }}" value="{{ osm_form.github_username.value|default:'' }}" class="input input-bordered w-full{% if osm_form.github_username.errors %} input-error{% endif %}" />
+              {% if osm_form.github_username.errors %}
+                <label class="label"><span class="label-text-alt text-error">{{ osm_form.github_username.errors|join:', ' }}</span></label>
+              {% endif %}
+            </div>
+
+            <!-- About -->
+            <div class="form-control">
+              <label class="label block" for="{{ osm_form.about.id_for_label }}"><span class="label-text">About</span></label>
+              <textarea name="{{ osm_form.about.html_name }}" id="{{ osm_form.about.id_for_label }}" class="textarea textarea-bordered w-full{% if osm_form.about.errors %} textarea-error{% endif %}" rows="4">{{ osm_form.about.value|default:'' }}</textarea>
+              {% if osm_form.about.errors %}
+                <label class="label"><span class="label-text-alt text-error">{{ osm_form.about.errors|join:', ' }}</span></label>
+              {% endif %}
+            </div>
+          {% endif %}
+
+          <div class="form-control mt-6">
+            <button class="btn btn-primary btn-retro" type="submit">{% trans 'Save Changes' %}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="mt-6">
+      <div class="card bg-base-200 shadow-xl">
+        <div class="card-body">
+          <h3 class="card-title text-lg">Account Management</h3>
+          <p class="mb-4">If you want to change your password, you can do it here:</p>
+          <a href="{% url 'account_change_password' %}" class="btn btn-outline">Change Password</a>
+
+          <div class="divider"></div>
+
+          <h3 class="card-title text-lg text-error">Danger Zone</h3>
+          <p class="mb-4">Permanently delete your account and all associated data:</p>
+          <a href="{% url 'profile_delete' %}" class="btn btn-error text-white">Delete Account</a>
+        </div>
       </div>
     </div>
   </div>
-</div>
 {% endblock %}

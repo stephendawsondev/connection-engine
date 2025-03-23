@@ -1,0 +1,20 @@
+.animate-typing {
+    animation: typing 3s steps(45, end) forwards, blink .7s infinite;
+  }
+  @keyframes typing {
+    0% {
+      max-width: 0%;
+      visibility: hidden;
+    }
+    100% {
+      max-width: 100%;
+    }
+  }
+  @keyframes blink {
+    50% {
+      border-color: transparent;
+    }
+    100% {
+      border-color: white;
+    }
+  }

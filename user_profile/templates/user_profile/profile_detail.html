@@ -1,116 +1,103 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
 
 {% block title %}
-{{ profile_user.username }}'s Profile
+  {{ profile_user.username }}'s Profile
 {% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'user_profile/css/user_profile.css' %}">
+  <link rel="stylesheet" href="{% static 'user_profile/css/user_profile.css' %}" />
 {% endblock %}
 
-
 {% block content %}
-<div class="max-w-4xl mx-auto">
+  <div class="max-w-4xl mx-auto">
     <div class="card bg-base-200 shadow-xl">
-        <div class="card-body">
-            <div class="flex flex-col md:flex-row items-center gap-6">
-                <div class="avatar">
-                    <div class="w-24 rounded-full">
-                        {% if profile.image %}
-                            <img src="{{ profile.image.url }}" alt="{{ profile_user.username }}'s profile picture" />
-                        {% else %}
-                            <div class="bg-primary text-primary-content grid place-items-center w-full h-full">
-                                {{ profile_user.username|slice:":1"|upper }}
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <div class="flex-1">
-                    <h2 class="text-2xl font-bold">{{ profile_user.username }}</h2>
-                    {% if profile_user.first_name or profile_user.last_name %}
-                        <p class="text-lg">
-                            {{ profile_user.first_name }} {{ profile_user.last_name }}
-                        </p>
-                    {% endif %}
-                    <p class="opacity-70">
-                        Member since {{ profile_user.date_joined|date:"F j, Y" }}
-                    </p>
-
-                    {% if user.is_authenticated and user == profile_user %}
-                        <div class="mt-4 flex flex-wrap gap-2">
-                            <a href="{% url 'profile_update' %}" class="btn btn-primary btn-sm">
-                                Edit Profile
-                            </a>
-                            <a href="{% url 'profile_delete' %}" class="btn btn-error btn-outline btn-sm">
-                                Delete Account
-                            </a>
-                        </div>
-                    {% endif %}
-                </div>
+      <div class="card-body">
+        <div class="flex flex-col md:flex-row items-center gap-6">
+          <div class="avatar">
+            <div class="w-24 rounded-full">
+              {% if profile.image %}
+                <img src="{{ profile.image.url }}" alt="{{ profile_user.username }}'s profile picture" />
+              {% else %}
+                <div class="bg-primary text-primary-content grid place-items-center w-full h-full">{{ profile_user.username|slice:':1'|upper }}</div>
+              {% endif %}
             </div>
+          </div>
+
+          <div class="flex-1">
+            <h2 class="text-2xl font-bold">{{ profile_user.username }}</h2>
+            {% if profile_user.first_name or profile_user.last_name %}
+              <p class="text-lg">{{ profile_user.first_name }} {{ profile_user.last_name }}</p>
+            {% endif %}
+            <p class="opacity-70">Member since {{ profile_user.date_joined|date:'F j, Y' }}</p>
+
+            {% if user.is_authenticated and user == profile_user %}
+              <div class="mt-4 flex flex-wrap gap-2">
+                <a href="{% url 'profile_update' %}" class="btn btn-primary btn-retro btn-sm">Edit Profile</a>
+                <a href="{% url 'profile_delete' %}" class="btn btn-error btn-outline btn-sm">Delete Account</a>
+              </div>
+            {% endif %}
+          </div>
         </div>
+      </div>
     </div>
 
     {% if user.is_authenticated and user == profile_user %}
-    <div class="mt-6">
+      <div class="mt-6">
         <div class="card bg-base-200 shadow-xl">
-            <div class="card-body">
-                <h3 class="card-title">Your Account Details</h3>
+          <div class="card-body">
+            <h3 class="card-title">Your Account Details</h3>
 
-                <div class="overflow-x-auto">
-                    <table class="table">
-                        <tbody>
-                            <tr>
-                                <th>Username</th>
-                                <td>{{ profile_user.username }}</td>
-                            </tr>
-                            <tr>
-                                <th>Email</th>
-                                <td>{{ profile_user.email }}</td>
-                            </tr>
-                            <tr>
-                                <th>First Name</th>
-                                <td>{{ profile_user.first_name|default:"Not provided" }}</td>
-                            </tr>
-                            <tr>
-                                <th>Last Name</th>
-                                <td>{{ profile_user.last_name|default:"Not provided" }}</td>
-                            </tr>
-                            <tr>
-                                <th>User Type</th>
-                                <td>
-                                    {% if profile_user.women_in_tech_profile %}
-                                        Women in Tech
-                                    {% elif profile_user.os_maintainer_profile %}
-                                        Open Source Maintainer
-                                    {% elif profile_user.mentor_profile %}
-                                        Mentor
-                                    {% else %}
-                                        Not specified
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Last Login</th>
-                                <td>{{ profile_user.last_login|date:"F j, Y, g:i a" }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="overflow-x-auto">
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <th>Username</th>
+                    <td>{{ profile_user.username }}</td>
+                  </tr>
+                  <tr>
+                    <th>Email</th>
+                    <td>{{ profile_user.email }}</td>
+                  </tr>
+                  <tr>
+                    <th>First Name</th>
+                    <td>{{ profile_user.first_name|default:'Not provided' }}</td>
+                  </tr>
+                  <tr>
+                    <th>Last Name</th>
+                    <td>{{ profile_user.last_name|default:'Not provided' }}</td>
+                  </tr>
+                  <tr>
+                    <th>User Type</th>
+                    <td>
+                      {% if profile_user.women_in_tech_profile %}
+                        Women in Tech
+                      {% elif profile_user.os_maintainer_profile %}
+                        Open Source Maintainer
+                      {% elif profile_user.mentor_profile %}
+                        Mentor
+                      {% else %}
+                        Not specified
+                      {% endif %}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Last Login</th>
+                    <td>{{ profile_user.last_login|date:'F j, Y, g:i a' }}</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
+          </div>
         </div>
-    </div>
+      </div>
     {% endif %}
-</div>
+  </div>
 
-{% include "user_profile/sidebar_favorites.html" %}
-
-
+  {% include 'user_profile/sidebar_favorites.html' %}
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'user_profile/js/favorites_sidebar.js' %}"></script>
+  <script src="{% static 'user_profile/js/favorites_sidebar.js' %}"></script>
 {% endblock %}
