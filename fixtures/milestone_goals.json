@@ -1,0 +1,282 @@
+[
+  {
+    "model": "os_project.milestonegoal",
+    "pk": 1,
+    "fields": {
+      "milestone": 1,
+      "title": "Create Button Component",
+      "description": "Implement accessible button component with various states (default, hover, active, disabled).",
+      "status": "NOT_STARTED",
+      "created_at": "2025-03-15T15:40:00Z",
+      "updated_at": "2025-03-15T15:40:00Z",
+      "evidence_link": null,
+      "evidence_image": null
+    }
+  },
+  {
+    "model": "os_project.milestonegoal",
+    "pk": 2,
+    "fields": {
+      "milestone": 1,
+      "title": "Create Form Input Components",
+      "description": "Implement accessible text input, select, checkbox, and radio button components.",
+      "status": "NOT_STARTED",
+      "created_at": "2025-03-15T15:42:00Z",
+      "updated_at": "2025-03-15T15:42:00Z",
+      "evidence_link": null,
+      "evidence_image": null
+    }
+  },
+  {
+    "model": "os_project.milestonegoal",
+    "pk": 3,
+    "fields": {
+      "milestone": 1,
+      "title": "Create Navigation Components",
+      "description": "Implement accessible navigation menu and breadcrumb components.",
+      "status": "NOT_STARTED",
+      "created_at": "2025-03-15T15:44:00Z",
+      "updated_at": "2025-03-15T15:44:00Z",
+      "evidence_link": null,
+      "evidence_image": null
+    }
+  },
+  {
+    "model": "os_project.milestonegoal",
+    "pk": 4,
+    "fields": {
+      "milestone": 2,
+      "title": "Component API Documentation",
+      "description": "Document the API for all components including props, events, and examples.",
+      "status": "NOT_STARTED",
+      "created_at": "2025-03-15T15:46:00Z",
+      "updated_at": "2025-03-15T15:46:00Z",
+      "evidence_link": null,
+      "evidence_image": null
+    }
+  },
+  {
+    "model": "os_project.milestonegoal",
+    "pk": 5,
+    "fields": {
+      "milestone": 2,
+      "title": "Usage Examples",
+      "description": "Create example code and demos for common usage patterns.",
+      "status": "NOT_STARTED",
+      "created_at": "2025-03-15T15:48:00Z",
+      "updated_at": "2025-03-15T15:48:00Z",
+      "evidence_link": null,
+      "evidence_image": null
+    }
+  },
+  {
+    "model": "os_project.milestonegoal",
+    "pk": 6,
+    "fields": {
+      "milestone": 3,
+      "title": "Implement Request-level Cache",
+      "description": "Create middleware for caching API responses based on request parameters.",
+      "status": "IN_PROGRESS",
+      "created_at": "2025-03-10T10:25:00Z",
+      "updated_at": "2025-03-20T14:30:00Z",
+      "evidence_link": "https://github.com/example/django-perf-toolkit/pull/5",
+      "evidence_image": null
+    }
+  },
+  {
+    "model": "os_project.milestonegoal",
+    "pk": 7,
+    "fields": {
+      "milestone": 3,
+      "title": "Implement Cache Invalidation",
+      "description": "Add mechanism for intelligently invalidating cache when data changes.",
+      "status": "NOT_STARTED",
+      "created_at": "2025-03-10T10:27:00Z",
+      "updated_at": "2025-03-10T10:27:00Z",
+      "evidence_link": null,
+      "evidence_image": null
+    }
+  },
+  {
+    "model": "os_project.milestonegoal",
+    "pk": 8,
+    "fields": {
+      "milestone": 4,
+      "title": "Query Analysis Tool",
+      "description": "Develop a tool to analyze and log slow database queries.",
+      "status": "NOT_STARTED",
+      "created_at": "2025-03-10T10:30:00Z",
+      "updated_at": "2025-03-10T10:30:00Z",
+      "evidence_link": null,
+      "evidence_image": null
+    }
+  },
+  {
+    "model": "os_project.milestonegoal",
+    "pk": 9,
+    "fields": {
+      "milestone": 4,
+      "title": "Query Optimization Suggestions",
+      "description": "Add feature to suggest optimizations for identified slow queries.",
+      "status": "NOT_STARTED",
+      "created_at": "2025-03-10T10:32:00Z",
+      "updated_at": "2025-03-10T10:32:00Z",
+      "evidence_link": null,
+      "evidence_image": null
+    }
+  },
+  {
+    "model": "os_project.milestonegoal",
+    "pk": 10,
+    "fields": {
+      "milestone": 5,
+      "title": "Bar Chart Component",
+      "description": "Implement interactive bar chart with customizable options.",
+      "status": "COMPLETED",
+      "created_at": "2025-03-05T17:10:00Z",
+      "updated_at": "2025-03-15T09:45:00Z",
+      "evidence_link": "https://github.com/example/viz-dashboard/pull/12",
+      "evidence_image": null
+    }
+  },
+  {
+    "model": "os_project.milestonegoal",
+    "pk": 11,
+    "fields": {
+      "milestone": 5,
+      "title": "Line Chart Component",
+      "description": "Implement interactive line chart with customizable options.",
+      "status": "READY_FOR_REVIEW",
+      "created_at": "2025-03-05T17:12:00Z",
+      "updated_at": "2025-03-18T16:20:00Z",
+      "evidence_link": "https://github.com/example/viz-dashboard/pull/15",
+      "evidence_image": null
+    }
+  },
+  {
+    "model": "os_project.milestonegoal",
+    "pk": 12,
+    "fields": {
+      "milestone": 5,
+      "title": "Pie Chart Component",
+      "description": "Implement interactive pie chart with customizable options.",
+      "status": "IN_PROGRESS",
+      "created_at": "2025-03-05T17:14:00Z",
+      "updated_at": "2025-03-16T11:30:00Z",
+      "evidence_link": null,
+      "evidence_image": null
+    }
+  },
+  {
+    "model": "os_project.milestonegoal",
+    "pk": 13,
+    "fields": {
+      "milestone": 6,
+      "title": "PNG Export",
+      "description": "Add functionality to export charts as PNG images.",
+      "status": "NOT_STARTED",
+      "created_at": "2025-03-05T17:16:00Z",
+      "updated_at": "2025-03-05T17:16:00Z",
+      "evidence_link": null,
+      "evidence_image": null
+    }
+  },
+  {
+    "model": "os_project.milestonegoal",
+    "pk": 14,
+    "fields": {
+      "milestone": 6,
+      "title": "SVG Export",
+      "description": "Add functionality to export charts as SVG images.",
+      "status": "NOT_STARTED",
+      "created_at": "2025-03-05T17:18:00Z",
+      "updated_at": "2025-03-05T17:18:00Z",
+      "evidence_link": null,
+      "evidence_image": null
+    }
+  },
+  {
+    "model": "os_project.milestonegoal",
+    "pk": 15,
+    "fields": {
+      "milestone": 6,
+      "title": "PDF Export",
+      "description": "Add functionality to export charts as PDF documents.",
+      "status": "NOT_STARTED",
+      "created_at": "2025-03-05T17:20:00Z",
+      "updated_at": "2025-03-05T17:20:00Z",
+      "evidence_link": null,
+      "evidence_image": null
+    }
+  },
+  {
+    "model": "os_project.milestonegoal",
+    "pk": 16,
+    "fields": {
+      "milestone": 7,
+      "title": "Docker Installation Guide",
+      "description": "Create guide for installing Docker on various operating systems.",
+      "status": "NOT_STARTED",
+      "created_at": "2025-03-01T11:40:00Z",
+      "updated_at": "2025-03-01T11:40:00Z",
+      "evidence_link": null,
+      "evidence_image": null
+    }
+  },
+  {
+    "model": "os_project.milestonegoal",
+    "pk": 17,
+    "fields": {
+      "milestone": 7,
+      "title": "Django Setup Guide",
+      "description": "Create guide for setting up a Django project with Docker.",
+      "status": "NOT_STARTED",
+      "created_at": "2025-03-01T11:42:00Z",
+      "updated_at": "2025-03-01T11:42:00Z",
+      "evidence_link": null,
+      "evidence_image": null
+    }
+  },
+  {
+    "model": "os_project.milestonegoal",
+    "pk": 18,
+    "fields": {
+      "milestone": 7,
+      "title": "React Setup Guide",
+      "description": "Create guide for setting up a React project with Docker.",
+      "status": "NOT_STARTED",
+      "created_at": "2025-03-01T11:44:00Z",
+      "updated_at": "2025-03-01T11:44:00Z",
+      "evidence_link": null,
+      "evidence_image": null
+    }
+  },
+  {
+    "model": "os_project.milestonegoal",
+    "pk": 19,
+    "fields": {
+      "milestone": 8,
+      "title": "AWS Deployment Guide",
+      "description": "Create guide for deploying Docker containers to AWS.",
+      "status": "NOT_STARTED",
+      "created_at": "2025-03-01T11:46:00Z",
+      "updated_at": "2025-03-01T11:46:00Z",
+      "evidence_link": null,
+      "evidence_image": null
+    }
+  },
+  {
+    "model": "os_project.milestonegoal",
+    "pk": 20,
+    "fields": {
+      "milestone": 8,
+      "title": "GCP Deployment Guide",
+      "description": "Create guide for deploying Docker containers to Google Cloud Platform.",
+      "status": "NOT_STARTED",
+      "created_at": "2025-03-01T11:48:00Z",
+      "updated_at": "2025-03-01T11:48:00Z",
+      "evidence_link": null,
+      "evidence_image": null
+    }
+  }
+]

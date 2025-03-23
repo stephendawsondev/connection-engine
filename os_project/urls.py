@@ -36,4 +36,46 @@ urlpatterns = [
         views.toggle_favorite,
         name="toggle_favorite",
     ),
+    path("<int:project_id>/milestones/", views.milestone_list, name="milestone_list"),
+    path(
+        "<int:project_id>/milestones/create/",
+        views.milestone_create,
+        name="milestone_create",
+    ),
+    path(
+        "<int:project_id>/milestones/<int:milestone_id>/",
+        views.milestone_detail,
+        name="milestone_detail",
+    ),
+    path(
+        "<int:project_id>/milestones/<int:milestone_id>/update/",
+        views.milestone_update,
+        name="milestone_update",
+    ),
+    path(
+        "<int:project_id>/milestones/<int:milestone_id>/delete/",
+        views.milestone_delete,
+        name="milestone_delete",
+    ),
+    path(
+        "<int:project_id>/milestones/<int:milestone_id>/lock/",
+        views.lock_milestone,
+        name="lock_milestone",
+    ),
+    path(
+        "<int:project_id>/goals/<int:goal_id>/update-status/",
+        views.update_goal_status,
+        name="update_goal_status",
+    ),
+    path(
+        "<int:project_id>/goals/<int:goal_id>/delete/",
+        views.delete_goal,
+        name="delete_goal",
+    ),
+    path("<int:project_id>/mentors/", views.manage_mentors, name="manage_mentors"),
+    path(
+        "<int:project_id>/mentors/<int:mentor_id>/remove/",
+        views.remove_mentor,
+        name="remove_mentor",
+    ),
 ]

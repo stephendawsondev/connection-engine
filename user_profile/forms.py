@@ -28,7 +28,12 @@ class CustomSignupForm(SignupForm):
         ("osm", "Open Source Maintainer"),
         ("mentor", "Mentor"),
     ]
-    user_type = forms.ChoiceField(choices=USER_TYPE_CHOICES, label="User Type")
+    user_type = forms.ChoiceField(
+        choices=USER_TYPE_CHOICES,
+        label="User Type",
+        widget=forms.RadioSelect(),
+        required=True,
+    )
 
     def save(self, request):
         user = super().save(request)

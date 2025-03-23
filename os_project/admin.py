@@ -1,6 +1,14 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin
-from .models import Project, ProjectInterest, ProjectCategory, ProjectTag
+from .models import (
+    Project,
+    ProjectInterest,
+    ProjectCategory,
+    ProjectTag,
+    Milestone,
+    MilestoneGoal,
+    ProjectMentor,
+)
 
 
 @admin.register(ProjectCategory)
@@ -115,3 +123,40 @@ class ProjectInterestAdmin(ModelAdmin):
         return "-"
 
     get_wit_display.short_description = "Woman in Tech"
+
+
+@admin.register(Milestone)
+class MilestoneAdmin(ModelAdmin):
+    list_display = (
+        "title",
+        "project",
+        "target_date",
+        "completion_percentage",
+        "locked",
+    )
+    list_filter = ("locked", "target_date", "project")
+    search_fields = ("title", "description", "project__title")
+    readonly_fields = ("created_at", "updated_at")
+    date_hierarchy = "target_date"
+
+
+class MilestoneGoalInline(admin.TabularInline):
+    model = MilestoneGoal
+    extra = 1
+    readonly_fields = ("created_at", "updated_at")
+
+
+@admin.register(MilestoneGoal)
+class MilestoneGoalAdmin(ModelAdmin):
+    list_display = ("title", "milestone", "status", "updated_at")
+    list_filter = ("status", "milestone__project")
+    search_fields = ("title", "description", "milestone__title")
+    readonly_fields = ("created_at", "updated_at")
+
+
+@admin.register(ProjectMentor)
+class ProjectMentorAdmin(ModelAdmin):
+    list_display = ("mentor", "project", "expertise_areas", "created_at")
+    list_filter = ("project", "mentor")
+    search_fields = ("project__title", "mentor__user__username", "expertise_areas")
+    readonly_fields = ("created_at",)
