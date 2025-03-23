@@ -1,5 +1,5 @@
 {
-  "name": "march_hackathon_placeholder",
+  "name": "connection_engine",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@tailwindcss/cli": "^4.0.14",
-    "march_hackathon_placeholder": "file:"
+    "connection_engine": "file:"
   },
   "devDependencies": {
     "daisyui": "^5.0.6",

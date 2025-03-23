@@ -25,8 +25,8 @@ A modern Django project template with built-in authentication, user profiles, Ta
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/stephendawsondev/march-hackathon.git
-   cd march-hackathon
+   git clone https://github.com/stephendawsondevconnection_engine.git
+   cd connection_engine
    ```
 
 2. **Set up a virtual environment**
