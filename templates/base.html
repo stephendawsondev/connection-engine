@@ -37,9 +37,6 @@
           </div>
           <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
             <li>
-              <a href="{% url 'home' %}">Home</a>
-            </li>
-            <li>
               <a href="{% url 'project_list' %}">Projects</a>
             </li>
             <li>
@@ -75,9 +72,6 @@
       </div>
       <div class="navbar-center hidden lg:flex">
         <ul class="menu menu-horizontal px-1">
-          <li>
-            <a href="{% url 'home' %}">Home</a>
-          </li>
           <li>
             <a href="{% url 'project_list' %}">Projects</a>
           </li>
@@ -146,23 +140,23 @@
       <div class="toast toast-bottom toast-end z-40">
         {% for message in messages %}
           <div class="alert {% if message.tags == 'error' %}
-              
+
               alert-error
 
             {% elif message.tags == 'success' %}
-              
+
               alert-success
 
             {% elif message.tags == 'info' %}
-              
+
               alert-info
 
             {% elif message.tags == 'warning' %}
-              
+
               alert-warning
 
             {% else %}
-              
+
               alert-info
 
             {% endif %}">
