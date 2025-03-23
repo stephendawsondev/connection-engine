@@ -4,7 +4,7 @@
 /* Light Mode Variables */
 :root {
   --highlight1: #30ceec;
-  --highlight2: #7aca09;
+  --highlight2: #7acc00;
   --highlight3: #e50004;
   --highlight4: #8c4ffe;
   --highlight5: #f5a742;
@@ -13,6 +13,8 @@
   --font-primary: "Press Start 2P", sans-serif;
   --font-secondary: "Orbitron", sans-serif;
 }
+
+/* General Font-Styles */
 
 h1,
 h2,
@@ -72,6 +74,20 @@ select {
   text-align: center;
 }
 
+/* General Font-Colors for Headers and Highlights */
+.women {
+  color: var(--highlight4);
+}
+
+.project {
+  color: var(--highlight2);
+}
+
+.mentor {
+  color: var(--highlight5);
+}
+
+/* Navbar */
 .logo {
   background-image: url("https://res.cloudinary.com/dj2lk9daf/image/upload/v1742647701/ce-logo-dark-theme_dulmwg.png");
   width: auto;
@@ -87,8 +103,6 @@ html[data-theme="light"] .logo {
 }
 
 /* Cards & Buttons pixelated border effect */
-
-/* Static cards Retro Effect */
 .btn-outline,
 .btn-outline--wrapper,
 .btn-error,
@@ -210,6 +224,14 @@ html[data-theme="light"] .logo {
 .card::after {
   margin: -5px;
 }
+
+.card-project::after {
+  background: var(--highlight2) !important;
+}
+.card-mentor::after {
+  background: var(--highlight5) !important;
+}
+
 
 .btn.btn-error::after {
   background: var(--highlight3) !important;

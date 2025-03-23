@@ -10,12 +10,12 @@
 {% block content %}
 <div class="container mx-auto px-4">
     <div class="text-center mb-6">
-        <h1 class="text-3xl font-bold">Open Source Projects</h1>
+        <h1 class="text-3xl project font-bold">Open Source Projects</h1>
         <p class="text-lg">Find projects to contribute to or create your own</p>
     </div>
 
     <!-- Search and filter section -->
-    <div class="card bg-base-200 shadow-md mb-6">
+    <div class="card card-project bg-base-200 shadow-md mb-6">
         <div class="card-body">
             <form method="get" action="{% url 'project_list' %}" class="space-y-4">
                 <div class="flex flex-col md:flex-row gap-4">
@@ -103,7 +103,7 @@
     {% if projects %}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for project in projects %}
-        <div class="card bg-base-200 shadow-xl h-full hover:shadow-2xl transition-shadow duration-300">
+        <div class="card card-project bg-base-200 shadow-xl h-full hover:shadow-2xl transition-shadow duration-300">
             {% if project.image %}
             <figure class="h-48">
                 <img src="{{ project.image.url }}" alt="{{ project.title }}" class="object-cover w-full h-full">

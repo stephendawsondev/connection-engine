@@ -12,13 +12,13 @@
 {% block content %}
   <div class="container mx-auto px-4 py-6">
     <div class="mb-4">
-      <a href="{% url 'project_list' %}" class="btn btn-ghost btn-sm">← Back to Projects</a>
+      <a href="{% url 'project_list' %}" class="btn btn-ghost btn-sm project">← Back to Projects</a>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <!-- Main content column -->
       <div class="lg:col-span-2">
-        <div class="card bg-base-200 shadow-xl">
+        <div class="card card-project bg-base-200 shadow-xl">
           {% if project.image %}
             <figure class="h-64">
               <img src="{{ project.image.url }}" alt="{{ project.title }}" class="object-cover w-full h-full" />
@@ -32,21 +32,21 @@
               <div class="flex flex-wrap gap-2">
                 <div class="badge badge-lg
                 {% if project.status == 'OPEN' %}
-                    
+
                 badge-success
 
                   {% elif project.status == 'ASSIGNED' %}
-                    
+
                 badge-warning
 
                   {% elif project.status == 'IN_PROGRESS' %}
-                    
+
 
                 badge-info
 
 
                   {% elif project.status == 'COMPLETED' %}
-                    
+
                 badge-secondary
 
                   {% endif %}">{{ project.get_status_display }}</div>
@@ -169,7 +169,7 @@
 
       <!-- Sidebar -->
       <div class="lg:col-span-1">
-        <div class="card bg-base-200 shadow-xl mb-6">
+        <div class="card card-project bg-base-200 shadow-xl mb-6">
           <div class="card-body">
             <h2 class="card-title mb-4">Project Info</h2>
 
@@ -221,7 +221,7 @@
           </div>
         </div>
 
-        <div class="card bg-base-200 shadow-xl">
+        <div class="card card-project bg-base-200 shadow-xl">
           <div class="card-body">
             <h2 class="card-title mb-4">Funding Progress</h2>
 
