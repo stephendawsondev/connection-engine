@@ -23,3 +23,10 @@
     background-color: var(--highlight5);
     border: 1px solid var(--highlight5);
   }
+
+  #stephen-card p a {
+    font-family: var(--font-secondary);
+    text-decoration: underline;
+    font-weight: bold;
+    color: blue;
+  }
