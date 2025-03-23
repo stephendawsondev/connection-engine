@@ -212,6 +212,10 @@ html[data-theme="light"] .logo {
 }
 
 .btn.btn-outline::after {
+  background: var(--bg);
+}
+
+html[data-theme="light"] .btn.btn-outline::after {
   background: var(--text);
 }
 
