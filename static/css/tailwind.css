@@ -3413,11 +3413,6 @@
       line-height: var(--tw-leading, var(--text-lg--line-height));
     }
   }
-  .md\:col-span-2 {
-    @media (width >= 48rem) {
-      grid-column: span 2 / span 2;
-    }
-  }
   .md\:flex {
     @media (width >= 48rem) {
       display: flex;
@@ -3512,14 +3507,6 @@
       scale: var(--tw-scale-x) var(--tw-scale-y);
     }
   }
-  .lg\:scale-70 {
-    @media (width >= 64rem) {
-      --tw-scale-x: 70%;
-      --tw-scale-y: 70%;
-      --tw-scale-z: 70%;
-      scale: var(--tw-scale-x) var(--tw-scale-y);
-    }
-  }
   .lg\:grid-cols-2 {
     @media (width >= 64rem) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3530,47 +3517,10 @@
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
-  .lg\:grid-cols-4 {
-    @media (width >= 64rem) {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-  }
-  .lg\:grid-cols-5 {
-    @media (width >= 64rem) {
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-    }
-  }
-  .lg\:grid-cols-6 {
-    @media (width >= 64rem) {
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-    }
-  }
-  .lg\:grid-cols-8 {
-    @media (width >= 64rem) {
-      grid-template-columns: repeat(8, minmax(0, 1fr));
-    }
-  }
-  .lg\:space-x-10 {
-    @media (width >= 64rem) {
-      :where(& > :not(:last-child)) {
-        --tw-space-x-reverse: 0;
-        margin-inline-start: calc(calc(var(--spacing) * 10) * var(--tw-space-x-reverse));
-        margin-inline-end: calc(calc(var(--spacing) * 10) * calc(1 - var(--tw-space-x-reverse)));
-      }
-    }
-  }
   .lg\:text-5xl {
     @media (width >= 64rem) {
       font-size: var(--text-5xl);
       line-height: var(--tw-leading, var(--text-5xl--line-height));
-    }
-  }
-  .xl\:scale-25 {
-    @media (width >= 80rem) {
-      --tw-scale-x: 25%;
-      --tw-scale-y: 25%;
-      --tw-scale-z: 25%;
-      scale: var(--tw-scale-x) var(--tw-scale-y);
     }
   }
   .xl\:scale-28 {
