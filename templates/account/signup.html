@@ -25,13 +25,27 @@
             {% endif %}
           </div>
 
-          <div class="form-control">
-            <label class="label block" for="email"><span class="label-text">{% trans 'Email' %}({% trans 'optional' %})</span></label>
-            <input type="email" name="email" id="email" placeholder="{% trans 'Email' %}" class="input input-bordered w-full" />
-            {% if form.email.errors %}
-              <label class="label"><span class="label-text-alt text-error">{{ form.email.errors.0 }}</span></label>
-            {% endif %}
-          </div>
+        <div class="form-control">
+          <label class="label block" for="email">
+            <span class="label-text"
+              >{% trans "Email" %}</span
+            >
+          </label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            placeholder="{% trans 'Email' %}"
+            class="input input-bordered w-full"
+          />
+          {% if form.email.errors %}
+          <label class="label">
+            <span class="label-text-alt text-error"
+              >{{ form.email.errors.0 }}</span
+            >
+          </label>
+          {% endif %}
+        </div>
 
           <div class="form-control">
             <label class="label block" for="password1"><span class="label-text">{% trans 'Password' %}</span></label>
