@@ -1,5 +1,6 @@
 from django.db import models
 from cloudinary.models import CloudinaryField
+from donations.models import Payment
 
 
 class ProjectCategory(models.Model):
@@ -73,9 +74,6 @@ class Project(models.Model):
     # Funding information
     funding_goal = models.DecimalField(max_digits=10, decimal_places=2)
     current_funding = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    # TODO replace with when payments app is finished:
-    # funding_goal = models.ForeignKey('payments.FundingGoal', on_delete=models.SET_NULL, null=True, related_name='project')
-    # or keep as is and update the current_funding value based on payment records
 
     # Categories and tags
     category = models.ForeignKey(
@@ -103,6 +101,26 @@ class Project(models.Model):
         if self.technologies:
             return [tech.strip() for tech in self.technologies.split(",")]
         return []
+
+    def update_funding(self):
+        """
+        Update the current_funding value based on actual payments/donations
+        received through Stripe.
+        """
+
+        # Get all successful payments related to this project
+        successful_payments = Payment.objects.filter(project=self, status="SUCCESS")
+
+        # Calculate total funding
+        total_funding = (
+            successful_payments.aggregate(total=models.Sum("amount"))["total"] or 0
+        )
+
+        # Update the current_funding field
+        self.current_funding = total_funding
+        self.save(update_fields=["current_funding"])
+
+        return self.current_funding
 
 
 class ProjectInterest(models.Model):

@@ -91,12 +91,13 @@ def stripe_webhook(request):
 def handle_completed_checkout(session):
     metadata = session.metadata
     payment_type = metadata.get("payment_type")
-    amount = session.amount_total / 100  # Convert from cents
+    user_id = metadata.get("user_id")
+    amount = Decimal(str(session.amount_total / 100))  # Convert from cents
 
     # Create payment record
     payment = Payment(
         confirmation_number=session.id,
-        user_id=metadata.get("user_id"),
+        user_id=user_id,
         amount=amount,
         status="SUCCESS",
         stripe_payment_intent_id=session.payment_intent,
@@ -106,18 +107,36 @@ def handle_completed_checkout(session):
     if payment_type == "project":
         project_id = metadata.get("project_id")
         if project_id:
-            project = Project.objects.get(id=project_id)
-            payment.project = project
-            project.current_funding += amount
-            project.save()
+            try:
+                project = Project.objects.get(id=project_id)
+                payment.project = project
+                payment.save()
+
+                # Update the project funding
+                project.update_funding()
+
+            except Project.DoesNotExist:
+                # Handle case where project doesn't exist
+                payment.save()
+        else:
+            payment.save()
 
     elif payment_type == "sponsor":
         wit_id = metadata.get("wit_id")
         if wit_id:
-            wit = WomenInTech.objects.get(id=wit_id)
-            payment.sponsored_user = wit
+            try:
+                wit = WomenInTech.objects.get(id=wit_id)
+                payment.sponsored_user = wit
+                payment.save()
+            except WomenInTech.DoesNotExist:
+                payment.save()
+        else:
+            payment.save()
+    else:
+        payment.save()
 
-    payment.save()
+
+# donations/views.py - update the success function
 
 
 @csrf_exempt
@@ -159,18 +178,31 @@ def success(request):
             # Handle project and WIT data from metadata
             if hasattr(session, "metadata"):
                 if session.metadata.get("project_id"):
-                    project = Project.objects.get(id=session.metadata.get("project_id"))
-                    payment.project = project
-                    # Update project funding
-                    project.current_funding += payment.amount
-                    project.save()
+                    try:
+                        project = Project.objects.get(
+                            id=session.metadata.get("project_id")
+                        )
+                        payment.project = project
+                        payment.save()
 
-                if session.metadata.get("wit_id"):
-                    payment.sponsored_user = WomenInTech.objects.get(
-                        id=session.metadata.get("wit_id")
-                    )
+                        # Update project funding
+                        project.update_funding()
 
-            payment.save()
+                    except Project.DoesNotExist:
+                        payment.save()
+
+                elif session.metadata.get("wit_id"):
+                    try:
+                        payment.sponsored_user = WomenInTech.objects.get(
+                            id=session.metadata.get("wit_id")
+                        )
+                        payment.save()
+                    except WomenInTech.DoesNotExist:
+                        payment.save()
+                else:
+                    payment.save()
+            else:
+                payment.save()
 
         return render(request, "donations/success.html", {"payment": payment})
 

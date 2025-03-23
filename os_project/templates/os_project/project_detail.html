@@ -32,23 +32,24 @@
               <div class="flex flex-wrap gap-2">
                 <div class="badge badge-lg
                 {% if project.status == 'OPEN' %}
-
+                    
                 badge-success
 
-                {% elif project.status == 'ASSIGNED' %}
-
+                  {% elif project.status == 'ASSIGNED' %}
+                    
                 badge-warning
 
-                {% elif project.status == 'IN_PROGRESS' %}
+                  {% elif project.status == 'IN_PROGRESS' %}
+                    
 
                 badge-info
 
-                {% elif project.status == 'COMPLETED' %}
 
+                  {% elif project.status == 'COMPLETED' %}
+                    
                 badge-secondary
 
-            {% endif %}">{{ project.get_status_display }}
-                </div>
+                  {% endif %}">{{ project.get_status_display }}</div>
 
                 <div class="badge badge-lg">{{ project.get_difficulty_display }}</div>
               </div>
@@ -69,13 +70,13 @@
               </div>
             {% endif %}
 
-            <div class="flex flex-col sm:flex-row gap-4 my-4">
+            <div class="flex flex-col gap-4 my-4">
               {% if project.repo_link %}
-                <a href="{{ project.repo_link }}" target="_blank" class="btn btn-primary">Repository</a>
+                <a href="{{ project.repo_link }}" target="_blank" class="btn btn-primary btn-retro">Repository</a>
               {% endif %}
 
               {% if project.deploy_link %}
-                <a href="{{ project.deploy_link }}" target="_blank" class="btn btn-primary">Live Demo</a>
+                <a href="{{ project.deploy_link }}" target="_blank" class="btn btn-primary btn-retro">Live Demo</a>
               {% endif %}
             </div>
 
@@ -103,25 +104,9 @@
                 <a href="{% url 'toggle_favorite' project_id=project.pk %}"
                   class="btn btn-circle {% if is_favorited %}favorited{% endif %} fill-primary favorite-btn"
                   title="{% if is_favorited %}
-
-
-
-
                     Remove from favorites
-
-
-
-
                   {% else %}
-
-
-
-
                     Add to favorites
-
-
-
-
                   {% endif %}">
                   <!-- Outline star (shown when not favorited) -->
                   <svg id="star-outline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -155,7 +140,7 @@
                   <a href="{% url 'withdraw_interest' project_id=project.pk %}" class="btn btn-outline btn-error">Withdraw Interest</a>
                 {% else %}
                   {% if project.status == 'OPEN' %}
-                    <a href="{% url 'express_interest' project_id=project.pk %}" class="btn btn-primary">Express Interest</a>
+                    <a href="{% url 'express_interest' project_id=project.pk %}" class="btn btn-primary btn-retro">Express Interest</a>
                   {% elif project.status == 'ASSIGNED' %}
                     {% if user.women_in_tech_profile %}
                       {% if project.assigned_wit == user.women_in_tech_profile %}
@@ -172,10 +157,9 @@
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 w-6">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-
                 <div>
                   <p>Sign in to express interest in this project.</p>
-                  <a href="{% url 'account_login' %}?next={{ request.path }}" class="btn btn-primary btn-sm mt-2">Sign In</a>
+                  <a href="{% url 'account_login' %}?next={{ request.path }}" class="btn btn-primary btn-retro btn-sm mt-2">Sign In</a>
                 </div>
               </div>
             {% endif %}
@@ -262,9 +246,25 @@
               <label class="label"><span class="label-text">Donation Amount (€)</span></label>
               <div class="input-group">
                 <input type="number" id="donation-amount" min="1" class="input input-bordered w-full" value="20" />
-                <button id="donate-button" class="btn btn-primary mt-2 w-full">Support This Project</button>
+                <button id="donate-button" class="btn btn-primary btn-retro mt-2 w-full">Support This Project</button>
               </div>
             </div>
+
+            {% if recent_donations %}
+              <div class="mt-4">
+                <h3 class="font-bold mb-2">Recent Donations</h3>
+                <div class="space-y-2 recent-donations">
+                  {% for donation in recent_donations %}
+                    <div class="bg-base-300 p-2 rounded-lg text-sm">
+                      <div class="flex justify-between">
+                        <span>€{{ donation.amount }}</span>
+                        <span class="opacity-70">{{ donation.created_at|date:'M d' }}</span>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -318,5 +318,5 @@
             });
         }
     });
-</script>
+  </script>
 {% endblock %}

@@ -1,46 +1,29 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load i18n %}
 {% block title %}
-{% trans "Sign Up" %} {% endblock %} {% block content %}
-<div class="max-w-md mx-auto">
-  <div class="card bg-base-200 shadow-xl">
-    <div class="card-body">
-      <h2 class="card-title text-2xl mb-4">{% trans "Sign Up" %}</h2>
+  {% trans 'Sign Up' %}
+{% endblock %} {% block content %}
+  <div class="max-w-md mx-auto">
+    <div class="card bg-base-200 shadow-xl">
+      <div class="card-body">
+        <h2 class="card-title text-2xl mb-4">{% trans 'Sign Up' %}</h2>
 
-      <p class="mb-4">
-        Already have an account? Then please
-        <a href="{{ login_url }}" class="link link-primary">sign in</a>.
-      </p>
+        <p class="mb-4">
+          Already have an account? Then please
+          <a href="{{ login_url }}" class="link link-primary">sign in</a>.
+        </p>
 
-      {% url 'account_signup' as action_url %}
-      <form
-        class="signup space-y-4"
-        id="signup_form"
-        method="post"
-        action="{{ action_url }}"
-      >
-        {% csrf_token %}
+        {% url 'account_signup' as action_url %}
+        <form class="signup space-y-4" id="signup_form" method="post" action="{{ action_url }}">
+          {% csrf_token %}
 
-        <div class="form-control">
-          <label class="label block" for="username">
-            <span class="label-text">{% trans "Username" %}</span>
-          </label>
-          <input
-            type="text"
-            name="username"
-            id="username"
-            placeholder="{% trans 'Username' %}"
-            class="input input-bordered w-full"
-            required
-          />
-          {% if form.username.errors %}
-          <label class="label">
-            <span class="label-text-alt text-error"
-              >{{ form.username.errors.0 }}</span
-            >
-          </label>
-          {% endif %}
-        </div>
+          <div class="form-control">
+            <label class="label block" for="username"><span class="label-text">{% trans 'Username' %}</span></label>
+            <input type="text" name="username" id="username" placeholder="{% trans 'Username' %}" class="input input-bordered w-full" required />
+            {% if form.username.errors %}
+              <label class="label"><span class="label-text-alt text-error">{{ form.username.errors.0 }}</span></label>
+            {% endif %}
+          </div>
 
         <div class="form-control">
           <label class="label block" for="email">
@@ -64,80 +47,42 @@
           {% endif %}
         </div>
 
-        <div class="form-control">
-          <label class="label block" for="password1">
-            <span class="label-text">{% trans "Password" %}</span>
-          </label>
-          <input
-            type="password"
-            name="password1"
-            id="password1"
-            placeholder="{% trans 'Password' %}"
-            class="input input-bordered w-full"
-            required
-          />
-          {% if form.password1.errors %}
-          <label class="label">
-            <span class="label-text-alt text-error"
-              >{{ form.password1.errors.0 }}</span
-            >
-          </label>
+          <div class="form-control">
+            <label class="label block" for="password1"><span class="label-text">{% trans 'Password' %}</span></label>
+            <input type="password" name="password1" id="password1" placeholder="{% trans 'Password' %}" class="input input-bordered w-full" required />
+            {% if form.password1.errors %}
+              <label class="label"><span class="label-text-alt text-error">{{ form.password1.errors.0 }}</span></label>
+            {% endif %}
+          </div>
+
+          <div class="form-control">
+            <label class="label block" for="password2"><span class="label-text">{% trans 'Confirm Password' %}</span></label>
+            <input type="password" name="password2" id="password2" placeholder="{% trans 'Confirm Password' %}" class="input input-bordered w-full" required />
+            {% if form.password2.errors %}
+              <label class="label"><span class="label-text-alt text-error">{{ form.password2.errors.0 }}</span></label>
+            {% endif %}
+          </div>
+
+          <div class="form-control">
+            <label class="label block" for="{{ form.user_type.id_for_label }}"><span class="label-text">User Type</span></label>
+            {{ form.user_type }} {% if form.user_type.errors %}
+              <label class="label"><span class="label-text-alt text-error">{{ form.user_type.errors.0 }}</span></label>
+            {% endif %}
+          </div>
+
+          {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+          {% endif %} {% if form.non_field_errors %}
+            <div class="alert alert-error">
+              <span>{{ form.non_field_errors.0 }}</span>
+            </div>
           {% endif %}
-        </div>
 
-        <div class="form-control">
-          <label class="label block" for="password2">
-            <span class="label-text">{% trans "Confirm Password" %}</span>
-          </label>
-          <input
-            type="password"
-            name="password2"
-            id="password2"
-            placeholder="{% trans 'Confirm Password' %}"
-            class="input input-bordered w-full"
-            required
-          />
-          {% if form.password2.errors %}
-          <label class="label">
-            <span class="label-text-alt text-error"
-              >{{ form.password2.errors.0 }}</span
-            >
-          </label>
-          {% endif %}
-        </div>
-
-        <div class="form-control">
-          <label class="label block" for="{{ form.user_type.id_for_label }}">
-            <span class="label-text">User Type</span>
-          </label>
-          {{ form.user_type }} {% if form.user_type.errors %}
-          <label class="label">
-            <span class="label-text-alt text-error"
-              >{{ form.user_type.errors.0 }}</span
-            >
-          </label>
-          {% endif %}
-        </div>
-
-        {% if redirect_field_value %}
-        <input
-          type="hidden"
-          name="{{ redirect_field_name }}"
-          value="{{ redirect_field_value }}"
-        />
-        {% endif %} {% if form.non_field_errors %}
-        <div class="alert alert-error">
-          <span>{{ form.non_field_errors.0 }}</span>
-        </div>
-        {% endif %}
-
-        <div class="form-control mt-6">
-          <button class="btn btn-primary w-full" type="submit">
-            {% trans "Sign Up" %}
-          </button>
-        </div>
-      </form>
+          <div class="form-control mt-6">
+            <button class="btn btn-primary btn-retro w-full" type="submit">{% trans 'Sign Up' %}</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-</div>
 {% endblock %}

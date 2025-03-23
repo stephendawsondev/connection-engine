@@ -21,7 +21,6 @@ from .decorators import os_maintainer_required, OSMaintainerRequiredMixin
 from django.conf import settings
 
 
-# List views
 class ProjectListView(ListView):
     model = Project
     template_name = "os_project/project_list.html"
@@ -67,11 +66,18 @@ class ProjectListView(ListView):
 
 
 class ProjectDetailView(DetailView):
+    """
+    View for displaying the project's page
+    """
+
     model = Project
     template_name = "os_project/project_detail.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        # Get the latest funding amount
+        self.object.update_funding()
 
         # Check if the user has already expressed interest in this project
         user_interested = False
@@ -116,6 +122,13 @@ class ProjectDetailView(DetailView):
                     )
 
             context["stripe_publishable_key"] = settings.STRIPE_PUBLISHABLE_KEY
+
+            # Add donation information
+            from donations.models import Payment
+
+            context["recent_donations"] = Payment.objects.filter(
+                project=self.object, status="SUCCESS"
+            ).order_by("-created_at")[:5]
 
             return context
 
@@ -217,7 +230,9 @@ def express_interest(request, project_id):
     try:
         wit_profile = WomenInTech.objects.get(user=user)
     except WomenInTech.DoesNotExist:
-        messages.error(request, "Only Women in Tech can express interest in projects.")
+        messages.error(
+            request, "Only Women in Tech can express interest in joining a project."
+        )
         return redirect("project_detail", pk=project_id)
 
     # Check if user has already expressed interest
@@ -290,6 +305,10 @@ def project_dashboard(request):
     except OS_Maintainer.DoesNotExist:
         # Fallback to just checking old_owner_id
         owned_projects = Project.objects.filter(old_owner_id=user.id)
+
+    # Update funding for all owned projects
+    for project in owned_projects:
+        project.update_funding()
 
     return render(
         request, "os_project/project_dashboard.html", {"owned_projects": owned_projects}
