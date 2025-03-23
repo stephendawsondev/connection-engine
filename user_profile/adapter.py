@@ -5,6 +5,14 @@ from django.conf import settings
 
 
 class CustomAccountAdapter(DefaultAccountAdapter):
+    def save_user(self, request, user, form, commit=True):
+        user = super().save_user(request, user, form, commit=False)
+        user_type = form.cleaned_data.get("user_type")
+        user._user_type = user_type
+        if commit:
+            user.save()
+        return user
+
     def send_mail(self, template_prefix, email, context):
         subject = render_to_string(f"{template_prefix}_subject.txt", context)
         subject = " ".join(subject.splitlines()).strip()
