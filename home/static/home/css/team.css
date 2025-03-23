@@ -24,11 +24,16 @@
     border: 5px solid var(--highlight5);
   }
 
-  #stephen-card p a {
+  #stephen-card p a,
+  #lucy-card p a,
+  #iliana-card p a,
+  #warren-card p a,
+  #soroush-card p a {
     font-family: var(--font-secondary);
     text-decoration: underline;
     font-weight: bold;
     color: blue;
+    font-size:medium;
   }
 
 
