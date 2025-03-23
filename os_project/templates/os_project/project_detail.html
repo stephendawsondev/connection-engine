@@ -32,15 +32,23 @@
               <div class="flex flex-wrap gap-2">
                 <div class="badge badge-lg
                 {% if project.status == 'OPEN' %}
+                    
                 badge-success
+
                   {% elif project.status == 'ASSIGNED' %}
+                    
                 badge-warning
+
                   {% elif project.status == 'IN_PROGRESS' %}
+                    
 
                 badge-info
 
+
                   {% elif project.status == 'COMPLETED' %}
+                    
                 badge-secondary
+
                   {% endif %}">{{ project.get_status_display }}</div>
 
                 <div class="badge badge-lg">{{ project.get_difficulty_display }}</div>
@@ -64,11 +72,11 @@
 
             <div class="flex flex-col gap-4 my-4">
               {% if project.repo_link %}
-                <a href="{{ project.repo_link }}" target="_blank" class="btn btn-primary">Repository</a>
+                <a href="{{ project.repo_link }}" target="_blank" class="btn btn-primary btn-retro">Repository</a>
               {% endif %}
 
               {% if project.deploy_link %}
-                <a href="{{ project.deploy_link }}" target="_blank" class="btn btn-primary">Live Demo</a>
+                <a href="{{ project.deploy_link }}" target="_blank" class="btn btn-primary btn-retro">Live Demo</a>
               {% endif %}
             </div>
 
@@ -95,7 +103,11 @@
               <div class="flex justify-end mb-4">
                 <a href="{% url 'toggle_favorite' project_id=project.pk %}"
                   class="btn btn-circle {% if is_favorited %}favorited{% endif %} fill-primary favorite-btn"
-                  title="{% if is_favorited %}Remove from favorites{% else %}Add to favorites{% endif %}">
+                  title="{% if is_favorited %}
+                    Remove from favorites
+                  {% else %}
+                    Add to favorites
+                  {% endif %}">
                   <!-- Outline star (shown when not favorited) -->
                   <svg id="star-outline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path d="m16,8v-2h-1v-2h-1v-2h-1v-1h-2v1h-1v2h-1v2h-1v2H1v2h1v1h1v1h1v1h1v1h1v5h-1v4h2v-1h2v-1h2v-1h2v1h2v1h2v1h2v-4h-1v-5h1v-1h1v-1h1v-1h1v-1h1v-2h-7Zm4,3h-1v1h-1v1h-1v1h-1v5h1v1h-2v-1h-2v-1h-2v1h-2v1h-2v-1h1v-5h-1v-1h-1v-1h-1v-1h-1v-1h4v-1h1v-1h1v-2h1v-2h2v2h1v2h1v1h1v1h4v1Z" />
@@ -128,7 +140,7 @@
                   <a href="{% url 'withdraw_interest' project_id=project.pk %}" class="btn btn-outline btn-error">Withdraw Interest</a>
                 {% else %}
                   {% if project.status == 'OPEN' %}
-                    <a href="{% url 'express_interest' project_id=project.pk %}" class="btn btn-primary">Express Interest</a>
+                    <a href="{% url 'express_interest' project_id=project.pk %}" class="btn btn-primary btn-retro">Express Interest</a>
                   {% elif project.status == 'ASSIGNED' %}
                     {% if user.women_in_tech_profile %}
                       {% if project.assigned_wit == user.women_in_tech_profile %}
@@ -147,7 +159,7 @@
                 </svg>
                 <div>
                   <p>Sign in to express interest in this project.</p>
-                  <a href="{% url 'account_login' %}?next={{ request.path }}" class="btn btn-primary btn-sm mt-2">Sign In</a>
+                  <a href="{% url 'account_login' %}?next={{ request.path }}" class="btn btn-primary btn-retro btn-sm mt-2">Sign In</a>
                 </div>
               </div>
             {% endif %}
@@ -234,7 +246,7 @@
               <label class="label"><span class="label-text">Donation Amount (€)</span></label>
               <div class="input-group">
                 <input type="number" id="donation-amount" min="1" class="input input-bordered w-full" value="20" />
-                <button id="donate-button" class="btn btn-primary mt-2 w-full">Support This Project</button>
+                <button id="donate-button" class="btn btn-primary btn-retro mt-2 w-full">Support This Project</button>
               </div>
             </div>
 
