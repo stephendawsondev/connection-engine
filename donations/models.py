@@ -67,7 +67,7 @@ class Payment(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.confirmation_number
+        return f"Payment {self.confirmation_number}"
 
 
 class ProjectFunding(models.Model):

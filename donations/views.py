@@ -1,14 +1,16 @@
 # donations/views.py
+import json
+
 import stripe
 from django.conf import settings
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import get_object_or_404
+
 from os_project.models import Project
 from user_profile.models import WomenInTech
-from .models import Payment
 
-import json
+from .models import Payment
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -53,7 +55,7 @@ def create_checkout_session(request):
                 }
             ],
             mode="payment",
-            success_url=success_url + "?session_id={CHECKOUT_SESSION_ID}",
+            success_url=success_url,
             cancel_url=cancel_url,
             metadata=metadata,
         )
@@ -113,3 +115,31 @@ def handle_completed_checkout(session):
             payment.sponsored_user = wit
 
     payment.save()
+
+
+def success(request, session_id=None):
+    """
+    Handle successful payments
+    """
+    save_info = request.session.get("save_info")
+
+    # Try to get the session_id from either the URL parameter or query parameter
+    if not session_id:
+        session_id = request.GET.get("session_id")
+
+    if not session_id:
+        return render(
+            request, "donations/error.html", {"error_message": "No session ID provided"}
+        )
+
+    try:
+        payment = Payment.objects.get(confirmation_number=session_id)
+        return render(
+            request,
+            "donations/success.html",
+            {"payment": payment, "save_info": save_info},
+        )
+    except Payment.DoesNotExist:
+        return render(
+            request, "donations/error.html", {"error_message": "Payment not found"}
+        )

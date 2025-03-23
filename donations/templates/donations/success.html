@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Success{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'donations/css/donations.css' %}">
+{% endblock %}
+
+{% block content %}
+<h1>Thank you for your donation!</h1>
+<p>Your payment has been successfully processed.</p>
+<p>Order Number: {{ payment.confirmation_number }}</p>
+<p>Amount: ${{ payment.amount }}</p>
+{% if save_info %}
+<p>Your information has been saved for future use.</p>
+{% endif %}
+{% endblock %}
+
+{% block postloadjs %}
+{{ block.super }}
+{% endblock %}
