@@ -42,7 +42,7 @@ textarea,
   font-family: var(--font-secondary);
   letter-spacing: 2px;
 }
-h1 {
+h1:not(.main-title) {
   font-size: 30px;
 }
 
