@@ -82,6 +82,49 @@
             </div>
         </div>
         {% endif %}
+        <br>
+        <br>
+        {% if project %}
+        <div class="card bg-base-200 shadow-md">
+            <h3>Recent Payments</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr>
+                            <th class="border-b border-gray-200 px-4 py-2">Date</th>
+                            <th class="border-b border-gray-200 px-4 py-2">User</th>
+                            <th class="border-b border-gray-200 px-4 py-2">Amount</th>
+                            <th class="border-b border-gray-200 px-4 py-2">Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pay in recent_payments %}
+                        <tr>
+                            <td class="px-4 py-2">{{ pay.created_at|date:"Y-m-d H:i" }}</td>
+                            <td class="px-4 py-2">{{ pay.user.username }}</td>
+                            <td class="px-4 py-2">€{{ pay.amount }}</td>
+                            <td class="px-4 py-2">
+                                {% if pay.project %}
+                                    Project Donation
+                                {% elif pay.sponsored_user %}
+                                    Sponsorship
+                                {% else %}
+                                    General Donation
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="px-4 py-2 text-center text-muted-foreground">
+                                No recent payments found
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}
 {% block postloadjs %}

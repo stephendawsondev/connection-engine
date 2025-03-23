@@ -12,9 +12,8 @@ from django.views.generic import ListView
 from os_project.models import Project
 from user_profile.models import WomenInTech
 
-from .models import Payment
-
 from .forms import WomenInTechSearchForm
+from .models import Payment
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -202,6 +201,24 @@ def success(request):
         if project:
             remaining_funding = project.funding_goal - project.current_funding
             funding_progress = project.funding_percentage()
+
+            # Add recent payments to the context
+            recent_payments = Payment.objects.exclude(status="PENDING").order_by(
+                "-created_at"
+            )[:5]
+
+            return render(
+                request,
+                "donations/success.html",
+                {
+                    "payment": payment,
+                    "project": project,
+                    "remaining_funding": remaining_funding,
+                    "funding_progress": funding_progress,
+                    "recent_payments": recent_payments,  # Add this line
+                    "save_info": request.session.get("save_info"),
+                },
+            )
 
             return render(
                 request,

@@ -40,13 +40,9 @@ class WITFundingForm(forms.ModelForm):
 
 class WomenInTechSearchForm(forms.Form):
     search = forms.CharField(required=False)
-    tech_specialties = forms.ModelChoiceField(
-        queryset=TechSpecialty.objects.all(),
-        required=False,
-        widget=forms.Select(attrs={"class": "select select-bordered"}),
+    tech_specialties = forms.CharField(
+        required=False, widget=forms.Select(attrs={"class": "select select-bordered"})
     )
     experience_level = forms.ChoiceField(
-        choices=EXPERIENCE_LEVEL_CHOICES,
-        required=False,
-        widget=forms.Select(attrs={"class": "select select-bordered"}),
+        required=False, widget=forms.Select(attrs={"class": "select select-bordered"})
     )
