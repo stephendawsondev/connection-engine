@@ -6,14 +6,14 @@
 {% endblock %}
 {% block content %}
 <div class="container success-container">
-    <div class="success-message">
+    <div class="card bg-base-200 shadow-md">
         <h1>Thank you for your donation {{ payment.user }}!</h1>
         <p>Your payment has been successfully processed.</p>
         <p>Order Number: {{ payment.confirmation_number }}</p>
         <p>Amount: €{{ payment.amount }}</p>
 
         {% if project %}
-        <div class="project-details">
+        <div class="card bg-base-200 shadow-md">
             <h2>Project Details</h2>
             <p>Project: {{ project.title }}</p>
             <p>Funding Progress: {{ funding_progress }}%</p>
@@ -28,25 +28,59 @@
     </div>
 
     {% if project %}
-    <div class="other-projects">
+    <div class="card bg-base-200 shadow-md">
         <h3>Other Open Source Projects</h3>
         <p>Consider supporting these projects too:</p>
-        <div class="project-grid">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for other_project in project.get_other_projects %}
-            <div class="project-card">
-                <h4>{{ other_project.title }}</h4>
-                <div class="progress-bar">
-                    <div class="progress" style="width: {{ other_project.funding_percentage }}%"></div>
+            <div class="card bg-base-200 shadow-xl h-full hover:shadow-2xl transition-shadow duration-300">
+                {% if other_project.image %}
+                <figure class="h-48">
+                    <img src="{{ other_project.image.url }}" alt="{{ other_project.title }}" class="object-cover w-full h-full">
+                </figure>
+                {% else %}
+                <figure class="h-48 bg-base-300 flex items-center justify-center">
+                    <div class="text-5xl opacity-30">📝</div>
+                </figure>
+                {% endif %}
+
+                <div class="card-body">
+                    <div class="flex items-center justify-between">
+                        <h2 class="card-title text-xs">{{ other_project.title }}</h2>
+                        {% if other_project.status == 'OPEN' %}
+                            <div class="badge badge-success text-xs">{{ other_project.get_status_display }}</div>
+                        {% elif other_project.status == 'ASSIGNED' %}
+                            <div class="badge badge-warning text-xs">{{ other_project.get_status_display }}</div>
+                        {% elif other_project.status == 'IN_PROGRESS' %}
+                            <div class="badge badge-info text-xs">{{ other_project.get_status_display }}</div>
+                        {% elif other_project.status == 'COMPLETED' %}
+                            <div class="badge badge-secondary text-xs">{{ other_project.get_status_display }}</div>
+                        {% endif %}
+                    </div>
+
+                    <p class="line-clamp-3">{{ other_project.description|truncatechars:150 }}</p>
+
+                    <div class="flex flex-wrap gap-1 mt-2">
+                        <div class="badge badge-outline">{{ other_project.get_difficulty_display }}</div>
+                        {% if other_project.category %}
+                        <div class="badge badge-outline">{{ other_project.category.name }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mt-4">
+                        <div class="text-sm mb-1">Funding: {{ other_project.funding_percentage }}%</div>
+                        <progress class="progress progress-primary w-full" value="{{ other_project.funding_percentage }}" max="100"></progress>
+                    </div>
+
+                    <div class="card-actions justify-end mt-4">
+                        <a href="{% url 'project_detail' pk=other_project.pk %}" class="btn btn-retro btn-sm">View Details</a>
+                    </div>
                 </div>
-                <p>Funding: {{ other_project.funding_percentage }}%</p>
-                <a href="{% url 'project_detail' other_project.id %}" class="btn btn-primary">
-                    View Project
-                </a>
             </div>
             {% endfor %}
+            </div>
         </div>
-    </div>
-    {% endif %}
+        {% endif %}
 </div>
 {% endblock %}
 {% block postloadjs %}
