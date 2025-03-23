@@ -1,18 +1,22 @@
 {% extends 'base.html' %}
 {% load i18n %}
-
+{% load static %}
 {% block title %}
   Home
 {% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'home/css/home.css' %}" />
+{% endblock %}
 
 {% block content %}
-  <div class="hero min-h-[70vh] bg-base-200 rounded-lg shadow-md">
-    <div class="hero-content text-center">
-      <div class="max-w-md">
-        <h1 class="text-2xl md:text-3xl lg:text-5xl font-bold">Welcome to Connection Engine</h1>
+  <div class="hero min-h-[50vh] sm:min-h-[70vh] bg-base-200 rounded-lg shadow-md overflow-hidden">
+    <div class="hero-content text-center flex flex-wrap lg:flex-nowrap">
+      <img src="https://res.cloudinary.com/dj2lk9daf/image/upload/v1742737056/ada-badass-light-theme-purple-glasses_fifvlx.png" class="max-w-sm w-full sm:w-2/3 lg:w-1/2 rounded-lg self-center px-4" />
+      <div class="max-w-xl lg:ml-8 p-4">
+        <h1 class="text-2xl md:text-3xl lg:text-5xl font-bold">Connection Engine</h1>
         <p class="py-6">Supporting Women in Tech on their Open Source journeys.</p>
         {% if not user.is_authenticated %}
-          <div class="flex flex-col md:flex-row gap-4 justify-center">
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="{% url 'account_login' %}" class="btn btn-outline">Login</a>
             <a href="{% url 'account_signup' %}" class="btn btn-primary btn-retro">Sign Up</a>
           </div>
@@ -22,6 +26,9 @@
           </p>
           <a href="{% url 'profile_detail' username=user.username %}" class="btn btn-primary btn-retro">View Profile</a>
         {% endif %}
+        <div class="w-max justify-center hidden sm:block">
+          <h1 class="animate-typing overflow-hidden whitespace-nowrap border-r-4 border-r-white text-2xl md:text-xl lg:text-2xl font-bold mt-8">Ada didn't mind the gap...</h1>
+        </div>
       </div>
     </div>
   </div>
@@ -58,6 +65,5 @@
   <div class="text-center mb-12">
     <h2 class="text-2xl md:text-3xl lg:text-5xl font-bold mb-6">Get Started</h2>
     <p class="max-w-2xl mx-auto mb-6">This Django starter template provides everything you need to build a modern web application with authentication, user profiles, and responsive design.</p>
-    <a href="#" target="_blank" class="btn btn-primary btn-retro">Call to action</a>
   </div>
 {% endblock %}
