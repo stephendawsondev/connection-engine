@@ -5,6 +5,7 @@ import stripe
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
 from os_project.models import Project
@@ -22,7 +23,9 @@ def create_checkout_session(request):
     type = data.get("type")
     id = data.get("id")
 
-    success_url = request.build_absolute_uri("/donations/success/")
+    success_url = request.build_absolute_uri(
+        reverse("success_with_id", args=["CHECKOUT_SESSION_ID"])
+    )
     cancel_url = request.build_absolute_uri("/donations/cancel/")
 
     metadata = {"user_id": request.user.id, "payment_type": type}
@@ -123,14 +126,15 @@ def success(request, session_id=None):
     """
     save_info = request.session.get("save_info")
 
-    # Try to get the session_id from either the URL parameter or query parameter
+    # If session_id is not provided in the URL, try to get it from the query parameter
     if not session_id:
         session_id = request.GET.get("session_id")
-
-    if not session_id:
-        return render(
-            request, "donations/error.html", {"error_message": "No session ID provided"}
-        )
+        if not session_id:
+            return render(
+                request,
+                "donations/error.html",
+                {"error_message": "No session ID provided"},
+            )
 
     try:
         payment = Payment.objects.get(confirmation_number=session_id)
