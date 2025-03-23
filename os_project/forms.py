@@ -1,5 +1,14 @@
 from django import forms
-from .models import Project, ProjectInterest, ProjectCategory, ProjectTag
+from .models import (
+    Project,
+    ProjectInterest,
+    ProjectCategory,
+    ProjectTag,
+    Milestone,
+    MilestoneGoal,
+    ProjectMentor,
+)
+from user_profile.models import Mentor
 
 
 class ProjectForm(forms.ModelForm):
@@ -84,3 +93,92 @@ class ProjectSearchForm(forms.Form):
         choices=[("", "All Difficulty Levels")] + list(Project.DIFFICULTY_CHOICES),
         required=False,
     )
+
+
+class MilestoneForm(forms.ModelForm):
+    """Form for creating and updating milestones"""
+
+    class Meta:
+        model = Milestone
+        fields = ["title", "description", "target_date"]
+        widgets = {
+            "description": forms.Textarea(attrs={"rows": 3}),
+            "target_date": forms.DateInput(attrs={"type": "date"}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.project = kwargs.pop("project", None)
+        super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if self.project:
+            instance.project = self.project
+        if commit:
+            instance.save()
+        return instance
+
+
+class MilestoneGoalForm(forms.ModelForm):
+    """Form for creating and updating milestone goals"""
+
+    class Meta:
+        model = MilestoneGoal
+        fields = ["title", "description"]
+        widgets = {
+            "description": forms.Textarea(attrs={"rows": 3}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.milestone = kwargs.pop("milestone", None)
+        super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if self.milestone:
+            instance.milestone = self.milestone
+        if commit:
+            instance.save()
+        return instance
+
+
+class MilestoneGoalUpdateForm(forms.ModelForm):
+    """Form for updating milestone goal status"""
+
+    class Meta:
+        model = MilestoneGoal
+        fields = ["status", "evidence_link", "evidence_image"]
+        widgets = {
+            "evidence_link": forms.URLInput(attrs={"placeholder": "https://..."}),
+        }
+
+
+class ProjectMentorForm(forms.ModelForm):
+    """Form for adding mentors to projects"""
+
+    class Meta:
+        model = ProjectMentor
+        fields = ["mentor", "expertise_areas", "availability", "notes"]
+        widgets = {
+            "notes": forms.Textarea(attrs={"rows": 3}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.project = kwargs.pop("project", None)
+        super().__init__(*args, **kwargs)
+        # Filter mentors who aren't already assigned to this project
+        if self.project:
+            existing_mentors = ProjectMentor.objects.filter(
+                project=self.project
+            ).values_list("mentor_id", flat=True)
+            self.fields["mentor"].queryset = Mentor.objects.exclude(
+                id__in=existing_mentors
+            )
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if self.project:
+            instance.project = self.project
+        if commit:
+            instance.save()
+        return instance
