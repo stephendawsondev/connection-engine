@@ -117,6 +117,7 @@
             <div class="card-body">
                 <div class="flex items-center justify-between">
                     <h2 class="card-title text-xs">{{ project.title }}</h2>
+                </div>
 
                     {% if project.status == 'OPEN' %}
                     <div class="badge badge-success text-xs">{{ project.get_status_display }}</div>
@@ -127,7 +128,6 @@
                     {% elif project.status == 'COMPLETED' %}
                     <div class="badge badge-secondary text-xs">{{ project.get_status_display }}</div>
                     {% endif %}
-                </div>
 
                 <p class="line-clamp-3">{{ project.description|truncatechars:150 }}</p>
 
