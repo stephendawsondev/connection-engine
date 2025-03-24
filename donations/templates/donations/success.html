@@ -7,15 +7,18 @@
 {% block content %}
 <div class="container success-container">
     <div class="card bg-base-200 shadow-md">
+        <h2 class="women text-center pt-3 pb-3">Thank you for your donation {{ payment.user }}!</h2>
         <h2>Payment Details</h2>
-        <h1>Thank you for your donation {{ payment.user }}!</h1>
+        <hr>
         <p>Your payment has been successfully processed.</p>
-        <p>Order Number: {{ payment.confirmation_number }}</p>
+        <p>Order Number:</p>
+            <p class="break-all !important">{{ payment.confirmation_number }}</p>
         <p>Amount: €{{ payment.amount }}</p>
 
         {% if project %}
         <div>
-            <h2>Project Details</h2>
+            <h2 class="project pt-3">Project Details</h2>
+            <hr>
             <p>Project: {{ project.title }}</p>
             <p>Funding Progress: {{ funding_progress }}%</p>
             <p>Remaining Funding Needed: €{{ remaining_funding }}</p>
@@ -30,7 +33,7 @@
     <br>
     {% if project %}
     <div class="card bg-base-200 shadow-md">
-        <h3>Other Open Source Projects</h3>
+        <h2>Other Open Source Projects</h2>
         <p>Consider supporting these projects too:</p>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for other_project in project.get_other_projects %}
@@ -41,24 +44,26 @@
                 </figure>
                 {% else %}
                 <figure class="h-48 bg-base-300 flex items-center justify-center">
-                    <div class="text-5xl opacity-30">📝</div>
+                    <div class="text-5xl opacity-30"><svg class="inline-icon text-color" id="image" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polygon points="9 6 9 9 8 9 8 10 5 10 5 9 4 9 4 6 5 6 5 5 8 5 8 6 9 6"/><path d="m22,2v-1H2v1h-1v20h1v1h20v-1h1V2h-1Zm-5,12v1h1v1h1v1h1v1h1v3h-13v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v1h1Zm3,1v-1h-1v-1h-1v-1h-1v-1h-1v-1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v-1h-1v-1h-1v-1h-1v-1h-1V3h18v12h-1Zm-15,3v1h1v1h1v1H3v-4h1v1h1Z"/></svg></div>
                 </figure>
                 {% endif %}
 
+                <div class="card card-project bg-base-200 shadow-md">
                 <div class="card-body">
                     <div class="flex items-center justify-between">
                         <h2 class="card-title text-xs">{{ other_project.title }}</h2>
-                        {% if other_project.status == 'OPEN' %}
-                            <div class="badge badge-success text-xs">{{ other_project.get_status_display }}</div>
-                        {% elif other_project.status == 'ASSIGNED' %}
-                            <div class="badge badge-warning text-xs">{{ other_project.get_status_display }}</div>
-                        {% elif other_project.status == 'IN_PROGRESS' %}
-                            <div class="badge badge-info text-xs">{{ other_project.get_status_display }}</div>
-                        {% elif other_project.status == 'COMPLETED' %}
-                            <div class="badge badge-secondary text-xs">{{ other_project.get_status_display }}</div>
-                        {% endif %}
                     </div>
-
+                    <div>
+                        {% if other_project.status == 'OPEN' %}
+                        <div class="badge badge-success text-xs">{{ other_project.get_status_display }}</div>
+                    {% elif other_project.status == 'ASSIGNED' %}
+                        <div class="badge badge-warning text-xs">{{ other_project.get_status_display }}</div>
+                    {% elif other_project.status == 'IN_PROGRESS' %}
+                        <div class="badge badge-info text-xs">{{ other_project.get_status_display }}</div>
+                    {% elif other_project.status == 'COMPLETED' %}
+                        <div class="badge badge-secondary text-xs">{{ other_project.get_status_display }}</div>
+                    {% endif %}
+                    </div>
                     <p class="line-clamp-3">{{ other_project.description|truncatechars:150 }}</p>
 
                     <div class="flex flex-wrap gap-1 mt-2">
@@ -77,6 +82,7 @@
                         <a href="{% url 'project_detail' pk=other_project.pk %}" class="btn btn-retro btn-sm">View Details</a>
                     </div>
                 </div>
+                </div>
             </div>
             {% endfor %}
             </div>
@@ -86,7 +92,7 @@
         <br>
         {% if project %}
         <div class="card bg-base-200 shadow-md">
-            <h3>Recent Payments</h3>
+            <h2>Recent Payments</h2>
             <div class="overflow-x-auto">
                 <table class="w-full">
                     <thead>
@@ -128,7 +134,7 @@
 
     {% if sponsored_user %}
     <div class="card bg-base-200 shadow-md">
-        <h3>Other Women in Tech</h3>
+        <h2>Other Women in Tech</h3>
         <p>Consider supporting these talented developers too:</p>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for other_wit in other_women_in_tech %}
@@ -170,7 +176,7 @@
     <br>
     {% if sponsored_user %}
         <div class="card bg-base-200 shadow-md">
-            <h3>Recent Payments</h3>
+            <h2>Recent Payments</h2>
             <div class="overflow-x-auto">
                 <table class="w-full">
                     <thead>
