@@ -9,21 +9,11 @@
 {% endblock %}
 
 {% block content %}
-<div class="grid grid-cols-1">
-  <div class="card bg-base-200 shadow-md mb-6">
-    <div class="card-body">
-      <h2 class="card-title text-3xl"><svg xmlns="http://www.w3.org/2000/svg" id="newsbreak" width="30" height="30" viewBox="0 0 24 24"><polygon points="23 2 23 6 22 6 22 12 21 12 21 17 20 17 20 18 18 18 18 19 16 19 16 20 14 20 14 21 12 21 12 20 11 20 11 18 10 18 10 16 9 16 9 14 8 14 8 15 7 15 7 16 6 16 6 17 5 17 5 19 4 19 4 20 3 20 3 21 2 21 2 22 1 22 1 19 2 19 2 15 3 15 3 11 4 11 4 7 5 7 5 6 7 6 7 5 9 5 9 4 11 4 11 3 13 3 13 5 14 5 14 7 15 7 15 9 16 9 16 11 18 11 18 9 19 9 19 7 20 7 20 5 21 5 21 3 22 3 22 2 23 2"/></svg>
-        News Flash!
-        <svg xmlns="http://www.w3.org/2000/svg" id="newsbreak" width="30" height="30" viewBox="0 0 24 24"><polygon points="23 2 23 6 22 6 22 12 21 12 21 17 20 17 20 18 18 18 18 19 16 19 16 20 14 20 14 21 12 21 12 20 11 20 11 18 10 18 10 16 9 16 9 14 8 14 8 15 7 15 7 16 6 16 6 17 5 17 5 19 4 19 4 20 3 20 3 21 2 21 2 22 1 22 1 19 2 19 2 15 3 15 3 11 4 11 4 7 5 7 5 6 7 6 7 5 9 5 9 4 11 4 11 3 13 3 13 5 14 5 14 7 15 7 15 9 16 9 16 11 18 11 18 9 19 9 19 7 20 7 20 5 21 5 21 3 22 3 22 2 23 2"/></svg></h2><p class="text-lg"><strong>Women aren't 'breaking into the tech world' - We helped to create it.</strong></p>
-
-      <p>Ada Lovelace was the world's first software engineer: she wrote an algorithm that described a sequence of operations a machine would follow, making it the first published computer program.</p>
-    </div>
-  </div>
-<div class="hero min-h-[40vh] sm:min-h-[70vh] bg-base-200 rounded-lg justify-center mb-6">
+<div class="hero min-h-[40vh] sm:min-h-[70vh] bg-base-200 rounded-lg justify-center">
   <div class="hero-content text-center flex flex-col justify-center w-full max-w-6xl px-4">
     <div class="grid grid-cols-1 px-6">
       <div class="w-full flex justify-center justify-center hidden sm:block mb-8">
-        <h1 class="animate-typing overflow-hidden whitespace-nowrap border-r-4 border-r-color-base-content font-bold mt-8 main-title md:text-xl lg:text-2xl">Ada didn't mind the gap...</h1>
+        <h1 class="animate-typing overflow-hidden whitespace-nowrap border-r-4 border-r-color-base-content font-bold mt-8 main-title md:text-xl lg:text-3xl">Ada didn't mind the gap...</h1>
       </div>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 justify-center items-center mt-4 md:gap-6">
@@ -33,7 +23,7 @@
       </div>
       <div class="max-w-lg text-center mx-auto px-6 sm:pb-4">
         <h1 class="text-xl md:text-3xl lg:text-3xl font-bold main-title ">Connection Engine</h1>
-        <p class="py-6">Connecting women in tech to opportunities, funding, and recognition.</p>
+        <p class="py-6">Connecting women in tech to opportunities, funding, and recognition</p>
         {% if not user.is_authenticated %}
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="{% url 'account_login' %}" class="btn btn-outline">Login</a>
@@ -49,6 +39,21 @@
       </div>
     </div>
   </div>
+
+
+
+    <div class="grid grid-cols-1 mt-12">
+      <div class="card bg-base-200 shadow-md mb-6">
+        <div class="card-body">
+          <h2 class="card-title text-3xl"><svg xmlns="http://www.w3.org/2000/svg" id="newsbreak" width="30" height="30" viewBox="0 0 24 24"><polygon points="23 2 23 6 22 6 22 12 21 12 21 17 20 17 20 18 18 18 18 19 16 19 16 20 14 20 14 21 12 21 12 20 11 20 11 18 10 18 10 16 9 16 9 14 8 14 8 15 7 15 7 16 6 16 6 17 5 17 5 19 4 19 4 20 3 20 3 21 2 21 2 22 1 22 1 19 2 19 2 15 3 15 3 11 4 11 4 7 5 7 5 6 7 6 7 5 9 5 9 4 11 4 11 3 13 3 13 5 14 5 14 7 15 7 15 9 16 9 16 11 18 11 18 9 19 9 19 7 20 7 20 5 21 5 21 3 22 3 22 2 23 2"/></svg>
+            News Flash!
+            <svg xmlns="http://www.w3.org/2000/svg" id="newsbreak" width="30" height="30" viewBox="0 0 24 24"><polygon points="23 2 23 6 22 6 22 12 21 12 21 17 20 17 20 18 18 18 18 19 16 19 16 20 14 20 14 21 12 21 12 20 11 20 11 18 10 18 10 16 9 16 9 14 8 14 8 15 7 15 7 16 6 16 6 17 5 17 5 19 4 19 4 20 3 20 3 21 2 21 2 22 1 22 1 19 2 19 2 15 3 15 3 11 4 11 4 7 5 7 5 6 7 6 7 5 9 5 9 4 11 4 11 3 13 3 13 5 14 5 14 7 15 7 15 9 16 9 16 11 18 11 18 9 19 9 19 7 20 7 20 5 21 5 21 3 22 3 22 2 23 2"/></svg></h2>
+          <p class="text-lg"><strong>Women aren't 'breaking into the tech world' - we helped to create it.</strong></p>
+
+          <p>Ada Lovelace was the world's first software engineer: she wrote what is considered the first computer algorithm, which described a sequence of operations the machine would follow, making it the first published computer program.</p>
+        </div>
+      </div>
+
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div class="card bg-base-200 shadow-md">
         <div class="card-body">
