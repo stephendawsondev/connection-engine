@@ -74,6 +74,25 @@ select {
   text-align: center;
 }
 
+/* text-color on light and dark theme */
+.text-color {
+  color: var(--bg);
+}
+html[data-theme="light"] .text-color {
+  color: var(--text);
+}
+
+/* text-color-white text-color-white for btns and badges*/
+.text-color-light {
+  color: var(--bg);
+  fill: var(--bg);
+}
+.text-color-dark {
+  color: var(--text);
+  fill: var(--text);
+}
+
+
 /* General Font-Colors for Headers and Highlights */
 .women {
   color: var(--highlight4);
@@ -85,6 +104,11 @@ select {
 
 .mentor {
   color: var(--highlight5);
+}
+
+/* Icons */
+.inline-icon {
+  height: 1.5rem;
 }
 
 /* Navbar */
