@@ -32,7 +32,7 @@
               <div class="flex flex-wrap gap-2">
                 <div class="badge badge-lg
                 {% if project.status == 'OPEN' %}
-                    
+
 
                 badge-success
 
@@ -54,7 +54,7 @@
 
 
                   {% elif project.status == 'ASSIGNED' %}
-                    
+
 
                 badge-warning
 
@@ -76,7 +76,7 @@
 
 
                   {% elif project.status == 'IN_PROGRESS' %}
-                    
+
 
 
                 badge-info
@@ -100,7 +100,7 @@
 
 
                   {% elif project.status == 'COMPLETED' %}
-                    
+
 
                 badge-secondary
 
@@ -176,7 +176,7 @@
                 <a href="{% url 'toggle_favorite' project_id=project.pk %}"
                   class="btn btn-circle {% if is_favorited %}favorited{% endif %} fill-primary favorite-btn"
                   title="{% if is_favorited %}
-                    
+
 
 
 
@@ -212,7 +212,7 @@
 
 
                   {% else %}
-                    
+
 
 
 
@@ -261,9 +261,9 @@
 
               {% if is_owner %}
                 <div class="flex flex-col flex-wrap md:flex-row gap-2">
-                  <a href="{% url 'project_update' pk=project.pk %}" class="btn btn-error btn-retro">Edit</a>
+                  <a href="{% url 'project_update' pk=project.pk %}" class="btn btn-outline">Edit</a>
                   {% if not project.assigned_wit and not project.old_assigned_wit_id and project.status == 'OPEN' %}
-                    <a href="{% url 'project_delete' pk=project.pk %}" class="btn btn-error">Delete</a>
+                    <a href="{% url 'project_delete' pk=project.pk %}" class="btn btn-error"><svg class="text-color-light inline-icon" id="trash-alt" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m18,5v-1h-1v-1h-1v-1h-1v-1h-6v1h-1v1h-1v1h-1v1H2v2h2v15h1v1h14v-2h1V7h1v-2h-3Zm-10-1h1v-1h6v1h1v1h-8v-1Zm10,17H6V7h12v14Z"/><rect x="8" y="9" width="2" height="10"/><rect x="14" y="9" width="2" height="10"/></svg></a>
                   {% endif %}
                   <a href="{% url 'project_interested_users' project_id=project.pk %}" class="btn btn-info btn-retro">View Interested Users ({{ interest_count }})</a>
                   <a href="{% url 'milestone_list' project_id=project.pk %}" class="btn btn-primary btn-retro">Manage Milestones</a>
