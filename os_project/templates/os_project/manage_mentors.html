@@ -6,12 +6,12 @@
 {% block content %}
 <div class="container mx-auto px-4 py-6">
     <div class="mb-4">
-        <a href="{% url 'milestone_list' project_id=project.id %}" class="btn btn-ghost btn-sm">
+        <a href="{% url 'milestone_list' project_id=project.id %}" class="btn milestone btn-ghost btn-sm">
             ← Back to Milestones
         </a>
     </div>
 
-    <div class="card bg-base-200 shadow-xl mb-6">
+    <div class="card card-mentor bg-base-200 shadow-xl mb-6">
         <div class="card-body">
             <h1 class="card-title text-2xl mb-2">Manage Project Mentors</h1>
             <h2 class="text-xl mb-4">{{ project.title }}</h2>

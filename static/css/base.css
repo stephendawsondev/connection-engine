@@ -22,7 +22,8 @@ h3,
 a,
 button,
 th,
-.stat {
+.stat,
+.footer {
   font-family: var(--font-primary);
 }
 
@@ -57,12 +58,13 @@ h3 {
 }
 
 a,
-.btn {
+.btn{
   font-size: 0.75rem;
 }
 
-.text-error {
-  font-size: 0.5rem;
+.text-error,
+.footer {
+  font-size: 0.55rem;
 }
 
 select {
@@ -74,17 +76,51 @@ select {
   text-align: center;
 }
 
+/* text-color on light and dark theme */
+.text-color {
+  color: var(--bg);
+  fill: var(--bg);
+}
+html[data-theme="light"] .text-color {
+  color: var(--text);
+  fill: var(--text);
+}
+
+/* text-color-white text-color-white for btns and badges*/
+.text-color-light {
+  color: var(--bg);
+  fill: var(--bg);
+}
+.text-color-dark {
+  color: var(--text);
+  fill: var(--text);
+}
+
+
 /* General Font-Colors for Headers and Highlights */
 .women {
   color: var(--highlight4);
+  fill: var(--highlight4);
 }
 
 .project {
   color: var(--highlight2);
+  fill: var(--highlight2);
 }
 
 .mentor {
   color: var(--highlight5);
+  fill: var(--highlight5)
+}
+
+.milestone {
+  color: var(--highlight1);
+  fill: var(--highlight1);
+}
+
+/* Icons */
+.inline-icon {
+  height: 1.5rem;
 }
 
 /* Navbar */
@@ -231,7 +267,9 @@ html[data-theme="light"] .logo {
 .card-mentor::after {
   background: var(--highlight5) !important;
 }
-
+.card-milestone::after {
+  background: var(--highlight1) !important;
+}
 
 .btn.btn-error::after {
   background: var(--highlight3) !important;
