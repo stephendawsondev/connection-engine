@@ -129,10 +129,12 @@
                     <div class="form-control">
                         <label class="label"><span class="label-text">Sponsorship Amount (€)</span></label>
                         <div class="input-group">
-                          <input type="number" id="sponsorship-amount" min="1" class="input input-bordered w-full" value="50" />
+                          <input type="number" id="sponsorship-amount-{{ wit.id }}" min="1" class="input input-bordered w-full" value="50" />
+                          <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                           <button id="sponsor-button-{{ wit.id }}" class="btn btn-success">Sponsor {{ wit.user.first_name|default:wit.user.username }}</button>
+                          <p>WIT ID: {{ wit.id }}</p>
                         </div>
-                      </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -168,66 +170,66 @@
     {% endif %}
 </div>
 {% endblock %}
+
 {% block extra_js %}
 {{ block.super }}
-<script src="{% static 'user_profile/js/favorites_sidebar.js' %}"></script>
+<script src="https://js.stripe.com/v3/"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll("[id^='sponsor-button-']").forEach(button => {
-            if (!button) return; // Check if button exists before adding event listener
+        setTimeout(() => {
+            document.querySelectorAll("[id^='sponsor-button-']").forEach(button => {
+                button.addEventListener('click', async function () {
+                    const witId = this.id.replace("sponsor-button-", "");
+                    const amountInput = document.getElementById(`sponsorship-amount-${witId}`);
 
-            button.addEventListener('click', async function () {
-                const witId = this.id.replace("sponsor-button-", "");
-                const amountInput = document.getElementById(`sponsorship-amount-${witId}`);
-
-                if (!amountInput) {
-                    console.error("Sponsorship amount input not found.");
-                    return;
-                }
-
-                const amount = parseFloat(amountInput.value);
-                if (!amount || amount <= 0) {
-                    alert("Please enter a valid amount.");
-                    return;
-                }
-
-                try {
-                    const response = await fetch('/donations/create-checkout-session/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': document.querySelector("[name=csrfmiddlewaretoken]").value
-                        },
-                        body: JSON.stringify({
-                            type: 'sponsor',
-                            id: witId,
-                            amount: amount
-                        })
-                    });
-
-                    const session = await response.json();
-
-                    if (session.error) {
-                        console.error("Stripe Session Error:", session.error);
-                        alert("Error processing payment. Please try again.");
+                    if (!amountInput) {
+                        console.error(`Sponsorship amount input not found for witId: ${witId}`);
                         return;
                     }
 
-                    // Ensure Stripe is initialized correctly
-                    if (!window.Stripe) {
-                        console.error("Stripe.js not loaded.");
-                        alert("Payment processing is unavailable at the moment.");
+                    const amount = parseFloat(amountInput.value);
+                    if (!amount || amount <= 0) {
+                        alert("Please enter a valid amount.");
                         return;
                     }
 
-                    const stripe = Stripe('{{ stripe_publishable_key }}');
-                    stripe.redirectToCheckout({ sessionId: session.id });
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert("An error occurred. Please try again.");
-                }
+                    try {
+                        const response = await fetch('/donations/create-checkout-session/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': document.querySelector("[name=csrfmiddlewaretoken]").value
+                            },
+                            body: JSON.stringify({
+                                type: 'sponsor',
+                                id: witId,
+                                amount: amount
+                            })
+                        });
+
+                        const session = await response.json();
+
+                        if (session.error) {
+                            console.error("Stripe Session Error:", session.error);
+                            alert("Error processing payment. Please try again.");
+                            return;
+                        }
+
+                        if (!window.Stripe) {
+                            console.error("Stripe.js not loaded.");
+                            alert("Payment processing is unavailable at the moment.");
+                            return;
+                        }
+
+                        const stripe = Stripe('{{ stripe_publishable_key }}');
+                        stripe.redirectToCheckout({ sessionId: session.id });
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert("An error occurred. Please try again.");
+                    }
+                });
             });
-        });
+        }, 500); // Delay execution slightly
     });
 </script>
 {% endblock %}
