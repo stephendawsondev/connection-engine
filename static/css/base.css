@@ -255,7 +255,9 @@ html[data-theme="light"] .logo {
 .card-mentor::after {
   background: var(--highlight5) !important;
 }
-
+.card-milestone::after {
+  background: var(--highlight1) !important;
+}
 
 .btn.btn-error::after {
   background: var(--highlight3) !important;
