@@ -11,5 +11,6 @@ urlpatterns = [
     path("profile/", include("user_profile.urls")),
     path("projects/", include("os_project.urls")),
     path("donations/", include("donations.urls")),
+    path("contact/", include("contact.urls")),
     path("", include("home.urls")),
 ]

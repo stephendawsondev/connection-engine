@@ -126,6 +126,7 @@ INSTALLED_APPS = [
     "user_profile",
     "os_project",
     "donations",
+    'contact',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Contact Us{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+  <!-- Header Image -->
+  <div class="flex justify-center mb-6">
+    <img
+          src="{% static 'images/Contact-gif.gif' %}"
+          alt="Contact GIF"
+          class="max-w-full h-auto"
+    >
+  </div>
+
+  <!-- Header -->
+  <header class="text-center mb-8">
+    <h1 class="text-3xl font-bold">Have questions?</h1>
+    <p class="text-lg">
+      Whether you’re a woman in tech or a supporter of women in tech, we’d love to hear from you!
+    </p>
+  </header>
+
+  <!-- Contact Section: Form & Quick Links -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <!-- Left Side: Contact Form -->
+    <div>
+      <div class="card bg-base-200 shadow-xl p-6">
+        <h2 class="card-title text-xl mb-4">Get in Touch</h2>
+        <form method="post" novalidate>
+          {% csrf_token %}
+          <div class="form-control mb-4">
+            <label class="label">
+              <span class="label-text">Name</span>
+            </label>
+            {{ form.name }}
+            {% if form.name.errors %}
+              <span class="text-error text-sm">{{ form.name.errors.0 }}</span>
+            {% endif %}
+          </div>
+          <div class="form-control mb-4">
+            <label class="label">
+              <span class="label-text">Email</span>
+            </label>
+            {{ form.email }}
+            {% if form.email.errors %}
+              <span class="text-error text-sm">{{ form.email.errors.0 }}</span>
+            {% endif %}
+          </div>
+          <div class="form-control mb-4">
+            <label class="label">
+              <span class="label-text">Subject</span>
+            </label>
+            {{ form.subject }}
+            {% if form.subject.errors %}
+              <span class="text-error text-sm">{{ form.subject.errors.0 }}</span>
+            {% endif %}
+          </div>
+          <div class="form-control mb-4">
+            <label class="label">
+              <span class="label-text">Message</span>
+            </label>
+            {{ form.message }}
+            {% if form.message.errors %}
+              <span class="text-error text-sm">{{ form.message.errors.0 }}</span>
+            {% endif %}
+          </div>
+          <div class="form-control">
+            <button type="submit" class="btn btn-primary btn-retro w-full">
+              Send Message
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Right Side: Quick Links -->
+    <div>
+      <div class="card bg-base-200 shadow-xl p-6">
+        <h2 class="card-title text-xl mb-4">Quick Links</h2>
+        <ul class="menu">
+          <li><a href="mailto:testingemail25.test@gmail.com">Support Email</a></li>
+          <li>
+            <a href="https://linkedin.com/" target="_blank">LinkedIn</a>
+          </li>
+          <li>
+            <a href="#faq" class="scroll-smooth">FAQ Section</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q&A (FAQ) -->
+  <div id="faq" class="mt-12">
+    <h2 class="text-2xl font-bold mb-4 text-center">Frequently Asked Questions</h2>
+    <div class="accordion w-full">
+      <!-- Q1 -->
+      <div tabindex="0" class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box mb-2">
+        <div class="collapse-title text-xl font-medium">
+          What is the purpose of this contact page?
+        </div>
+        <div class="collapse-content">
+          <p>This page is designed to help you reach out with any questions, suggestions, or support inquiries regarding our mission to support women in tech.</p>
+        </div>
+      </div>
+      <!-- Q2 -->
+      <div tabindex="0" class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box mb-2">
+        <div class="collapse-title text-xl font-medium">
+          How can I support women in tech?
+        </div>
+        <div class="collapse-content">
+          <p>You can support by joining our open-source projects, spreading the word on social media, or even sponsoring initiatives on our platform.</p>
+        </div>
+      </div>
+      <!-- Q3 -->
+      <div tabindex="0" class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box mb-2">
+        <div class="collapse-title text-xl font-medium">
+          Do I need to be a professional coder?
+        </div>
+        <div class="collapse-content">
+          <p>No, our platform welcomes beginners as well as experienced developers. We have projects suitable for all skill levels.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+  {{ block.super }}
+  <script>
+    // smooth scrolling for the FAQ link
+    document.querySelectorAll('a.scroll-smooth').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetID = this.getAttribute('href').substring(1);
+        const targetSection = document.getElementById(targetID);
+        if (targetSection) {
+          targetSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+{% endblock %}
