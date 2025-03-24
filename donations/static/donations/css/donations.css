@@ -1,5 +1,5 @@
 /* Variables */
-* {
+/* * {
     box-sizing: border-box;
   }
 
@@ -13,7 +13,16 @@
     align-content: center;
     height: 100vh;
     width: 100vw;
+  } */
+
+  .card {
+    padding: 1rem;
   }
+  @media (min-width: 500px) {
+    .card {
+        padding: 2rem;
+    }
+}
 
   form {
     width: 30vw;
@@ -145,8 +154,14 @@
   }
 
   h2 {
-    margin: 0;
-    text-align: center;
+    /* margin: 0;
+    text-align: center; */
+    font-size: 1rem;
+  }
+  @media (min-width: 800px) {
+    h2 {
+        font-size: 1.5rem;
+    }
   }
 
   a {
