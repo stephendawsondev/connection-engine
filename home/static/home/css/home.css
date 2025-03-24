@@ -19,4 +19,10 @@
     }
   }
 
-  
+  html[data-theme="light"] .hero {
+background-color: #ebebeb;
+  }
+
+  .hero {
+    border-radius: 0;
+  }
