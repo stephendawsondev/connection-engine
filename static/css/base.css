@@ -79,9 +79,11 @@ select {
 /* text-color on light and dark theme */
 .text-color {
   color: var(--bg);
+  fill: var(--bg);
 }
 html[data-theme="light"] .text-color {
   color: var(--text);
+  fill: var(--text);
 }
 
 /* text-color-white text-color-white for btns and badges*/
@@ -98,18 +100,22 @@ html[data-theme="light"] .text-color {
 /* General Font-Colors for Headers and Highlights */
 .women {
   color: var(--highlight4);
+  fill: var(--highlight4);
 }
 
 .project {
   color: var(--highlight2);
+  fill: var(--highlight2);
 }
 
 .mentor {
   color: var(--highlight5);
+  fill: var(--highlight5)
 }
 
 .milestone {
   color: var(--highlight1);
+  fill: var(--highlight1);
 }
 
 /* Icons */
