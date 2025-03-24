@@ -169,18 +169,25 @@
 </div>
 {% endblock %}
 {% block extra_js %}
-  {{ block.super }}
-  <script src="{% static 'user_profile/js/favorites_sidebar.js' %}"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
+{{ block.super }}
+<script src="{% static 'user_profile/js/favorites_sidebar.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll("[id^='sponsor-button-']").forEach(button => {
-            button.addEventListener('click', async function() {
-                const witId = this.id.replace("sponsor-button-", "");
-                const amountInput = document.getElementById('sponsorship-amount');
-                const amount = amountInput.value;
+            if (!button) return; // Check if button exists before adding event listener
 
+            button.addEventListener('click', async function () {
+                const witId = this.id.replace("sponsor-button-", "");
+                const amountInput = document.getElementById(`sponsorship-amount-${witId}`);
+
+                if (!amountInput) {
+                    console.error("Sponsorship amount input not found.");
+                    return;
+                }
+
+                const amount = parseFloat(amountInput.value);
                 if (!amount || amount <= 0) {
-                    alert("Please enter a valid amount");
+                    alert("Please enter a valid amount.");
                     return;
                 }
 
@@ -189,7 +196,7 @@
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-CSRFToken': '{{ csrf_token }}'
+                            'X-CSRFToken': document.querySelector("[name=csrfmiddlewaretoken]").value
                         },
                         body: JSON.stringify({
                             type: 'sponsor',
@@ -201,7 +208,15 @@
                     const session = await response.json();
 
                     if (session.error) {
-                        console.error(session.error);
+                        console.error("Stripe Session Error:", session.error);
+                        alert("Error processing payment. Please try again.");
+                        return;
+                    }
+
+                    // Ensure Stripe is initialized correctly
+                    if (!window.Stripe) {
+                        console.error("Stripe.js not loaded.");
+                        alert("Payment processing is unavailable at the moment.");
                         return;
                     }
 
@@ -209,6 +224,7 @@
                     stripe.redirectToCheckout({ sessionId: session.id });
                 } catch (error) {
                     console.error('Error:', error);
+                    alert("An error occurred. Please try again.");
                 }
             });
         });
