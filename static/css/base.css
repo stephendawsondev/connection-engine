@@ -22,7 +22,8 @@ h3,
 a,
 button,
 th,
-.stat {
+.stat,
+.footer {
   font-family: var(--font-primary);
 }
 
@@ -57,12 +58,13 @@ h3 {
 }
 
 a,
-.btn {
+.btn{
   font-size: 0.75rem;
 }
 
-.text-error {
-  font-size: 0.5rem;
+.text-error,
+.footer {
+  font-size: 0.55rem;
 }
 
 select {
