@@ -16,7 +16,7 @@
         <div class="flex justify-between items-center">
           <h1 class="card-title text-2xl mb-2">Project Milestones</h1>
           {% if is_owner %}
-            <a href="{% url 'milestone_create' project_id=project.id %}" class="btn btn-primary">Add Milestone</a>
+            <a href="{% url 'milestone_create' project_id=project.id %}" class="btn btn-retro btn-primary">Add Milestone</a>
           {% endif %}
         </div>
         <h2 class="text-xl mb-4">{{ project.title }}</h2>
@@ -54,7 +54,7 @@
                     </td>
                     <td>
                       <div class="flex gap-2">
-                        <a href="{% url 'milestone_detail' project_id=project.id milestone_id=milestone.id %}" class="btn btn-sm btn-primary">View</a>
+                        <a href="{% url 'milestone_detail' project_id=project.id milestone_id=milestone.id %}" class="btn btn-sm btn-retro btn-primary">View</a>
                         {% if is_owner and not milestone.locked %}
                           <a href="{% url 'milestone_update' project_id=project.id milestone_id=milestone.id %}" class="btn btn-sm btn-outline">Edit</a>
                           <a href="{% url 'milestone_delete' project_id=project.id milestone_id=milestone.id %}" class="btn btn-sm btn-outline btn-error">Delete</a>
@@ -71,7 +71,7 @@
             <span>No milestones have been created for this project yet.</span>
             {% if is_owner %}
               <div class="mt-4">
-                <a href="{% url 'milestone_create' project_id=project.id %}" class="btn btn-primary">Create First Milestone</a>
+                <a href="{% url 'milestone_create' project_id=project.id %}" class="btn btn-retro btn-retro btn-primary">Create 1st Milestone</a>
               </div>
             {% endif %}
           </div>
@@ -85,7 +85,7 @@
           <h2 class="card-title text-xl mb-4">Project Mentors</h2>
 
           <div class="flex justify-end mb-4">
-            <a href="{% url 'manage_mentors' project_id=project.id %}" class="btn btn-primary btn-sm">Manage Mentors</a>
+            <a href="{% url 'manage_mentors' project_id=project.id %}" class="btn btn-retro btn-retro btn-primary btn-sm">Manage Mentors</a>
           </div>
 
           {% with mentor_count=project.mentors.count %}
