@@ -106,6 +106,10 @@ html[data-theme="light"] .text-color {
   color: var(--highlight5);
 }
 
+.milestone {
+  color: var(--highlight1);
+}
+
 /* Icons */
 .inline-icon {
   height: 1.5rem;
