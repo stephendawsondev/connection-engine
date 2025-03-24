@@ -32,6 +32,7 @@
               <div class="flex flex-wrap gap-2">
                 <div class="badge badge-lg
                 {% if project.status == 'OPEN' %}
+                    
 
                 badge-success
 
@@ -51,7 +52,9 @@
 
 
 
+
                   {% elif project.status == 'ASSIGNED' %}
+                    
 
                 badge-warning
 
@@ -71,7 +74,9 @@
 
 
 
+
                   {% elif project.status == 'IN_PROGRESS' %}
+                    
 
 
                 badge-info
@@ -93,9 +98,12 @@
 
 
 
+
                   {% elif project.status == 'COMPLETED' %}
+                    
 
                 badge-secondary
+
 
 
 
@@ -168,6 +176,7 @@
                 <a href="{% url 'toggle_favorite' project_id=project.pk %}"
                   class="btn btn-circle {% if is_favorited %}favorited{% endif %} fill-primary favorite-btn"
                   title="{% if is_favorited %}
+                    
 
 
 
@@ -201,7 +210,9 @@
 
 
 
+
                   {% else %}
+                    
 
 
 
@@ -219,6 +230,7 @@
 
 
                     Add to favorites
+
 
 
 
@@ -483,7 +495,7 @@
 {% endblock %}
 
 {% block extra_js %}
-  <script src="{% static 'os_project/js/favorite.js' %}"></script>
+  <script src="{% static 'os_project/js/os_project.js' %}"></script>
   <script src="https://js.stripe.com/v3/"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
