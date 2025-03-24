@@ -4,6 +4,7 @@ from decimal import Decimal
 
 import stripe
 from django.conf import settings
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
@@ -235,6 +236,29 @@ def success(request):
 
 
 # Women iIn Tech List
+class WomenInTechListView(ListView):
+    model = WomenInTech
+    template_name = "donations/sponsorship.html"
+    context_object_name = "women_in_tech"
+    paginate_by = 12
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_query = self.request.GET.get("search", "")
+
+        if search_query:
+            queryset = queryset.filter(
+                Q(user__username__icontains=search_query)
+                | Q(tech_specialties__icontains=search_query)
+                | Q(about__icontains=search_query)
+            )
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["search_query"] = self.request.GET.get("search", "")
+        return context
 
 
 @csrf_exempt
