@@ -121,12 +121,18 @@
                 </div>
 
                 <div class="mt-4">
-                    <div class="text-sm mb-1">Total Sponsorships: €{{ wit.total_sponsorships }}</div>
+
                     <progress class="progress progress-primary w-full" value="{{ wit.sponsorship_percentage }}" max="100"></progress>
                 </div>
 
                 <div class="card-actions justify-end mt-4">
-                    <a href="{% url 'profile_detail' pk=wit.user.id %}" class="btn btn-primary btn-retro btn-sm">View Profile</a>
+                    <div class="form-control">
+                        <label class="label"><span class="label-text">Sponsorship Amount (€)</span></label>
+                        <div class="input-group">
+                          <input type="number" id="sponsorship-amount" min="1" class="input input-bordered w-full" value="50" />
+                          <button id="sponsor-button-{{ wit.id }}" class="btn btn-success">Sponsor {{ wit.user.first_name|default:wit.user.username }}</button>
+                        </div>
+                      </div>
                 </div>
             </div>
         </div>
@@ -161,4 +167,51 @@
     </div>
     {% endif %}
 </div>
+{% endblock %}
+{% block extra_js %}
+  {{ block.super }}
+  <script src="{% static 'user_profile/js/favorites_sidebar.js' %}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll("[id^='sponsor-button-']").forEach(button => {
+            button.addEventListener('click', async function() {
+                const witId = this.id.replace("sponsor-button-", "");
+                const amountInput = document.getElementById('sponsorship-amount');
+                const amount = amountInput.value;
+
+                if (!amount || amount <= 0) {
+                    alert("Please enter a valid amount");
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/donations/create-checkout-session/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: JSON.stringify({
+                            type: 'sponsor',
+                            id: witId,
+                            amount: amount
+                        })
+                    });
+
+                    const session = await response.json();
+
+                    if (session.error) {
+                        console.error(session.error);
+                        return;
+                    }
+
+                    const stripe = Stripe('{{ stripe_publishable_key }}');
+                    stripe.redirectToCheckout({ sessionId: session.id });
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}

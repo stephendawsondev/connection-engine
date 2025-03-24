@@ -257,7 +257,7 @@ class WomenInTechListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["search_query"] = self.request.GET.get("search", "")
+        context["profile_user"] = self.request.user
         return context
 
 
