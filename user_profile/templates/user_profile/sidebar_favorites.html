@@ -16,7 +16,7 @@
         {% for project in favorites %}
           <div class="card card-side w-[calc(50% - 3px)] bg-base-100 shadow-sm my-2">
             <div class="card-body">
-              <h2 class="card-title text-sm text-center md:text-left">{{ project.title }}</h2>
+              <p class="card-title text-sm text-center md:text-left">{{ project.title }}</p>
               <div class="card-actions justify-end">
                 <a class="btn btn-primary btn-retro text-xs mt-2" href="{% url 'project_detail' pk=project.pk %}">View project</a>
               </div>
