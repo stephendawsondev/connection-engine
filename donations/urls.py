@@ -10,4 +10,11 @@ urlpatterns = [
     ),
     path("webhook/", views.stripe_webhook, name="stripe_webhook"),
     path("success/", views.success, name="success"),
+    # Sponsorship URLs
+    path(
+        "sponsorship/create-checkout-session/",
+        views.create_sponsorship_session,
+        name="create_sponsorship_session",
+    ),
+    path("sponsorship/success/", views.sponsorship_success, name="sponsorship_success"),
 ]

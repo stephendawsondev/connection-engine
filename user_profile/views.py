@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
+from django.conf import settings
+
 from .models import Profile
 from .forms import (
     UserUpdateForm,
@@ -26,6 +28,7 @@ def profile_detail(request, username):
         "profile_user": user,
         "profile": profile,
         "favorites": favorites,
+        "stripe_publishable_key": settings.STRIPE_PUBLISHABLE_KEY,
     }
     return render(request, "user_profile/profile_detail.html", context)
 

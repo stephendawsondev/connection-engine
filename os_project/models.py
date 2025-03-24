@@ -1,5 +1,6 @@
-from django.db import models
 from cloudinary.models import CloudinaryField
+from django.db import models
+
 from donations.models import Payment
 
 
@@ -121,6 +122,47 @@ class Project(models.Model):
         self.save(update_fields=["current_funding"])
 
         return self.current_funding
+
+    def get_other_projects(self):
+        """Get related projects that might be of interest."""
+        similar_projects = Project.objects.exclude(id=self.id)
+
+        if self.category:
+            similar_projects = similar_projects.filter(category=self.category)
+
+        if self.tags.exists():
+            similar_projects = similar_projects.filter(tags__in=self.tags.all())
+
+        return similar_projects.annotate(
+            category_match=models.Case(
+                models.When(category=self.category, then=1),
+                default=0,
+                output_field=models.IntegerField(),
+            ),
+            tag_matches=models.Count("tags"),
+        ).order_by("-category_match", "-tag_matches")[
+            :6
+        ]  # Return top 6 matches
+
+    def get_status_display(self):
+        """Return formatted status text."""
+        status_mapping = {
+            "OPEN": "Open for Contributions",
+            "ASSIGNED": "Developer Assigned",
+            "IN_PROGRESS": "In Progress",
+            "COMPLETED": "Completed",
+        }
+        return status_mapping.get(self.status, "Unknown Status")
+
+    def get_difficulty_display(self):
+        """Return formatted difficulty text."""
+        difficulty_mapping = {
+            "BEGINNER": "Beginner Friendly",
+            "INTERMEDIATE": "Intermediate",
+            "ADVANCED": "Advanced",
+            "EXPERT": "Expert Level",
+        }
+        return difficulty_mapping.get(self.difficulty, "Unknown Difficulty")
 
 
 class ProjectInterest(models.Model):
