@@ -307,7 +307,7 @@
           </div>
         </div>
         {% if user.is_authenticated and milestones %}
-          <div class="card bg-base-200 shadow-xl mt-6">
+          <div class="card card-milestone bg-base-200 shadow-xl mt-6">
             <div class="card-body">
               <div class="flex justify-between items-center">
                 <h2 class="card-title text-xl">Project Milestones</h2>
@@ -413,12 +413,12 @@
             <div class="stats stats-vertical shadow">
               <div class="stat">
                 <div class="stat-title">Target</div>
-                <div class="stat-value">€{{ project.funding_goal }}</div>
+                <div class="stat-value"><h2 class="text-end">€{{ project.funding_goal }}</h2></div>
               </div>
 
               <div class="stat">
                 <div class="stat-title">Raised</div>
-                <div class="stat-value">€{{ project.current_funding }}</div>
+                <div class="stat-value"><h2 class="text-end">€{{ project.current_funding }}</h2></div>
                 <div class="stat-desc">{{ project.funding_percentage }}% of goal</div>
               </div>
             </div>
@@ -450,7 +450,7 @@
         </div>
 
         {% if user.is_authenticated and project_mentors.exists %}
-          <div class="card bg-base-200 shadow-xl mt-6">
+          <div class="card card-mentor bg-base-200 shadow-xl mt-6">
             <div class="card-body">
               <h2 class="card-title mb-4">Project Mentors</h2>
 
