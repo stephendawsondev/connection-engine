@@ -8,7 +8,7 @@
 {% block content %}
   <div class="container mx-auto px-4 py-6">
     <div class="flex justify-between items-center mb-6">
-      <h1 class="text-3xl font-bold">Project Dashboard</h1>
+      <h1 class="text-3xl project font-bold">Project Dashboard</h1>
       <a href="{% url 'project_create' %}" class="btn btn-primary btn-retro">Create New Project</a>
     </div>
 
@@ -113,7 +113,7 @@
         </table>
       </div>
     {% else %}
-      <div class="card bg-base-200 shadow-md">
+      <div class="card card-project bg-base-200 shadow-md">
         <div class="card-body text-center">
           <h3 class="text-xl mb-4">You haven't created any projects yet</h3>
           <p>Create your first project to get started!</p>
