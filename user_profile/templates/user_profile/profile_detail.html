@@ -93,11 +93,67 @@
         </div>
       </div>
     {% endif %}
+    {% if profile_user.women_in_tech_profile %}
+      <div class="mt-4">
+        <div class="form-control">
+          <label class="label"><span class="label-text">Sponsorship Amount (€)</span></label>
+          <div class="input-group">
+            <input type="number" id="sponsorship-amount" min="1" class="input input-bordered w-full" value="50" />
+            <button id="sponsor-button" class="btn btn-success">Sponsor {{ profile_user.first_name|default:profile_user.username }}</button>
+          </div>
+        </div>
+      </div>
+    {% endif %}
   </div>
 
   {% include 'user_profile/sidebar_favorites.html' %}
 {% endblock %}
 
 {% block extra_js %}
+  {{ block.super }}
   <script src="{% static 'user_profile/js/favorites_sidebar.js' %}"></script>
+  <script src="https://js.stripe.com/v3/"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sponsorButton = document.getElementById('sponsor-button');
+        if (sponsorButton) {
+            sponsorButton.addEventListener('click', async function() {
+                const amountInput = document.getElementById('sponsorship-amount');
+                const amount = amountInput.value;
+
+                if (!amount || amount <= 0) {
+                    alert("Please enter a valid amount");
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/donations/create-checkout-session/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: JSON.stringify({
+                            type: 'sponsor',
+                            id: {{ profile_user.women_in_tech_profile.id }},
+                            amount: amount
+                        })
+                    });
+
+                    const session = await response.json();
+
+                    if (session.error) {
+                        console.error(session.error);
+                        return;
+                    }
+
+                    const stripe = Stripe('{{ stripe_publishable_key }}');
+                    stripe.redirectToCheckout({ sessionId: session.id });
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+    });
+</script>
 {% endblock %}

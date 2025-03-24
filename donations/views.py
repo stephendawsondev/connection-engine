@@ -1,12 +1,13 @@
 # donations/views.py
 import json
+from decimal import Decimal
 
 import stripe
-from decimal import Decimal
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import ListView
 
 from os_project.models import Project
 from user_profile.models import WomenInTech
@@ -139,23 +140,19 @@ def handle_completed_checkout(session):
 # donations/views.py - update the success function
 
 
-@csrf_exempt
 def success(request):
     """
     Handle successful payments
     """
     # Get the session ID from query parameters
     session_id = request.GET.get("session_id")
-
     if not session_id:
         return render(
             request, "donations/error.html", {"error_message": "No session ID provided"}
         )
-
     try:
         # Retrieve the session from Stripe
         session = stripe.checkout.Session.retrieve(session_id)
-
         # Look for an existing payment or create one
         try:
             payment = Payment.objects.get(confirmation_number=session_id)
@@ -174,7 +171,6 @@ def success(request):
                 status="SUCCESS",
                 stripe_payment_intent_id=session.payment_intent,
             )
-
             # Handle project and WIT data from metadata
             if hasattr(session, "metadata"):
                 if session.metadata.get("project_id"):
@@ -183,14 +179,10 @@ def success(request):
                             id=session.metadata.get("project_id")
                         )
                         payment.project = project
-                        payment.save()
-
-                        # Update project funding
                         project.update_funding()
-
+                        payment.save()
                     except Project.DoesNotExist:
                         payment.save()
-
                 elif session.metadata.get("wit_id"):
                     try:
                         payment.sponsored_user = WomenInTech.objects.get(
@@ -201,11 +193,109 @@ def success(request):
                         payment.save()
                 else:
                     payment.save()
-            else:
-                payment.save()
 
-        return render(request, "donations/success.html", {"payment": payment})
+        # Get project information if applicable
+        project = payment.project
+        context = {
+            "payment": payment,
+            "save_info": request.session.get("save_info"),
+        }
 
+        if project:
+            remaining_funding = project.funding_goal - project.current_funding
+            funding_progress = project.funding_percentage()
+            context.update(
+                {
+                    "project": project,
+                    "remaining_funding": remaining_funding,
+                    "funding_progress": funding_progress,
+                }
+            )
+
+        # Add recent payments to the context
+        recent_payments = Payment.objects.exclude(status="PENDING").order_by(
+            "-created_at"
+        )[:5]
+        context["recent_payments"] = recent_payments
+
+        # Add other women in tech if this was a sponsorship
+        if payment.sponsored_user:
+            context["sponsored_user"] = payment.sponsored_user
+            context["other_women_in_tech"] = WomenInTech.objects.exclude(
+                user=payment.sponsored_user.user
+            ).order_by("-created_at")[:5]
+        return render(request, "donations/success.html", context)
+
+    except Exception as e:
+        return render(
+            request,
+            "donations/error.html",
+            {"error_message": f"Error retrieving payment: {str(e)}"},
+        )
+
+
+# Women iIn Tech List
+
+
+@csrf_exempt
+def create_sponsorship_session(request):
+    data = json.loads(request.body)
+    amount = int(float(data.get("amount", 10)) * 100)  # Convert to cents
+    wit_id = data.get("wit_id")
+    success_url = request.build_absolute_uri("/donations/sponsorship/success/")
+    cancel_url = request.build_absolute_uri("/donations/cancel/")
+
+    try:
+        wit = WomenInTech.objects.get(id=wit_id)
+        product_name = f"Sponsorship for {wit.user.username}"
+
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=["card"],
+            line_items=[
+                {
+                    "price_data": {
+                        "currency": "eur",
+                        "product_data": {
+                            "name": product_name,
+                        },
+                    },
+                    "quantity": 1,
+                    "amount": amount,
+                }
+            ],
+            mode="payment",
+            success_url=success_url,
+            cancel_url=cancel_url,
+            metadata={
+                "user_id": request.user.id,
+                "payment_type": "sponsor",
+                "wit_id": wit_id,
+            },
+        )
+        return JsonResponse({"id": checkout_session.id})
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
+
+
+def sponsorship_success(request):
+    session_id = request.GET.get("session_id")
+    if not session_id:
+        return render(
+            request, "donations/error.html", {"error_message": "No session ID provided"}
+        )
+
+    try:
+        session = stripe.checkout.Session.retrieve(session_id)
+        payment = handle_completed_checkout(session)
+
+        return render(
+            request,
+            "donations/sponsorship_success.html",
+            {
+                "payment": payment,
+                "save_info": request.session.get("save_info"),
+            },
+        )
     except Exception as e:
         return render(
             request,
