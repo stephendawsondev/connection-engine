@@ -11,9 +11,9 @@
         </a>
     </div>
 
-    <div class="card bg-base-200 shadow-xl max-w-4xl mx-auto">
+    <div class="card card-project bg-base-200 shadow-xl max-w-4xl mx-auto">
         <div class="card-body">
-            <h1 class="card-title text-2xl">{% if form.instance.pk %}Edit{% else %}Create{% endif %} Project</h1>
+            <h1 class="card-title project text-2xl">{% if form.instance.pk %}Edit{% else %}Create{% endif %} Project</h1>
 
             <form method="post" enctype="multipart/form-data" class="space-y-6">
                 {% csrf_token %}
