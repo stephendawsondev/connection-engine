@@ -139,8 +139,6 @@ class ProjectDetailView(DetailView):
                 self.request.user, self.object
             )
 
-            context["stripe_publishable_key"] = settings.STRIPE_PUBLISHABLE_KEY
-
             # Add donation information
             from donations.models import Payment
 
@@ -157,7 +155,8 @@ class ProjectDetailView(DetailView):
             context["project_mentors"] = ProjectMentor.objects.filter(
                 project=self.object
             )
-
+            
+        context["stripe_publishable_key"] = settings.STRIPE_PUBLISHABLE_KEY
         return context
 
 
