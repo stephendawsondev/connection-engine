@@ -16,7 +16,6 @@ urlpatterns = [
         views.create_sponsorship_session,
         name="create_sponsorship_session",
     ),
-    path("sponsorship/success/", views.sponsorship_success, name="sponsorship_success"),
     # women in tech
     path(
         "sponsorship/", views.WomenInTechListView.as_view(), name="women_in_tech_list"
