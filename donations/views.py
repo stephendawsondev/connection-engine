@@ -145,6 +145,7 @@ def success(request):
     """
     Handle successful payments
     """
+
     # Get the session ID from query parameters
     session_id = request.GET.get("session_id")
     if not session_id:
@@ -267,7 +268,7 @@ def create_sponsorship_session(request):
     data = json.loads(request.body)
     amount = int(float(data.get("amount", 10)) * 100)  # Convert to cents
     wit_id = data.get("wit_id")
-    success_url = request.build_absolute_uri("/donations/sponsorship/success/")
+    success_url = request.build_absolute_uri("/donations/success/")
     cancel_url = request.build_absolute_uri("/donations/cancel/")
 
     try:
@@ -300,30 +301,3 @@ def create_sponsorship_session(request):
         return JsonResponse({"id": checkout_session.id})
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
-
-
-def sponsorship_success(request):
-    session_id = request.GET.get("session_id")
-    if not session_id:
-        return render(
-            request, "donations/error.html", {"error_message": "No session ID provided"}
-        )
-
-    try:
-        session = stripe.checkout.Session.retrieve(session_id)
-        payment = handle_completed_checkout(session)
-
-        return render(
-            request,
-            "donations/sponsorship_success.html",
-            {
-                "payment": payment,
-                "save_info": request.session.get("save_info"),
-            },
-        )
-    except Exception as e:
-        return render(
-            request,
-            "donations/error.html",
-            {"error_message": f"Error retrieving payment: {str(e)}"},
-        )

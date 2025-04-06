@@ -164,7 +164,7 @@
                         <progress class="progress progress-primary w-full" value="{{ other_wit.sponsorship_percentage }}" max="100"></progress>
                     </div>
                     <div class="card-actions justify-end mt-4">
-                        <a href="{% url 'profile_detail' pk=other_wit.user.id %}" class="btn btn-retro btn-sm">View Profile</a>
+                        <a href="{% url 'profile_detail' username=other_wit.user.username %}" class="btn btn-retro btn-sm">View Profile</a>
                     </div>
                 </div>
             </div>
