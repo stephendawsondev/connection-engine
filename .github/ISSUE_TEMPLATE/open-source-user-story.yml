@@ -1,0 +1,56 @@
+name: 🧩 Open Source User Story
+description: A user story for features open to community contributions
+title: "📖 USER STORY: <Brief description of story>"
+labels: ["user story", "help wanted"]
+body:
+  - type: textarea
+    id: user-story
+    attributes:
+      label: User Story
+      value: "As a **user**, I can **do some action** so that I can **achieve some goal**."
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: |
+        List the criteria that must be achieved for the story to be considered complete.
+      placeholder: "List the acceptance criteria here."
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        ### Standard Tasks Checklist
+  - type: textarea
+    id: standard-tasks
+    attributes:
+      label: Please ensure you've completed these tasks before marking the issue as done.
+      value: |
+        - [ ] Reviewed the user story for clarity and completeness.
+        - [ ] Identified and linked related issues or epics.
+        - [ ] Updated the issue with any relevant notes or feedback (to date).
+  - type: markdown
+    attributes:
+      value: |
+        ### Further tasks
+  - type: textarea
+    id: further-tasks
+    attributes:
+      label: Please add any further tasks that need to be completed before the issue can be marked as done.
+      value: |
+        - [ ]
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ### 🛠️ Want to contribute?
+        This issue is open to the community!  
+        If you'd like to help:
+
+        1. Comment below to claim the issue  
+        2. Fork the repo and create a branch  
+        3. Make your changes and open a pull request  
+
+        ✨ First-time contributors are welcome!
